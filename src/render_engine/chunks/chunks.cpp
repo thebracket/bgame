@@ -316,6 +316,7 @@ namespace chunks {
 		if (!made_flags_ssbo)
 		{
 			glGenBuffers(1, &flags_ssbo);
+			made_flags_ssbo = true;
 		}
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, flags_ssbo);
 		glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(uint32_t) * region::get_tile_flags()->size(), &region::get_tile_flags()->operator[](0), GL_DYNAMIC_COPY);
