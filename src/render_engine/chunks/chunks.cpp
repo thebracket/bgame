@@ -317,10 +317,18 @@ namespace chunks {
 		{
 			glGenBuffers(1, &flags_ssbo);
 			made_flags_ssbo = true;
+
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, flags_ssbo);
+			glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(uint32_t) * region::get_tile_flags()->size(), &region::get_tile_flags()->operator[](0), GL_DYNAMIC_COPY);
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+		} else
+		{
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, flags_ssbo);
+			GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+			memcpy(p, &region::get_tile_flags()->operator[](0), sizeof(uint32_t) * region::get_tile_flags()->size());
+			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 		}
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, flags_ssbo);
-		glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(uint32_t) * region::get_tile_flags()->size(), &region::get_tile_flags()->operator[](0), GL_DYNAMIC_COPY);
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+		
 	}
 
     void update_buffers() {
