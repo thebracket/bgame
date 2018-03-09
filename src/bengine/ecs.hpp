@@ -273,31 +273,53 @@ namespace bengine
 		template <class ... ComponentsToIterate, typename Function>
 		void each(const Function &callback) noexcept
 		{
-			auto view = materialize_view<ComponentsToIterate...>();
-			std::for_each(view.begin(), view.end(), [&callback](auto &tuple)
+			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
+			for (auto &entity : entities)
 			{
-				callback(*std::get<entity_t*>(tuple), *std::get<ComponentsToIterate *>(tuple)...);
-			});
+				const auto entity_id = entity.second.id;
+				if (!entity.second.is_deleted)
+				{
+					if (entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
+					{
+						callback(entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
+					}
+				}
+			}
 		}
 
 		template <class ... ComponentsToIterate, typename Predicate, typename Function>
 		void each_if(const Predicate & predicate, const Function &callback) noexcept
 		{
-			auto view = materialize_view_predicate<ComponentsToIterate...>(predicate);
-			std::for_each(view.begin(), view.end(), [&callback, &view](auto &tuple)
+			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
+			for (auto &entity : entities)
 			{
-				callback(*std::get<entity_t*>(tuple), *std::get<ComponentsToIterate *>(tuple)...);
-			});
+				const auto entity_id = entity.second.id;
+				if (!entity.second.is_deleted)
+				{
+					if (entity_has_all_of<ComponentsToIterate...>(entity.second, to_test) && predicate(entity.second, *entity_component<ComponentsToIterate>(entity_id)...))
+					{
+						callback(entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
+					}
+				}
+			}
 		}
 
 		template <class ComponentToIgnore, class ... ComponentsToIterate, typename Function>
 		void each_without(const Function &callback) noexcept
 		{
-			auto view = materialize_view_excluding<ComponentToIgnore, ComponentsToIterate...>();
-			std::for_each(view.begin(), view.end(), [&callback, &view](auto &tuple)
+			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
+			for (auto &entity : entities)
 			{
-				callback(*std::get<entity_t*>(tuple), *std::get<ComponentsToIterate *>(tuple)...);
-			});
+				const auto entity_id = entity.second.id;
+				if (!entity.second.is_deleted)
+				{
+					if (entity_does_not_have<ComponentToIgnore>(entity.second) && entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
+					{
+						// It matches!
+						callback(entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
+					}
+				}
+			}
 		}
 
 		template<typename ...Ts, size_t... I>
