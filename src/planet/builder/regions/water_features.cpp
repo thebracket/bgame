@@ -108,25 +108,25 @@ void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::v
 		auto start_x = 0;
 		auto start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4 -1;
         bengine::line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
-        water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
+        water_spawners.push_back({1, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[1]; ++i) {
         int start_x = REGION_WIDTH-1;
         int start_y = rng.roll_dice(1, REGION_HEIGHT/2) + REGION_HEIGHT/4 -1;
         bengine::line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
-        water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
+        water_spawners.push_back({1, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[2]; ++i) {
         int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4-1;
         int start_y = 0;
         bengine::line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
-        water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
+        water_spawners.push_back({1, (start_y * REGION_WIDTH) + start_x});
     }
     for (int i=0; i<river_entry[3]; ++i) {
         int start_x = rng.roll_dice(1, REGION_WIDTH/2) + REGION_WIDTH/4-1;
         int start_y = REGION_HEIGHT-1;
         bengine::line_func(start_x, start_y, midpoint_x, midpoint_y, dig_river);
-        water_spawners.push_back({2, (start_y * REGION_WIDTH) + start_x});
+        water_spawners.push_back({1, (start_y * REGION_WIDTH) + start_x});
     }
 
     // Run confluence to the exit
@@ -137,7 +137,7 @@ void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::v
         if (river_exit == 3) { end_x = rng.roll_dice(1, REGION_WIDTH/2)+REGION_WIDTH/4; end_y = 0; }
         if (river_exit == 4) { end_x = rng.roll_dice(1, REGION_WIDTH/2)+REGION_WIDTH/4; end_y = REGION_HEIGHT; }
         bengine::line_func(midpoint_x, midpoint_y, end_x, end_y, dig_exit_river);
-        water_spawners.push_back({3, (end_y * REGION_WIDTH) + end_x});
+        water_spawners.push_back({0, (end_y * REGION_WIDTH) + end_x});
     }
 
     // Actually dig out the rivers
@@ -151,8 +151,8 @@ void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::v
     // 2 - Dig down - the rivers are (lowest-point - depth)
     for (const auto &t : dig_targets) {
         if (!t.second.has_water_already) {
-            heightmap[t.first] = t.second.altitude - t.second.depth;
-            pooled_water[t.first] = (t.second.depth-1)*10;
+            heightmap[t.first] = min_altitude;
+            pooled_water[t.first] = 10;
         }
     }
 }

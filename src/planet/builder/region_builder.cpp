@@ -56,7 +56,7 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
     lay_strata(heightmap, biome, strata, rng, pooled_water, water_spawners);
 
     // Build ramps and beaches
-    build_ramps();
+    build_ramps(pooled_water);
     build_beaches();
 
     // Determine crash site

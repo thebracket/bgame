@@ -6,11 +6,11 @@
 
 using namespace region;
 
-void build_ramps() noexcept {
+void build_ramps(const std::vector<uint8_t> pooled_water) noexcept {
     for (int y=1; y<REGION_HEIGHT-1; ++y) {
         for (int x=1; x<REGION_WIDTH-1; ++x) {
             const int z = ground_z(x,y);
-            if (region::tile_type(mapidx(x,y,z)) == tile_type::FLOOR) {
+            if (region::tile_type(mapidx(x,y,z)) == tile_type::FLOOR && pooled_water[(y*REGION_WIDTH)+x]==0) {
                 bool is_ramp = false;
                 if (region::tile_type(mapidx(x,y-1,z+1)) == tile_type::FLOOR) is_ramp = true;
                 if (region::tile_type(mapidx(x,y+1,z+1)) == tile_type::FLOOR) is_ramp = true;
