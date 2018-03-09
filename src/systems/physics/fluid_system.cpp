@@ -9,6 +9,8 @@
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../global_assets/game_ecs.hpp"
+#include "../../bengine/gl_include.hpp"
+#include "../../global_assets/shader_storage.hpp"
 
 using namespace bengine;
 using namespace region;
@@ -16,145 +18,96 @@ using namespace tile_flags;
 
 namespace systems {
 	namespace fluids {
-		std::vector<bool> water_stable(REGION_TILES_COUNT);
 
-		int cycle = 1;
+		bool made_water_level_ssbo = false;
+		unsigned int water_level_ssbo;
+		unsigned int flags_idx;
+		unsigned int water_idx;
+		unsigned int offset_idx;
 
-		inline void do_cell(const int &x, const int &y, const int &z, const int &idx, bool &did_something)
+		void copy_to_shader()
 		{
-			water_stable[idx] = true;
+			/*
+			if (!made_water_level_ssbo)
+			{
+				glGenBuffers(1, &water_level_ssbo);
+				made_water_level_ssbo = true;
 
-			const auto idx_below = mapidx(x, y, z - 1);
-			// Is there space below? If so, fall
-			if (!flag(idx_below, SOLID) && water_level(idx_below)<10) {
-				// Move a water cell down
-				add_water(idx_below);
-				remove_water(idx);
-				calc_render(idx);
-				calc_render(idx_below);
-				did_something = true;
-			}
-			else {
-				const uint8_t my_water_level = water_level(idx);
-				const int idx_west = mapidx(x - 1, y, z);
-				const int idx_east = mapidx(x + 1, y, z);
-				const int idx_north = mapidx(x, y - 1, z);
-				const int idx_south = mapidx(x, y + 1, z);
-				if (x>0 && !flag(idx_west, SOLID) && water_level(idx_west)<my_water_level && water_level(idx_west)<10) {
-					add_water(idx_west);
-					remove_water(idx);
-					calc_render(idx);
-					calc_render(idx_west);
-					did_something = true;
-					chunks::mark_chunk_dirty_by_tileidx(idx);
-				}
-				else if (x<REGION_WIDTH - 1 && !flag(idx_east, SOLID) && water_level(idx_east)<my_water_level && water_level(idx_east)<10) {
-					add_water(idx_east);
-					remove_water(idx);
-					calc_render(idx);
-					calc_render(idx_east);
-					did_something = true;
-					chunks::mark_chunk_dirty_by_tileidx(idx);
-				}
-				else if (y>0 && !flag(idx_north, SOLID) && water_level(idx_north)<my_water_level && water_level(idx_north)<10) {
-					add_water(idx_north);
-					remove_water(idx);
-					calc_render(idx);
-					calc_render(idx_north);
-					did_something = true;
-					chunks::mark_chunk_dirty_by_tileidx(idx);
-				}
-				else if (y<REGION_HEIGHT - 1 && !flag(idx_south, SOLID) && water_level(idx_south)<my_water_level && water_level(idx_south)<10) {
-					add_water(idx_south);
-					remove_water(idx);
-					calc_render(idx);
-					calc_render(idx_south);
-					did_something = true;
-					chunks::mark_chunk_dirty_by_tileidx(idx);
-				}
-			}
+				glBindBuffer(GL_SHADER_STORAGE_BUFFER, water_level_ssbo);
+				glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(uint32_t) * region::get_water_level()->size(), &region::get_water_level()->operator[](0), GL_DYNAMIC_COPY);
+				glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-			// Mark as unstable
-			if (did_something) {
-				const int idx_west = mapidx(x - 1, y, z);
-				const int idx_east = mapidx(x + 1, y, z);
-				const int idx_north = mapidx(x, y - 1, z);
-				const int idx_south = mapidx(x, y + 1, z);
-				const int idx_down = mapidx(x, y, z - 1);
-				const int idx_up = mapidx(x, y, z + 1);
-				water_stable[idx] = false;
-				if (x>0 && water_level(idx_west)>0) water_stable[idx_west] = false;
-				if (x<REGION_WIDTH - 1 && water_level(idx_east)>0) water_stable[idx_east] = false;
-				if (y>0 && water_level(idx_north)>0) water_stable[idx_north] = false;
-				if (y<REGION_HEIGHT - 1 && water_level(idx_south)>0) water_stable[idx_south] = false;
-				if (z>0 && water_level(idx_down)>0) water_stable[idx_down] = false;
-				if (z<REGION_DEPTH - 1 && water_level(idx_up)>0) water_stable[idx_up] = false;
+				flags_idx = glGetProgramResourceIndex(assets::fluid_shader, GL_SHADER_STORAGE_BLOCK, "terrain_flags");
+				water_idx = glGetProgramResourceIndex(assets::fluid_shader, GL_SHADER_STORAGE_BLOCK, "water_level");
+				offset_idx = glGetUniformLocation(assets::fluid_shader, "offset");
 			}
+			else
+			{
+				glBindBuffer(GL_SHADER_STORAGE_BUFFER, water_level_ssbo);
+				GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+				memcpy(p, &region::get_water_level()->operator[](0), sizeof(uint32_t) * region::get_water_level()->size());
+				glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+			}*/
+
 		}
 
-		inline void do_layer(const int &z, bool &did_something) {
-			for (int y = 1; y<REGION_HEIGHT - 1; ++y) {
-				for (int x = 1; x<REGION_WIDTH - 1; ++x) {
-					const auto idx = mapidx(x, y, z);
-					if (water_level(idx)>0 && !water_stable[idx]) {
-						do_cell(x, y, z, idx, did_something);
-					}
-				}
-			}
+		void copy_back_to_world()
+		{
+			/*
+			glMemoryBarrier(GL_ALL_BARRIER_BITS);
+			
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, water_level_ssbo);
+			GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
+			memcpy(&region::get_water_level()->operator[](0), p, sizeof(uint32_t) * REGION_TILES_COUNT);
+			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+			glCheckError();
+			*/
 		}
 
-		void do_fluids()
+		static unsigned offset_counter = 0;
+
+		static void run_compute_shader()
 		{
-			bool did_something = false;
+			/*
+			glUseProgram(assets::fluid_shader);
 
-			int start_z, end_z;
+			glShaderStorageBlockBinding(assets::fluid_shader, flags_idx, 4);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, chunks::flags_ssbo);
 
-			constexpr int ONE_QUARTER = REGION_DEPTH / 4;
-			constexpr int ONE_HALF = REGION_DEPTH / 2;
-			constexpr int THREE_QUARTERS = ONE_QUARTER * 3;
-			int C = cycle % 4;
-			switch (C) {
-			case 0: { start_z = 2; end_z = ONE_QUARTER; } break;
-			case 1: { start_z = ONE_QUARTER; end_z = ONE_HALF; } break;
-			case 2: { start_z = ONE_HALF; end_z = THREE_QUARTERS; } break;
-			case 3: { start_z = THREE_QUARTERS; end_z = REGION_DEPTH - 1; } break;
-			}
+			glShaderStorageBlockBinding(assets::fluid_shader, water_idx, 5);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, water_level_ssbo);
+			
+			glUniform1ui(offset_idx, offset_counter);
 
-			for (int z = start_z; z<end_z; ++z) {
-				do_layer(z, did_something);
-			}
-			++cycle;
+			constexpr unsigned offset_max = REGION_DEPTH-1;
+			constexpr auto x_runs = REGION_WIDTH;
+			constexpr auto y_runs = REGION_HEIGHT;
+			constexpr auto z_runs = 1;
+			glMemoryBarrier(GL_ALL_BARRIER_BITS);
+			glDispatchCompute(x_runs, y_runs, z_runs);
 
-			if (did_something) {
-				//emit(map_dirty_message{});
-				//emit(map_rerender_message{});
-			}
-
-			each<water_spawner_t, position_t>([](entity_t &e, water_spawner_t &w, position_t &pos) {
-				const auto idx = mapidx(pos.x, pos.y, pos.z);
-				if (w.spawner_type == 1 || w.spawner_type == 2) {
-					// TODO: When rainfall is implemented, type 1 only spawns when it rains
-					if (water_level(idx) < 10) {
-						set_water_level(idx, 10);
-						chunks::mark_chunk_dirty_by_tileidx(idx);
+			bool has_water = false;
+			auto count = 0;
+			while (!has_water && count < REGION_DEPTH) {
+				++offset_counter;
+				offset_counter = offset_counter % offset_max;
+				for (auto y = 0; y < REGION_HEIGHT; ++y) {
+					for (auto x = 0; x < REGION_WIDTH; ++x) {
+						const auto idx = mapidx(x, y, offset_counter);
+						if (region::water_level(idx) > 0) has_water = true;
 					}
 				}
-				else {
-					// Type 3 removes water - used to make rivers flow downhill
-					if (water_level(idx) > 0) {
-						set_water_level(idx, 0);
-						chunks::mark_chunk_dirty_by_tileidx(idx);
-					}
-				}
-			});
+				++count;
+			}
+			*/
 		}
 
 		void run(const double &duration_ms) {
 
-			// This is too slow
-			/*for (std::size_t i = 0; i<REGION_TILES_COUNT; ++i) {
-				if (water_stable[i] && water_level(i) == 1 && rng.roll_dice(1, 6) == 6) set_water_level(i, 0);
-			}*/
+			run_compute_shader();
+
+			// Evaporation
+			// Swimming/drowning
 
 			each<position_t>([](entity_t &e, position_t &pos) {
 				if (water_level(mapidx(pos)) > 7) {

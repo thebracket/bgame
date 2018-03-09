@@ -68,6 +68,11 @@ namespace region {
 		return &current_region->tile_flags;
 	}
 
+	std::vector<uint8_t> * get_water_level()
+	{
+		return &current_region->water_level;
+	}
+
 	int ground_z(const int x, const int y) {
 		int z = REGION_DEPTH - 1;
 		bool hit_ground = false;

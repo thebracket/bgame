@@ -36,6 +36,7 @@ namespace assets {
 	extern std::unique_ptr<ascii_light_shader_t> ascii_light_shader;
 	extern unsigned int skyshader;
 	extern std::unique_ptr<skylight_shader_t> skylight_shader;
+	extern unsigned int fluid_shader;
 
 	void initialize_shaders();
 }

@@ -57,7 +57,16 @@ namespace systems {
 				debug::show_profiler = !debug::show_profiler;
 			}},
 			wish_t{ "parallax", [] { config::game_config.parallax = !config::game_config.parallax; }},
-			wish_t{ "lighting", [] { config::game_config.disable_lighting = !config::game_config.disable_lighting; } }
+			wish_t{ "lighting", [] { config::game_config.disable_lighting = !config::game_config.disable_lighting; } },
+			wish_t{ "sploosh", [] {
+				for (int y=0; y<REGION_HEIGHT; ++y)
+				{
+					for (int x=0; x<REGION_WIDTH; ++x)
+					{
+						region::set_water_level(mapidx(x, y, REGION_DEPTH - 2), 10);
+					}
+				}
+			}}
 		};
 
 		static void make_wish(const std::string &wish) {

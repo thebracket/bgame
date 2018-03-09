@@ -32,7 +32,8 @@ namespace assets {
 	std::unique_ptr<ascii_base_shader_t> ascii_shader;
 	std::unique_ptr<ascii_light_shader_t> ascii_light_shader;
 	std::unique_ptr<skylight_shader_t> skylight_shader;
-	extern unsigned int skyshader = 0;
+	unsigned int skyshader = 0;
+	unsigned int fluid_shader = 0;
 
 	void initialize_shaders()
 	{
@@ -55,5 +56,6 @@ namespace assets {
 		ascii_light_shader = std::make_unique<ascii_light_shader_t>();
 		skyshader = load_shaders("game_assets/shaders45/skyshader_vertex.glsl", "game_assets/shaders45/skyshader_fragment.glsl");
 		skylight_shader = std::make_unique<skylight_shader_t>();
+		fluid_shader = load_shaders("game_assets/shaders45/compute/fluid_flow.glsl");
 	}
 }

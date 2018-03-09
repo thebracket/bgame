@@ -101,6 +101,8 @@ namespace region {
      * Water
      */
 
+	std::vector<uint8_t> * get_water_level();
+
     /* Get the water level at a specified cell */
     uint8_t water_level(const int idx);
 
