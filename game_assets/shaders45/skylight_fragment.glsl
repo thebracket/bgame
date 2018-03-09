@@ -12,7 +12,7 @@ uniform sampler2D ao_tex;
 uniform vec3 camera_position;
 uniform vec3 light_color;
 
-layout (std430, binding=4) buffer terrain_flags
+layout (std430, binding=4) readonly buffer terrain_flags
 { 
     uint flags[];
 } terrainFlags;

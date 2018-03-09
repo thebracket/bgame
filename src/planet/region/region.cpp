@@ -6,6 +6,7 @@
 #include "../../bengine/serialization_utils.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../../bengine/bitset.hpp"
+#include "../../systems/physics/fluid_system.hpp"
 
 using namespace tile_flags;
 
@@ -176,6 +177,7 @@ namespace region {
     }
 
     void set_water_level(const int idx, const uint8_t level) {
+		systems::fluids::water_dirty = true;
         current_region->water_level[idx] = level;
     }
 
@@ -197,10 +199,12 @@ namespace region {
     }
 
     void add_water(const int idx) {
+		systems::fluids::water_dirty = true;
         if (current_region->water_level[idx] < 10) ++current_region->water_level[idx];
     }
 
     void remove_water(const int idx) {
+		systems::fluids::water_dirty = true;
         if (current_region->water_level[idx]>0) --current_region->water_level[idx];
     }
 

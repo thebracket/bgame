@@ -12,15 +12,14 @@
 #include "../../bengine/gl_include.hpp"
 #include "../shaders/chunk_shader.hpp"
 #include "../ubo/first_stage_ubo.hpp"
+#include "../../systems/physics/fluid_system.hpp"
 
 namespace render {
 	static unsigned int water_vao = 0;
 	static unsigned int water_vbo = 0;
 	static int n_elements_water_elements = 0;
 	bool reset_wet_vao = true;
-	bool made_water_noise = false;
 	static uint8_t wc = 0;
-	static std::array<float, REGION_WIDTH * REGION_HEIGHT> noise_level;
 
 	void build_water_geometry() {
 		++wc;
@@ -28,32 +27,11 @@ namespace render {
 
 		n_elements_water_elements = 0;
 
-		if (!made_water_noise) {
-			constexpr unsigned int octaves = 5;
-			constexpr float persistence = 0.5F;
-			constexpr float frequency = 4.0F;
-
-			FastNoise noise;
-			noise.SetNoiseType(FastNoise::GradientFractal);
-			noise.SetFractalType(FastNoise::FBM);
-			noise.SetFractalOctaves(octaves);
-			noise.SetFractalGain(persistence);
-			noise.SetFractalLacunarity(frequency);
-
-			int idx = 0;
-			for (int y = 0; y < REGION_HEIGHT; ++y) {
-				for (int x = 0; x < REGION_WIDTH; ++x) {
-					noise_level[idx] = noise.GetGradientFractal(x, y);
-					++idx;
-				}
-			}
-
-			made_water_noise = true;
-		}
-
 		// Generate GL resources if needed
 		if (water_vao == 0) glGenVertexArrays(1, &water_vao);
 		if (water_vbo == 0) glGenBuffers(1, &water_vbo);
+
+		if (!systems::fluids::water_dirty) return;
 
 		// Build the cursor geometry
 		std::vector<float> data;
@@ -68,13 +46,11 @@ namespace render {
 					if (waterlvl > 0) {
 						const float water_offset = static_cast<float>(waterlvl) / 10.0f;
 						const auto[x, y, z] = idxmap(idx);
-						const float X = static_cast<float>(x);
-						const float Y = static_cast<float>(y);
-						const float Z = static_cast<float>(z);
-						const std::size_t perturb_idx = (y * REGION_WIDTH) + x + wc % (REGION_WIDTH * REGION_HEIGHT);
-						const float perturb = noise_level[perturb_idx];
+						const auto X = static_cast<float>(x);
+						const auto Y = static_cast<float>(y);
+						const auto Z = static_cast<float>(z);
 
-						n_elements_water_elements += chunks::add_cube_geometry(data, X, Y, Z, 1.0f, 1.0f, 12, water_offset + perturb);
+						n_elements_water_elements += chunks::add_water_geometry(data, X, Y, Z, 1.0f, 1.0f, 12, water_offset);
 					}
 				}
 			}

@@ -11,6 +11,7 @@
 #include "../../global_assets/game_ecs.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../global_assets/shader_storage.hpp"
+#include "../gui/particle_system.hpp"
 
 using namespace bengine;
 using namespace region;
@@ -19,94 +20,106 @@ using namespace tile_flags;
 namespace systems {
 	namespace fluids {
 
-		bool made_water_level_ssbo = false;
-		unsigned int water_level_ssbo;
-		unsigned int flags_idx;
-		unsigned int water_idx;
-		unsigned int offset_idx;
-
-		void copy_to_shader()
+		bool water_dirty = true;
+		
+		struct water_particle_t
 		{
-			/*
-			if (!made_water_level_ssbo)
+			int idx;
+			uint8_t level;
+		};
+		constexpr int MAX_WATER_SIZE = REGION_TILES_COUNT * sizeof(water_particle_t);
+
+		static std::vector<water_particle_t> build_water_as_particles()
+		{
+			std::vector<water_particle_t> water;
+			for (auto i=0; i < REGION_TILES_COUNT; ++i)
 			{
-				glGenBuffers(1, &water_level_ssbo);
-				made_water_level_ssbo = true;
-
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, water_level_ssbo);
-				glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(uint32_t) * region::get_water_level()->size(), &region::get_water_level()->operator[](0), GL_DYNAMIC_COPY);
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-				flags_idx = glGetProgramResourceIndex(assets::fluid_shader, GL_SHADER_STORAGE_BLOCK, "terrain_flags");
-				water_idx = glGetProgramResourceIndex(assets::fluid_shader, GL_SHADER_STORAGE_BLOCK, "water_level");
-				offset_idx = glGetUniformLocation(assets::fluid_shader, "offset");
-			}
-			else
-			{
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, water_level_ssbo);
-				GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-				memcpy(p, &region::get_water_level()->operator[](0), sizeof(uint32_t) * region::get_water_level()->size());
-				glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-			}*/
-
-		}
-
-		void copy_back_to_world()
-		{
-			/*
-			glMemoryBarrier(GL_ALL_BARRIER_BITS);
-			
-			glBindBuffer(GL_SHADER_STORAGE_BUFFER, water_level_ssbo);
-			GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-			memcpy(&region::get_water_level()->operator[](0), p, sizeof(uint32_t) * REGION_TILES_COUNT);
-			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-			glCheckError();
-			*/
-		}
-
-		static unsigned offset_counter = 0;
-
-		static void run_compute_shader()
-		{
-			/*
-			glUseProgram(assets::fluid_shader);
-
-			glShaderStorageBlockBinding(assets::fluid_shader, flags_idx, 4);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, chunks::flags_ssbo);
-
-			glShaderStorageBlockBinding(assets::fluid_shader, water_idx, 5);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, water_level_ssbo);
-			
-			glUniform1ui(offset_idx, offset_counter);
-
-			constexpr unsigned offset_max = REGION_DEPTH-1;
-			constexpr auto x_runs = REGION_WIDTH;
-			constexpr auto y_runs = REGION_HEIGHT;
-			constexpr auto z_runs = 1;
-			glMemoryBarrier(GL_ALL_BARRIER_BITS);
-			glDispatchCompute(x_runs, y_runs, z_runs);
-
-			bool has_water = false;
-			auto count = 0;
-			while (!has_water && count < REGION_DEPTH) {
-				++offset_counter;
-				offset_counter = offset_counter % offset_max;
-				for (auto y = 0; y < REGION_HEIGHT; ++y) {
-					for (auto x = 0; x < REGION_WIDTH; ++x) {
-						const auto idx = mapidx(x, y, offset_counter);
-						if (region::water_level(idx) > 0) has_water = true;
-					}
+				const auto wl = water_level(i);
+				if (wl > 0)
+				{
+					water.emplace_back(water_particle_t{ 
+						i,
+						wl
+					});
 				}
-				++count;
 			}
-			*/
+			water_dirty = false;
+			return water;
+		}
+
+		static void water_swap(const int &idx, const int &dest_idx)
+		{
+			const auto my_level = region::water_level(idx);
+			const auto their_level = region::water_level(dest_idx);
+			const auto amount_to_move = 1;
+			region::set_water_level(idx, my_level - amount_to_move);
+			region::set_water_level(dest_idx, their_level + amount_to_move);
 		}
 
 		void run(const double &duration_ms) {
+			// Water creation and destruction
 
-			run_compute_shader();
+			// Build particle list
+			const auto wp = build_water_as_particles();
+			const auto evaporation_roll = (rng.roll_dice(1, 20) == 1);
 
-			// Evaporation
+			// Water falling, evaporation and so on
+			for (const auto &w : wp)
+			{
+				const auto[x, y, z] = idxmap(w.idx);
+				const auto idx_below = w.idx - 65536;
+				const auto idx_west = w.idx - 1;
+				const auto idx_east = w.idx + 1;
+				const auto idx_north = w.idx - 256;
+				const auto idx_south = w.idx + 256;
+
+				if (region::flag(w.idx, SOLID))
+				{
+					// Water shouldn't be here - remove it
+					region::set_water_level(w.idx, 0);
+
+				}
+				else {
+					// Can it fall?
+					if (z > 1 && !region::flag(idx_below, SOLID) && !region::flag(w.idx, CAN_STAND_HERE) && region::water_level(idx_below) < 10)
+					{
+						// It can fall
+						water_swap(w.idx, idx_below);
+						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+					}
+					else if (x > 1 && !region::flag(idx_west, SOLID) && region::water_level(idx_west) < 10)
+					{
+						// It can go west
+						water_swap(w.idx, idx_west);
+						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+					}
+					else if (x < REGION_WIDTH-1 && !region::flag(idx_east, SOLID) && region::water_level(idx_east) < 10)
+					{
+						// It can go west
+						water_swap(w.idx, idx_east);
+						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+					}
+					else if (y > 1 && !region::flag(idx_north, SOLID) && region::water_level(idx_north) < 10)
+					{
+						// It can go west
+						water_swap(w.idx, idx_north);
+						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+					}
+					else if (y < REGION_HEIGHT-1 && !region::flag(idx_south, SOLID) && region::water_level(idx_south) < 10)
+					{
+						// It can go west
+						water_swap(w.idx, idx_south);
+						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+					}
+					else if (evaporation_roll && w.level == 1)
+					{
+						// Remove the water - disabled for now
+						set_water_level(w.idx, 0);
+						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+					}
+				}
+			}
+
 			// Swimming/drowning
 
 			each<position_t>([](entity_t &e, position_t &pos) {
