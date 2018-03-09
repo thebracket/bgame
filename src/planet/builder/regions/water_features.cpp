@@ -151,8 +151,8 @@ void just_add_water(planet_t &planet, std::vector<uint8_t> &pooled_water, std::v
     // 2 - Dig down - the rivers are (lowest-point - depth)
     for (const auto &t : dig_targets) {
         if (!t.second.has_water_already) {
-            heightmap[t.first] = min_altitude;
-            pooled_water[t.first] = 10;
+            heightmap[t.second.idx] = min_altitude-1;
+            pooled_water[t.second.idx] = 20;
         }
     }
 }

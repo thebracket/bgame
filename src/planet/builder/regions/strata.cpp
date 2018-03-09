@@ -171,11 +171,12 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
                         }
                     }
 
-                    while (w > 0) {
-                        set_water_level(mapidx(x,y,Z), 10);
-                        w -= 10;
-                        ++Z;
-                    }
+					set_water_level(mapidx(x, y, Z), 10);
+                    //while (w > 0) {
+                    //    set_water_level(mapidx(x,y,Z), 10);
+                    //    w -= 10;
+                    //    ++Z;
+                    //}
                 } else {
 
                     set_water_level(mapidx(x,y,z-1), 0);

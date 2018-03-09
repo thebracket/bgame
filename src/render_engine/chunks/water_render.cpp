@@ -24,14 +24,14 @@ namespace render {
 	void build_water_geometry() {
 		++wc;
 		if (water_vao > 0 && wc % 5 != 0) return;
+		//if (!systems::fluids::water_dirty) return;
+		systems::fluids::water_dirty = false;
 
 		n_elements_water_elements = 0;
 
 		// Generate GL resources if needed
 		if (water_vao == 0) glGenVertexArrays(1, &water_vao);
 		if (water_vbo == 0) glGenBuffers(1, &water_vbo);
-
-		if (!systems::fluids::water_dirty) return;
 
 		// Build the cursor geometry
 		std::vector<float> data;
@@ -50,7 +50,7 @@ namespace render {
 						const auto Y = static_cast<float>(y);
 						const auto Z = static_cast<float>(z);
 
-						n_elements_water_elements += chunks::add_water_geometry(data, X, Y, Z, 1.0f, 1.0f, 12, water_offset);
+						n_elements_water_elements += chunks::add_water_geometry(data, X, Y, Z, 1.0f, 1.0f, 12, waterlvl);
 					}
 				}
 			}

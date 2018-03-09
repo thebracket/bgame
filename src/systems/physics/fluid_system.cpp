@@ -41,7 +41,6 @@ namespace systems {
 					});
 				}
 			}
-			water_dirty = false;
 			return water;
 		}
 
