@@ -85,37 +85,37 @@ namespace systems {
 					{
 						// It can fall
 						water_swap(w.idx, idx_below);
-						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+						//particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
 					}
 					else if (x > 1 && !region::flag(idx_west, SOLID) && region::water_level(idx_west) < 10)
 					{
 						// It can go west
 						water_swap(w.idx, idx_west);
-						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+						//particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
 					}
 					else if (x < REGION_WIDTH-1 && !region::flag(idx_east, SOLID) && region::water_level(idx_east) < 10)
 					{
 						// It can go west
 						water_swap(w.idx, idx_east);
-						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+						//particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
 					}
 					else if (y > 1 && !region::flag(idx_north, SOLID) && region::water_level(idx_north) < 10)
 					{
 						// It can go west
 						water_swap(w.idx, idx_north);
-						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+						//particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
 					}
 					else if (y < REGION_HEIGHT-1 && !region::flag(idx_south, SOLID) && region::water_level(idx_south) < 10)
 					{
 						// It can go west
 						water_swap(w.idx, idx_south);
-						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+						//particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
 					}
 					else if (evaporation_roll && w.level == 1)
 					{
-						// Remove the water - disabled for now
+						// Remove the water
 						set_water_level(w.idx, 0);
-						particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
+						//particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
 					}
 				}
 			}
