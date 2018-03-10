@@ -46,7 +46,7 @@ namespace region {
 		std::vector<uint8_t> tile_vegetation_lifecycle;
 		std::vector<uint32_t> stockpile_id;
 		std::vector<bengine::bitset<tile_flag_type>> tile_flags;
-		std::vector<uint8_t> water_level;
+		std::vector<uint32_t> water_level;
 		std::vector<render::ascii::glyph_t> veg_render_cache_ascii;
 
 		void tile_recalc_all();
@@ -69,7 +69,7 @@ namespace region {
 		return &current_region->tile_flags;
 	}
 
-	std::vector<uint8_t> * get_water_level()
+	std::vector<uint32_t> * get_water_level()
 	{
 		return &current_region->water_level;
 	}
@@ -90,7 +90,7 @@ namespace region {
 		return z;
 	}
 
-	uint8_t water_level(const int idx) {
+	uint32_t water_level(const int idx) {
 		return current_region->water_level[idx];
 	}
 
@@ -176,7 +176,7 @@ namespace region {
         current_region->tile_vegetation_lifecycle[idx] = lifecycle;
     }
 
-    void set_water_level(const int idx, const uint8_t level) {
+    void set_water_level(const int idx, const uint32_t level) {
 		systems::fluids::water_dirty = true;
         current_region->water_level[idx] = level;
     }

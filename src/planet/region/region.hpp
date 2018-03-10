@@ -101,13 +101,13 @@ namespace region {
      * Water
      */
 
-	std::vector<uint8_t> * get_water_level();
+	std::vector<uint32_t> * get_water_level();
 
     /* Get the water level at a specified cell */
-    uint8_t water_level(const int idx);
+    uint32_t water_level(const int idx);
 
     /* Set the water level for a cell. */
-    void set_water_level(const int idx, const uint8_t level);
+    void set_water_level(const int idx, const uint32_t level);
 
     /* Add water to a cell. */
     void add_water(const int idx);

@@ -23,7 +23,7 @@ namespace render {
 
 	void build_water_geometry() {
 		++wc;
-		if (water_vao > 0 && wc % 5 != 0) return;
+		//if (water_vao > 0 && wc % 5 != 0) return;
 		systems::fluids::water_dirty = false;
 
 		n_elements_water_elements = 0;
@@ -41,9 +41,8 @@ namespace render {
 					const int chunkidx = chunks::chunk_id_by_world_pos(x, y, z);
 					if (visible_chunk_set.find(chunkidx) == visible_chunk_set.end()) break;
 					const int idx = mapidx(x, y, z);
-					const uint8_t waterlvl = region::water_level(idx);
+					const auto waterlvl = region::water_level(idx);
 					if (waterlvl > 0) {
-						const float water_offset = static_cast<float>(waterlvl) / 10.0f;
 						const auto[x, y, z] = idxmap(idx);
 						const auto X = static_cast<float>(x);
 						const auto Y = static_cast<float>(y);

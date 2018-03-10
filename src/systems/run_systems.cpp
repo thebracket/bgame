@@ -302,6 +302,7 @@ namespace systems {
 
         // Items that only run if the simulation has ticked
         if (major_tick) {
+			fluids::copy_to_gpu();
 			logging::age_log();
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
 			if (hour_elapsed) run_system(settler_spawner::run, duration_ms, SETTLER_SPAWNER_SYSTEM);
@@ -359,6 +360,7 @@ namespace systems {
 			run_system(visibility::run, duration_ms, VISIBILITY_SYSTEM);
 			run_system(vegetation::run, duration_ms, VEGETATION_SYSTEM);
 			if (day_elapsed) run_system(item_wear::run, duration_ms, ITEM_WEAR_SYSTEM);
+			fluids::copy_from_gpu();
         }
 		run_system(design_mode::run, duration_ms, DESIGN_MODE_SYSTEM);
 		if (game_master_mode == DESIGN) {
