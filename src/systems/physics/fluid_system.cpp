@@ -30,12 +30,19 @@ namespace systems {
 		unsigned int water_level_idx;
 		unsigned int water_particles_idx;
 		
-		static std::vector<GLuint> build_water_as_particles()
+		static std::vector<GLuint> build_water_as_particles_with_evaporation()
 		{
+			const auto evaporate = rng.roll_dice(1, 100) == 1;
+
 			std::vector<GLuint> water;
 			for (auto i=0; i < REGION_TILES_COUNT; ++i)
 			{
-				const auto wl = water_level(i);
+				auto wl = water_level(i);
+				if (wl == 1 && evaporate)
+				{
+					wl = 0;
+					region::set_water_level(i, 0);
+				}
 				if (wl > 0)
 				{
 					water.emplace_back(static_cast<GLuint>(i));
@@ -66,7 +73,7 @@ namespace systems {
 				}
 			});
 
-			wp = build_water_as_particles();
+			wp = build_water_as_particles_with_evaporation();
 
 			if (!made_ssbos)
 			{
@@ -108,15 +115,6 @@ namespace systems {
 			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 		}
 
-		static void water_swap(const int &idx, const int &dest_idx)
-		{
-			const auto my_level = region::water_level(idx);
-			const auto their_level = region::water_level(dest_idx);
-			const auto amount_to_move = 1;
-			region::set_water_level(idx, my_level - amount_to_move);
-			region::set_water_level(dest_idx, their_level + amount_to_move);
-		}
-
 		void run(const double &duration_ms) {
 			glUseProgram(assets::fluid_shader);
 
@@ -130,71 +128,6 @@ namespace systems {
 			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, water_particles_ssbo);
 
 			glDispatchCompute(wp.size(), 1, 1);
-
-			/*
-			constexpr auto add_particles = true;			
-
-			// Build particle list
-			const auto wp = build_water_as_particles();
-			const auto evaporation_roll = (rng.roll_dice(1, 20) == 1);
-
-			// Water falling, evaporation and so on
-			for (const auto &w : wp)
-			{
-				const auto[x, y, z] = idxmap(w.idx);
-				const auto idx_below = w.idx - 65536;
-				const auto idx_west = w.idx - 1;
-				const auto idx_east = w.idx + 1;
-				const auto idx_north = w.idx - 256;
-				const auto idx_south = w.idx + 256;
-
-				if (region::flag(w.idx, SOLID))
-				{
-					// Water shouldn't be here - remove it
-					region::set_water_level(w.idx, 0);
-
-				}
-				else {
-					// Can it fall?
-					if (z > 1 && !region::flag(idx_below, SOLID) && !region::flag(w.idx, CAN_STAND_HERE) && region::water_level(idx_below) < 10)
-					{
-						// It can fall
-						water_swap(w.idx, idx_below);
-						if constexpr (add_particles) particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
-					}
-					else if (x > 1 && !region::flag(idx_west, SOLID) && region::water_level(idx_west) < 10)
-					{
-						// It can go west
-						water_swap(w.idx, idx_west);
-						if constexpr (add_particles)particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
-					}
-					else if (x < REGION_WIDTH-1 && !region::flag(idx_east, SOLID) && region::water_level(idx_east) < 10)
-					{
-						// It can go west
-						water_swap(w.idx, idx_east);
-						if constexpr (add_particles)particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
-					}
-					else if (y > 1 && !region::flag(idx_north, SOLID) && region::water_level(idx_north) < 10)
-					{
-						// It can go west
-						water_swap(w.idx, idx_north);
-						if constexpr (add_particles)particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
-					}
-					else if (y < REGION_HEIGHT-1 && !region::flag(idx_south, SOLID) && region::water_level(idx_south) < 10)
-					{
-						// It can go west
-						water_swap(w.idx, idx_south);
-						if constexpr (add_particles)particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
-					}
-					else if (evaporation_roll && w.level == 1)
-					{
-						// Remove the water
-						set_water_level(w.idx, 0);
-						if constexpr (add_particles)particles::emit_particle(x, y, z, 0.25f, 0.25f, 1.0f, 1.0f, particles::PARTICLE_SMOKE);
-					}
-				}
-			}
-			*/
 
 			// Swimming/drowning
 
