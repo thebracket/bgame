@@ -35,7 +35,7 @@ namespace render {
 		// Build the cursor geometry
 		std::vector<float> data;
 
-		for (int z = camera_position->region_z - 10; z < camera_position->region_z; ++z) {
+		for (int z = camera_position->region_z - 10; z < camera_position->region_z+1; ++z) {
 			for (int y = 0; y < REGION_HEIGHT; ++y) {
 				for (int x = 0; x < REGION_WIDTH; ++x) {
 					const int chunkidx = chunks::chunk_id_by_world_pos(x, y, z);
@@ -48,7 +48,8 @@ namespace render {
 						const auto Y = static_cast<float>(y);
 						const auto Z = static_cast<float>(z);
 
-						n_elements_water_elements += chunks::add_water_geometry(data, X, Y, Z, 1.0f, 1.0f, 12, waterlvl);
+						//n_elements_water_elements += chunks::add_water_geometry(data, X, Y, Z, 1.0f, 1.0f, 12, waterlvl);
+						n_elements_water_elements += chunks::add_cube_geometry(data, X, Y, Z, 1.0f, 1.0f, 12, (static_cast<float>(waterlvl)/10.0f) - 0.02);
 					}
 				}
 			}

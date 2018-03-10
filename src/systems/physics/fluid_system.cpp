@@ -32,17 +32,12 @@ namespace systems {
 		
 		static std::vector<GLuint> build_water_as_particles_with_evaporation()
 		{
-			const auto evaporate = rng.roll_dice(1, 100) == 1;
+			//const auto evaporate = rng.roll_dice(1, 100) == 1;
 
 			std::vector<GLuint> water;
 			for (auto i=0; i < REGION_TILES_COUNT; ++i)
 			{
 				auto wl = water_level(i);
-				if (wl == 1 && evaporate)
-				{
-					wl = 0;
-					region::set_water_level(i, 0);
-				}
 				if (wl > 0)
 				{
 					water.emplace_back(static_cast<GLuint>(i));

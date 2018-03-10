@@ -282,7 +282,7 @@ namespace chunks {
 		const float x1 = x0 + width;
 		const float y0 = -0.5f + z + water_y;
 		//const float y1 = y0 + 1.0f; // We don't use y1 for floors
-		const float z0 = -0.5f + y + water_y;
+		const float z0 = -0.5f + y;
 		const float z1 = z0 + height;
 		const float TI = texture_id;
 		constexpr float T0 = 0.0f;
