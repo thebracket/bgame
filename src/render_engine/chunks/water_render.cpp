@@ -24,7 +24,6 @@ namespace render {
 	void build_water_geometry() {
 		++wc;
 		if (water_vao > 0 && wc % 5 != 0) return;
-		//if (!systems::fluids::water_dirty) return;
 		systems::fluids::water_dirty = false;
 
 		n_elements_water_elements = 0;
