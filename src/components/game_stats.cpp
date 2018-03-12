@@ -177,7 +177,7 @@ std::tuple<skill_roll_result_t, int, int> skill_roll_ext(const int settler_id, g
 	const int total = luck_component + natural_ability + person_skill;
 	std::tuple<skill_roll_result_t, int, int> result;
 	std::get<1>(result) = luck_component;
-	std::get<2>(result) = difficulty - total;
+	std::get<2>(result) = total - difficulty;
 
 	glog(log_target::GAME, log_severity::INFO, "{0} roll, difficulty {1}. 1d20 = {2}, + {3} (ability) + {4} (skill) = {5}", skill_name, difficulty, luck_component, natural_ability, person_skill, total);
 

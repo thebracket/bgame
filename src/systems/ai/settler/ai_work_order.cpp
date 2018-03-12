@@ -223,6 +223,7 @@ namespace systems {
 					auto [skill_check, roll, difference] = skill_roll_ext(e.id, *stats, rng, finder->skill, finder->difficulty);
 
 					if (skill_check >= SUCCESS) {
+						//std::cout << "Difference (success): " << difference << "\n";
 						// Quality and wear
 						uint8_t wear = 100;
 						uint8_t quality = 3;

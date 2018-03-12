@@ -178,19 +178,21 @@ namespace systems {
 				std::map<std::string, int> items;
 				each<item_t, position_t>([&world_x, &world_y, &world_z, &items](entity_t &entity, item_t &item, position_t &pos) {
 					if (pos.x == world_x && pos.y == world_y && pos.z == world_z) {
-						auto finder = items.find(item.item_name);
+						std::string claimed;
+						if (entity.component<claimed_t>() != nullptr) claimed = " (c)";
+						std::string quality;
+						std::string wear;
+
+						auto qual = entity.component<item_quality_t>();
+						auto wr = entity.component<item_wear_t>();
+						if (qual) quality = std::string(" (") + qual->get_quality_text() + std::string(" quality)");
+						if (wr) wear = std::string(" (") + wr->get_wear_text() + std::string(")");
+						const auto name = item.item_name + claimed + quality + wear;
+
+						auto finder = items.find(name);
 						if (finder == items.end()) {
-							std::string claimed;
-							if (entity.component<claimed_t>() != nullptr) claimed = " (c)";
-							std::string quality;
-							std::string wear;
 
-							auto qual = entity.component<item_quality_t>();
-							auto wr = entity.component<item_wear_t>();
-							if (qual) quality = std::string(" (") + qual->get_quality_text() + std::string(" quality)");
-							if (wr) wear = std::string(" (") + wr->get_wear_text() + std::string(")");
-
-							items[item.item_name + claimed + quality + wear] = 1;
+							items[name] = 1;
 						}
 						else {
 							++finder->second;
