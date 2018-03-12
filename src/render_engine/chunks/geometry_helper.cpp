@@ -50,7 +50,7 @@ namespace chunks {
 	}
 
 	unsigned int get_cube_tex(const int &idx) {
-		auto tt = region::tile_type(idx);
+		const auto tt = region::tile_type(idx);
 		if (tt == tile_type::TREE_TRUNK) return 6;
 		if (tt == tile_type::TREE_LEAF) return 9;
 
@@ -59,7 +59,7 @@ namespace chunks {
 		if (!material) return 3;
 
 		unsigned int use_id = 3;
-		if (region::flag(idx, CONSTRUCTION)) {
+		if (!region::flag(idx, CONSTRUCTION)) {
 			use_id = (unsigned int)material->constructed_texture_id;
 		}
 		else {
