@@ -170,6 +170,11 @@ namespace render {
 
 	static std::map<int, std::vector<composite_cache_t>> composite_cache;
 
+	void invalidate_composite_cache_for_entity(const int &id)
+	{
+		composite_cache.erase(id);
+	}
+
 	static void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 		const auto species = e.component<species_t>();
 		if (!species) return;

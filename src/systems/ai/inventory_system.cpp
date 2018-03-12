@@ -109,6 +109,11 @@ namespace systems {
 				if (!E) return;
 				claimed_items.enqueue(item_claimed_message{ msg.id, false });
 
+				auto carried_by = E->component<item_carried_t>();
+				if (carried_by)
+				{
+					render::invalidate_composite_cache_for_entity(carried_by->carried_by);
+				}
 				delete_component<item_carried_t>(msg.id);
 
 				auto item = E->component<item_t>();
@@ -129,6 +134,7 @@ namespace systems {
 				}
 				delete_component<item_stored_t>(msg.id);
 				entity(msg.id)->assign(item_carried_t{ msg.loc, msg.collector });
+				render::invalidate_composite_cache_for_entity(msg.collector);
 				if (entity(msg.id)->component<claimed_t>() == nullptr) entity(msg.id)->assign(claimed_t{ msg.collector });
 				dirty = true;
 				render::models_changed = true;

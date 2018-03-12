@@ -15,4 +15,6 @@ namespace render {
 
 	extern bool models_changed;
 	extern std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
+
+	void invalidate_composite_cache_for_entity(const int &id);
 }
