@@ -173,60 +173,6 @@ namespace chunks {
 		constexpr float T0 = 0.0f;
 		const float TW = width;
 		const float TH = height;
-	
-		/*
-		 * Lookup table data - commented out but kept in case I need the reference again
-		 
-		const auto tangent1 = calculate_tangent(
-			x0, y0, z0, T0, T0,
-			x1, y1, z0, TW, T0,
-			x1, y0, z0, TW, TH,
-			0.0f, 0.0f, 1.0f
-		);
-		const auto tangent2 = calculate_tangent(
-			x0, y0, z1, T0, T0,
-			x1, y0, z1, TW, T0,
-			x1, y1, z1, TW, TH,
-			0.0f, 0.0f, -1.0f
-		);
-		const auto tangent3 = calculate_tangent(
-			x0, y1, z1, T0, T0,
-			x0, y1, z0, TW, T0,
-			x0, y0, z0, TW, TH,
-			-1.0f, 0.0f, 0.0f
-		);
-		const auto tangent4 = calculate_tangent(
-			x1, y1, z1, T0, T0,
-			x1, y0, z0, TW, TH,
-			x1, y1, z0, TW, T0,
-			1.0f, 0.0f, 0.0f
-		);
-		const auto tangent5 = calculate_tangent(
-			x0, y0, z0, T0, T0,
-			x1, y0, z0, TW, T0,
-			x1, y0, z1, TW, TH,
-			0.0f, -1.0f, 0.0f
-		);
-		const auto tangent6 = calculate_tangent(
-			x0, y1, z0, T0, T0,
-			x1, y1, z1, TW, T0,
-			x1, y1, z0, TW, TH,
-			0.0f, 1.0f, 0.0f
-		);
-		std::cout << "Tangent for a back is equal to: " << tangent1.first.x << ", " << tangent1.first.y << ", " << tangent1.first.z << "\n";
-		std::cout << "Tangent for a front is equal to: " << tangent2.first.x << ", " << tangent2.first.y << ", " << tangent2.first.z << "\n";
-		std::cout << "Tangent for a left is equal to: " << tangent3.first.x << ", " << tangent3.first.y << ", " << tangent3.first.z << "\n";
-		std::cout << "Tangent for a right is equal to: " << tangent4.first.x << ", " << tangent4.first.y << ", " << tangent4.first.z << "\n";
-		std::cout << "Tangent for a bottom is equal to: " << tangent5.first.x << ", " << tangent5.first.y << ", " << tangent5.first.z << "\n";
-		std::cout << "Tangent for a top is equal to: " << tangent6.first.x << ", " << tangent6.first.y << ", " << tangent6.first.z << "\n";
-
-		std::cout << "Bitangent for a back is equal to: " << tangent1.second.x << ", " << tangent1.second.y << ", " << tangent1.second.z << "\n";
-		std::cout << "Bitangent for a front is equal to: " << tangent2.second.x << ", " << tangent2.second.y << ", " << tangent2.second.z << "\n";
-		std::cout << "Bitangent for a left is equal to: " << tangent3.second.x << ", " << tangent3.second.y << ", " << tangent3.second.z << "\n";
-		std::cout << "Bitangent for a right is equal to: " << tangent4.second.x << ", " << tangent4.second.y << ", " << tangent4.second.z << "\n";
-		std::cout << "Bitangent for a bottom is equal to: " << tangent5.second.x << ", " << tangent5.second.y << ", " << tangent5.second.z << "\n";
-		std::cout << "Bitangent for a top is equal to: " << tangent6.second.x << ", " << tangent6.second.y << ", " << tangent6.second.z << "\n";
-		*/
 
 		v.insert(v.end(), {
 			x0, y0, z0, z, T0, T0, TI,  NORMAL_BACK,
@@ -308,7 +254,7 @@ namespace chunks {
 		const float x0 = -0.5f + x;
 		const float x1 = x0 + width;
 		const float y0 = -0.5f + z;
-		//const float y1 = y0 + 1.0f; // We don't use y1 for floors
+		const float y1 = y0 + 0.5f; // We don't use y1 for floors
 		const float z0 = -0.5f + y;
 		const float z1 = z0 + height;
 		const float TI = texture_id;
@@ -316,14 +262,8 @@ namespace chunks {
 		const float TW = width;
 		const float TH = height;
 		constexpr float ceiling_gap = 0.001f;
-
-		const glm::vec3 a(x1, y0 + ne, z1);
-		const glm::vec3 b(x1, y0 + se, z0);
-		const glm::vec3 c(x0, y0 + sw, z0);
-		const auto dir = glm::cross(b - a, c - a);
-		const auto normal = glm::normalize(dir);
-		//std::cout << normal.x << "," << normal.y << "," << normal.z << "\n";
-
+		
+		/*
 		v.insert(v.end(), {
 			// Upwards facing floor
 			x1, y0 + ne, z1, z, TW, TH, TI,  NORMAL_UP,
@@ -334,5 +274,51 @@ namespace chunks {
 			x1, y0 + ne, z1, z, TW, TH, TI,  NORMAL_UP,
 		});
 		return 6;
+		*/
+
+		v.insert(v.end(), {
+			x0, y0, z0, z, T0, T0, TI,  NORMAL_BACK,
+			x1, y1, z0, z, TW, TH, TI,  NORMAL_BACK,
+			x1, y0, z0, z, TW, T0, TI,  NORMAL_BACK,
+			x1, y1, z0, z, TW, TH, TI,  NORMAL_BACK,
+			x0, y0, z0, z, T0, T0, TI,  NORMAL_BACK,
+			x0, y1, z0, z, T0, TH, TI,  NORMAL_BACK,
+
+			x0, y0, z1, z, T0, T0, TI,  NORMAL_FRONT,
+			x1, y0, z1, z, TW, T0, TI,  NORMAL_FRONT,
+			x1, y1, z1, z, TW, TH, TI,  NORMAL_FRONT,
+			x1, y1, z1, z, TW, TH, TI,  NORMAL_FRONT,
+			x0, y1, z1, z, T0, TH, TI,  NORMAL_FRONT,
+			x0, y0, z1, z, T0, T0, TI,  NORMAL_FRONT,
+
+			x0, y1, z1, z, TW, TH, TI, NORMAL_LEFT,
+			x0, y1, z0, z, TW, T0, TI, NORMAL_LEFT,
+			x0, y0, z0, z, T0, T0, TI, NORMAL_LEFT,
+			x0, y0, z0, z, T0, T0, TI, NORMAL_LEFT,
+			x0, y0, z1, z, T0, TH, TI, NORMAL_LEFT,
+			x0, y1, z1, z, TW, TH, TI, NORMAL_LEFT,
+
+			x1, y1, z1, z, TW, TH, TI,  NORMAL_RIGHT,
+			x1, y0, z0, z, T0, T0, TI,  NORMAL_RIGHT,
+			x1, y1, z0, z, TW, T0, TI,  NORMAL_RIGHT,
+			x1, y0, z0, z, T0, T0, TI,  NORMAL_RIGHT,
+			x1, y1, z1, z, TW, TH, TI,  NORMAL_RIGHT,
+			x1, y0, z1, z, T0, TH, TI,  NORMAL_RIGHT,
+
+			x0, y0, z0, z, TW, TH, TI,  NORMAL_BOTTOM,
+			x1, y0, z0, z, TW, T0, TI,  NORMAL_BOTTOM,
+			x1, y0, z1, z, T0, T0, TI,  NORMAL_BOTTOM,
+			x1, y0, z1, z, T0, T0, TI,  NORMAL_BOTTOM,
+			x0, y0, z1, z, T0, TH, TI,  NORMAL_BOTTOM,
+			x0, y0, z0, z, TW, TH, TI,  NORMAL_BOTTOM,
+
+			x1, y1, z1, z, TW, TH, TI,  NORMAL_UP,
+			x1, y1, z0, z, TW, T0, TI,  NORMAL_UP,
+			x0, y1, z0, z, T0, T0, TI,  NORMAL_UP,
+			x0, y1, z0, z, T0, T0, TI,  NORMAL_UP,
+			x0, y1, z1, z, T0, TH, TI,  NORMAL_UP,
+			x1, y1, z1, z, TW, TH, TI,  NORMAL_UP,
+			});
+		return 36;
 	}
 }

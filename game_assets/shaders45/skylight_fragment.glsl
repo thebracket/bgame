@@ -150,6 +150,6 @@ void main()
 
     vec3 Lo = vec3(0.0); // Light Output
     Lo += gameLight(albedo, N, V, F0, roughness, metallic, light_position.xyz, position.xyz, light_color.rgb);
-
-    FragColor = is_lit * Lo;
+    float y_difference = 1.0 - ((camera_position.y - position.y) * 0.1);
+    FragColor = is_lit * Lo * y_difference;
 }
