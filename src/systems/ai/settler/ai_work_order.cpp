@@ -73,6 +73,27 @@ namespace systems {
 					if (!autojob) {
 						autojob = find_automatic_reaction_task(e.id, w);
 						//if (autojob) std::cout << "Automatic reaction added\n";
+						// TODO: Remove from work queue
+						bool found = false;
+						for (auto &j : building_designations->build_orders)
+						{
+							if (j.second == w.reaction_target.reaction_tag && j.first > 1)
+							{
+								found = true;
+								--j.first;
+							}
+						}
+						if (!found)
+						{
+							building_designations->build_orders.erase(
+								std::remove_if(
+									building_designations->build_orders.begin(),
+									building_designations->build_orders.end(),
+									[&w](const auto &b) { return w.reaction_target.reaction_tag == b.second; }
+								),
+								building_designations->build_orders.end()
+							);
+						}
 					}
 
 					if (!autojob) {

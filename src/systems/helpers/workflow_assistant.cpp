@@ -20,26 +20,22 @@ namespace workflow {
 			const auto workshop_entity = entity(outerit.first);
 			if (workshop_entity)
 			{
-				const auto is_claimed = workshop_entity->component<claimed_t>();
-				if (is_claimed == nullptr)
-				{
-					// Iterate available automatic reactions
-					for (const auto &reaction_name : outerit.second) {
-						auto reaction = get_reaction_def(reaction_name);
-						if (reaction != nullptr) {
-							// Are the inputs available?
-							auto available = true;
-							for (auto &input : reaction->inputs) {
-								const auto n_available = inventory::available_items_by_reaction_input(worker_id, input);
-								if (n_available < input.quantity) {
-									available = false;
-								};
-							}
+				// Iterate available automatic reactions
+				for (const auto &reaction_name : outerit.second) {
+					auto reaction = get_reaction_def(reaction_name);
+					if (reaction != nullptr) {
+						// Are the inputs available?
+						auto available = true;
+						for (auto &input : reaction->inputs) {
+							const auto n_available = inventory::available_items_by_reaction_input(worker_id, input);
+							if (n_available < input.quantity) {
+								available = false;
+							};
+						}
 
-							if (available) {
-								// Components are available, build job and return it
-								return true;
-							}
+						if (available) {
+							// Components are available, build job and return it
+							return true;
 						}
 					}
 				}
@@ -60,38 +56,33 @@ namespace workflow {
 			const auto workshop_entity = entity(outerit.first);
 			if (workshop_entity)
 			{
-				const auto is_claimed = workshop_entity->component<claimed_t>();
-				if (is_claimed == nullptr)
-				{
-					// Iterate available automatic reactions
-					for (const auto &reaction_name : outerit.second) {
-						const auto reaction = get_reaction_def(reaction_name);
-						if (reaction != nullptr) {
-							// Are the inputs available?
-							auto available = true;
-							std::vector<std::pair<int, bool>> components;
-							for (auto &input : reaction->inputs) {
-								const auto n_available = inventory::available_items_by_reaction_input(worker_id, input);
-								if (n_available < input.quantity) {
-									available = false;
-								}
-								else {
-									// Claim an item and push its # to the list
-									const auto item_id = inventory::claim_item_by_reaction_input(input, worker_id);
-									components.emplace_back(std::make_pair(item_id, false));
-								}
-							}
-
-							if (available) {
-								// Components are available, build job and return it
-								result = std::make_unique<reaction_task_t>(outerit.first, reaction->name, reaction->tag, components);
-								workshop_entity->assign(claimed_t{worker_id});
-								return result;
+				// Iterate available automatic reactions
+				for (const auto &reaction_name : outerit.second) {
+					const auto reaction = get_reaction_def(reaction_name);
+					if (reaction != nullptr) {
+						// Are the inputs available?
+						auto available = true;
+						std::vector<std::pair<int, bool>> components;
+						for (auto &input : reaction->inputs) {
+							const auto n_available = inventory::available_items_by_reaction_input(worker_id, input);
+							if (n_available < input.quantity) {
+								available = false;
 							}
 							else {
-								for (const auto comp : components) {
-									inventory::unclaim_by_id(comp.first);
-								}
+								// Claim an item and push its # to the list
+								const auto item_id = inventory::claim_item_by_reaction_input(input, worker_id);
+								components.emplace_back(std::make_pair(item_id, false));
+							}
+						}
+
+						if (available) {
+							// Components are available, build job and return it
+							result = std::make_unique<reaction_task_t>(outerit.first, reaction->name, reaction->tag, components);
+							return result;
+						}
+						else {
+							for (const auto comp : components) {
+								inventory::unclaim_by_id(comp.first);
 							}
 						}
 					}
@@ -116,10 +107,8 @@ namespace workflow {
 			std::size_t workshop_id;
 			each<building_t>([&possible, &reaction, &workshop_id](entity_t &e, building_t &b) {
 				if (b.complete && b.tag == reaction->workshop) {
-					if (e.component<claimed_t>() == nullptr) {
-						workshop_id = e.id;
-						possible = true;
-					}
+					workshop_id = e.id;
+					possible = true;
 				}
 			});
 			if (!possible) break;
@@ -150,7 +139,6 @@ namespace workflow {
 				if (available) {
 					// Components are available, build job and return it
 					result = std::make_unique<reaction_task_t>(workshop_id, reaction->name, reaction->tag, components);
-					entity(workshop_id)->assign(claimed_t{worker_id});
 					--order.first;
 					systems::workflow_system::update_workflow();
 					return result;
