@@ -207,11 +207,12 @@ namespace systems {
 
 				// Keyboard shortcuts
 				if (game_master_mode == PLAY) {
+					const auto pressed_control = glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
 					if (is_key_down(GLFW_KEY_U, false)) game_master_mode = UNITS;
 					if (is_key_down(GLFW_KEY_C, false)) game_master_mode = CIVS;
-					if (is_key_down(GLFW_KEY_W, false)) game_master_mode = WORKFLOW;
+					if (!pressed_control && is_key_down(GLFW_KEY_W, false)) game_master_mode = WORKFLOW;
 					if (is_key_down(GLFW_KEY_J, false)) game_master_mode = JOB_CENTER_MODE;
-					if (is_key_down(GLFW_KEY_W, false)) game_master_mode = WISHMODE;
+					if (pressed_control && is_key_down(GLFW_KEY_W, false)) game_master_mode = WISHMODE;
 					if (is_key_down(GLFW_KEY_APOSTROPHE)) render::depth_test_render = !render::depth_test_render;
 				}
 			} else

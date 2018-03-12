@@ -161,12 +161,19 @@ namespace render {
 		if (health && health->unconscious) return true;
 		return false;
 	}
+	
+	struct composite_cache_t
+	{
+		int voxel_model;
+		float r, g, b;
+	};
+
+	static std::map<int, std::vector<composite_cache_t>> composite_cache;
 
 	static void render_settler(bengine::entity_t &e, renderable_composite_t &r, position_t &pos) {
 		const auto species = e.component<species_t>();
 		if (!species) return;
 
-		// For now, everything uses voxel 49!
 		if (pos.z > camera_position->region_z - 10 && pos.z <= camera_position->region_z) {
 			const auto chunkidx = chunks::chunk_id_by_world_pos(pos.x, pos.y, pos.z);
 			if (visible_chunk_set.find(chunkidx) != visible_chunk_set.end()) {
@@ -181,9 +188,21 @@ namespace render {
 				const auto rot2 = is_upright ? 1.0f : 0.0f;
 				const auto rot3 = 0.0f;
 
+				const auto cache_finder = composite_cache.find(e.id);
+				if (cache_finder != composite_cache.end())
+				{
+					for (const auto &c : cache_finder->second)
+					{
+						add_voxel_model(c.voxel_model, inner_x, inner_y, inner_z, c.r, c.g, c.b, rotation, rot1, rot2, rot3);
+					}
+					return;
+				}
+				std::vector<composite_cache_t> cc;
+
 				// Clip check passed - add the model
 				add_voxel_model(49, inner_x, inner_y, inner_z, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b, rotation, rot1, rot2, rot3);
-
+				cc.emplace_back(composite_cache_t{ 49, species->skin_color.second.r, species->skin_color.second.g, species->skin_color.second.b });
+				
 				// Add hair
 				int hair_vox;
 				switch (species->hair_style) {
@@ -197,15 +216,19 @@ namespace render {
 				}
 				if (hair_vox > 0) {
 					add_voxel_model(hair_vox, inner_x, inner_y, inner_z, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b, rotation, rot1, rot2, rot3);
-				}
+					cc.emplace_back(composite_cache_t{ hair_vox, species->hair_color.second.r, species->hair_color.second.g, species->hair_color.second.b });
+				}				
 
 				// Add items
 				using namespace bengine;
-				each<item_t, item_carried_t>([&pos, &e, &inner_x, &inner_y, &inner_z, &rotation, &rot1, &rot2, &rot3](entity_t &E, item_t &item, item_carried_t &carried) {
+				each<item_t, item_carried_t>([&pos, &e, &inner_x, &inner_y, &inner_z, &rotation, &rot1, &rot2, &rot3, &cc](entity_t &E, item_t &item, item_carried_t &carried) {
 					if (carried.carried_by == e.id && item.clothing_layer > 0) {
 						add_voxel_model(item.clothing_layer, inner_x, inner_y, inner_z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b, rotation, rot1, rot2, rot3);
+						cc.emplace_back(composite_cache_t{ item.clothing_layer, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b });
 					}
 				});
+
+				composite_cache.insert(std::make_pair(e.id, cc));
 			}
 		}
 	}

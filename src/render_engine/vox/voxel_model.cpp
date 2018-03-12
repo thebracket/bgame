@@ -254,6 +254,7 @@ namespace vox {
 	void start_buffer_accumulation()
 	{
 		instance_buffer.clear();
+		instance_buffer.reserve(1000);
 	}
 
 	void finish_instance_buffers()
