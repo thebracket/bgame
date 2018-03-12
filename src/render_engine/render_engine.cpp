@@ -57,9 +57,6 @@ namespace render {
         }
     }
 
-	static const glm::mat3 identity_matrix{ 1.0 };
-	static const glm::mat3 normal_matrix = glm::transpose(glm::inverse(identity_matrix));
-
     static void render_chunks() {
 		glDepthMask(GL_FALSE);
         // Use the program
@@ -179,7 +176,7 @@ namespace render {
 		glUniform1i(skylight_shader->world_position, 2);
 		glUniform1i(skylight_shader->ao_tex, 3);
 		glUniform3f(skylight_shader->camera_position, static_cast<float>(camera_position->region_x), static_cast<float>(camera_position->region_z), static_cast<float>(camera_position->region_y));
-		glUniform3f(skylight_shader->light_position, calendar->sun_x, calendar->sun_y + 128.0f, calendar->sun_z);
+		glUniform3f(skylight_shader->light_position, calendar->sun_x, calendar->sun_y, calendar->sun_z);
 		glUniform3f(skylight_shader->light_color, calendar->sun_r, calendar->sun_g, calendar->sun_b);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -203,9 +200,9 @@ namespace render {
 
 		// Render it as the moon
 		glUniform3f(skylight_shader->light_position, -calendar->sun_x, -calendar->sun_y, -calendar->sun_z);
-		glUniform3f(skylight_shader->light_color, 0.2f, 0.2f, 0.7f);
+		glUniform3f(skylight_shader->light_color, 0.1f, 0.1f, 0.4f);
 		render_buffer_quad();
-		glCheckError();
+		glCheckError();	
 
 		glDisable(GL_BLEND);
     }

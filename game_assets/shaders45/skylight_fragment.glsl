@@ -130,7 +130,6 @@ void main()
     uint above_ground = terrainFlags.flags[idx] & 2048;
     if (above_ground == 0) discard;
 
-
     // Lighting
     vec3 base_color = texture(albedo_tex, TexCoords).rgb;
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
@@ -145,7 +144,7 @@ void main()
     // Use https://learnopengl.com/code_viewer_gh.php?code=src/6.pbr/1.2.lighting_textured/1.2.pbr.fs
     vec3 albedo = base_color;
     vec3 N = normal;
-    vec3 V = normalize(camera_position - position);
+    vec3 V = normalize(camera_position - vec3(128, 64, 128));
     vec3 F0 = vec3(0.04); 
     F0 = mix(F0, albedo, metallic);
 
