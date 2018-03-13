@@ -55,7 +55,8 @@ namespace systems {
 				if (sp_entity) {
 					auto sp = sp_entity->component<stockpile_t>();
 					if (sp) {
-						each_stockpile([&sp](stockpile_def_t * it) {
+						auto count = 0;
+						each_stockpile([&sp, &count](stockpile_def_t * it) {
 							if (sp->category.test(it->index)) {
 								const std::string sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->name;
 								if (ImGui::Button(sp_label.c_str())) {
@@ -68,6 +69,9 @@ namespace systems {
 									sp->category.set(it->index);
 								}
 							}
+							if (count != 5) ImGui::SameLine();
+							++count;
+							count = count % 6;
 						});
 					}
 				}
