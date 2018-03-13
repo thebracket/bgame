@@ -106,6 +106,7 @@ namespace systems {
 		{
 			// Update the stock list
 			if (major_tick) {
+				stock_list.clear();
 				bengine::each<item_t>([](entity_t &e, item_t &i)
 				{
 					const auto finder = stock_list.find(i.item_tag);
