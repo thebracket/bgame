@@ -32,7 +32,7 @@ namespace systems {
 
 		static bool wo_headings_first_run = true;
 		static std::vector<bengine::table_heading_t> wo_headings{
-			{ "Reaction", -1.0f },{ "Workshop", -1.0f },{ "Inputs", -1.0f },{ "Outputs", -1.0f } ,{ "Options", -1.0f }
+			{ "Reaction", -1.0f },{ "Workshop", -1.0f },{ "Inputs", -1.0f },{ "Outputs", -1.0f }, {"# Queued", -1.0f} ,{ "Options", -1.0f }
 		};
 
 		static void render_queue()
@@ -57,7 +57,8 @@ namespace systems {
 					bengine::end_zebra_col();
 
 					bengine::begin_zebra_col(zebra);
-					if (ImGui::SmallButton(btn_close.c_str()))
+					const std::string btn_id = btn_close + std::string("##") + order.second;
+					if (ImGui::SmallButton(btn_id.c_str()))
 					{
 						if (order.first > 1)
 						{
@@ -89,88 +90,124 @@ namespace systems {
 
 		}
 
+		char filter[254];
+		std::string filter_str;
+
+		static bool meets_filter(const std::pair<std::string, std::string> &r)
+		{
+			if (filter_str.empty()) return true;
+			auto tmp = r.second;
+			std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
+			return tmp.find(filter_str) != std::string::npos;
+		}
+
 		static void render_available()
 		{
+			std::map<std::string, int> orders;
+			for (const auto &j : building_designations->build_orders)
+			{
+				orders.insert(std::make_pair(j.second, j.first));
+			}
+
 			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "The following jobs are available to be added to the work queue.");
+			ImGui::Text("%s", "Filter: ");
+			ImGui::SameLine();
+			ImGui::InputText("##filter", (char *)&filter, 254);
+			filter_str = std::string(filter);
+			std::transform(filter_str.begin(), filter_str.end(), filter_str.begin(), ::tolower);
+
 			auto zebra = true;
 			auto available_reactions = inventory::get_available_reactions();
 			if (!available_reactions.empty()) {
 				bengine::begin_table(wo_headings_first_run, wo_headings, "workorder_list_grid", true);
 				for (const auto &r : available_reactions)
 				{
-					bengine::zebra_row(zebra);
-					bengine::begin_zebra_col(zebra);
-					ImGui::Text("%s", r.second.c_str());
-					bengine::end_zebra_col();
+					if (meets_filter(r)) {
+						bengine::zebra_row(zebra);
+						bengine::begin_zebra_col(zebra);
+						ImGui::Text("%s", r.second.c_str());
+						bengine::end_zebra_col();
 
-					bengine::begin_zebra_col(zebra);
-					const auto rf = get_reaction_def(r.first);
-					const auto bf = get_building_def(rf->workshop);
-					ImGui::Text("%s", bf->name.c_str());
-					bengine::end_zebra_col();
+						bengine::begin_zebra_col(zebra);
+						const auto rf = get_reaction_def(r.first);
+						const auto bf = get_building_def(rf->workshop);
+						ImGui::Text("%s", bf->name.c_str());
+						bengine::end_zebra_col();
 
-					bengine::begin_zebra_col(zebra);
-					std::string inputs;
-					for (const auto &i : rf->inputs)
-					{
-						const auto ifinder = get_item_def(i.tag);
-						if (i.required_material>0)
+						bengine::begin_zebra_col(zebra);
+						std::string inputs;
+						for (const auto &i : rf->inputs)
 						{
-							const auto mf = get_material(i.required_material);
-							inputs += std::string("{") + mf->name + std::string("}");
-						}
-						if (i.required_material_type>0)
-						{
-							switch (i.required_material_type)
+							const auto ifinder = get_item_def(i.tag);
+							if (i.required_material > 0)
 							{
-							case CLUSTER_ROCK: inputs += std::string("[rock] "); break;
-							case ROCK: inputs += std::string("[rock] "); break;
-							case SOIL: inputs += std::string("[soil] "); break;
-							case SAND: inputs += std::string("[sand] "); break;
-							case METAL: inputs += std::string("[metal] "); break;
-							case SYNTHETIC: inputs += std::string("[synthetic] "); break;
-							case ORGANIC: inputs += std::string("[organic] "); break;
-							case LEATHER: inputs += std::string("[leather] "); break;
-							case FOOD: inputs += std::string("[food] "); break;
-							case SPICE: inputs += std::string("[spice] "); break;
-							case BLIGHT: inputs += std::string("[blight] "); break;
+								const auto mf = get_material(i.required_material);
+								inputs += std::string("{") + mf->name + std::string("}");
+							}
+							if (i.required_material_type > 0)
+							{
+								switch (i.required_material_type)
+								{
+								case CLUSTER_ROCK: inputs += std::string("[rock] "); break;
+								case ROCK: inputs += std::string("[rock] "); break;
+								case SOIL: inputs += std::string("[soil] "); break;
+								case SAND: inputs += std::string("[sand] "); break;
+								case METAL: inputs += std::string("[metal] "); break;
+								case SYNTHETIC: inputs += std::string("[synthetic] "); break;
+								case ORGANIC: inputs += std::string("[organic] "); break;
+								case LEATHER: inputs += std::string("[leather] "); break;
+								case FOOD: inputs += std::string("[food] "); break;
+								case SPICE: inputs += std::string("[spice] "); break;
+								case BLIGHT: inputs += std::string("[blight] "); break;
+								}
+							}
+							const auto name = ifinder ? ifinder->name : std::string("");
+							inputs += name + std::string(" (x") + std::to_string(i.quantity) + ") ";
+						}
+						if (rf->power_drain > 0) inputs += std::string("Drains ") + std::to_string(rf->power_drain) + std::string(" power. ");
+						ImGui::Text("%s", inputs.c_str());
+						bengine::end_zebra_col();
+
+						bengine::begin_zebra_col(zebra);
+						std::string outputs;
+						for (const auto &i : rf->outputs)
+						{
+							const auto ifinder = get_item_def(i.first);
+							outputs += ifinder->name + std::string(" (x") + std::to_string(i.second) + ") ";
+						}
+						ImGui::Text("%s", outputs.c_str());
+						bengine::end_zebra_col();
+
+						bengine::begin_zebra_col(zebra);
+						const auto qf = orders.find(r.first);
+						if (qf == orders.end()) {
+							ImGui::Text("%s", "0");
+						} else
+						{
+							ImGui::Text("%d", qf->second);
+						}
+						bengine::end_zebra_col();
+
+						bengine::begin_zebra_col(zebra);
+						const std::string btn_id = btn_build + std::string("##") + rf->tag;
+						if (ImGui::SmallButton(btn_id.c_str()))
+						{
+							auto found = false;
+							for (auto &job : building_designations->build_orders)
+							{
+								if (job.second == rf->tag)
+								{
+									found = true;
+									++job.first;
+								}
+							}
+							if (!found)
+							{
+								building_designations->build_orders.emplace_back(std::make_pair(1, rf->tag));
 							}
 						}
-						const auto name = ifinder ? ifinder->name : std::string("");
-						inputs += name + std::string(" (x") + std::to_string(i.quantity) + ") ";
+						bengine::end_zebra_col();
 					}
-					if (rf->power_drain > 0) inputs += std::string("Drains ") + std::to_string(rf->power_drain) + std::string(" power. ");
-					ImGui::Text("%s", inputs.c_str());
-					bengine::end_zebra_col();
-
-					bengine::begin_zebra_col(zebra);
-					std::string outputs;
-					for (const auto &i : rf->outputs)
-					{
-						const auto ifinder = get_item_def(i.first);
-						outputs += ifinder->name + std::string(" (x") + std::to_string(i.second) + ") ";
-					}
-					ImGui::Text("%s", outputs.c_str());
-					bengine::end_zebra_col();
-
-					bengine::begin_zebra_col(zebra);
-					if (ImGui::SmallButton(btn_build.c_str()))
-					{
-						bool found = false;
-						for (auto &job : building_designations->build_orders)
-						{
-							if (job.second == rf->tag)
-							{
-								found = true;
-								++job.first;
-							}
-						}
-						if (!found)
-						{
-							building_designations->build_orders.emplace_back(std::make_pair(1, rf->tag));
-						}
-					}
-					bengine::end_zebra_col();
 				}
 				bengine::end_table();
 			}
