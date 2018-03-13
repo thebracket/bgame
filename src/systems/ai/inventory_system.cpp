@@ -17,6 +17,7 @@
 #include "distance_map_system.hpp"
 #include "../../global_assets/building_designations.hpp"
 #include "../../global_assets/game_ecs.hpp"
+#include "../../bengine/btabs.hpp"
 
 namespace systems {
 	namespace inventory_system {
@@ -27,39 +28,39 @@ namespace systems {
 		};
 
 		struct drop_item_message {
-			drop_item_message() {}
-			drop_item_message(const int &ID, const int &X, const int &Y, const int &Z) : id(ID), x(X), y(Y), z(Z) {}
+			drop_item_message() = default;
+			drop_item_message(const int &new_id, const int &X, const int &Y, const int &Z) : id(new_id), x(X), y(Y), z(Z) {}
 			int id;
 			int x, y, z;
 		};
 
 		struct item_claimed_message {
-			item_claimed_message() {}
+			item_claimed_message() = default;
 			item_claimed_message(const int i, const bool c) : claimed(c), id(i) {}
 			bool claimed;
 			int id;
 		};
 
 		struct pickup_item_message {
-			pickup_item_message() {}
-			pickup_item_message(const int &ID, const std::size_t &holder) : id(ID), collector(holder) {}
-			pickup_item_message(const int &ID, const std::size_t &holder, const item_location_t &LOC) : id(ID), collector(holder), loc(LOC) {}
+			pickup_item_message() = default;
+			pickup_item_message(const int &new_id, const std::size_t &holder) : id(new_id), collector(holder) {}
+			pickup_item_message(const int &new_id, const std::size_t &holder, const item_location_t &LOC) : id(new_id), collector(holder), loc(LOC) {}
 			int id;
 			int collector;
 			item_location_t loc = INVENTORY;
 		};
 
 		struct destroy_item_message {
-			destroy_item_message() {}
-			destroy_item_message(const int ID) : id(ID) {}
+			destroy_item_message() = default;
+			destroy_item_message(const int new_id) : id(new_id) {}
 			int id;
 		};
 
 		struct build_request_message {
 			int x, y, z;
 			buildings::available_building_t building;
-			build_request_message() {}
-			build_request_message(const int X, const int Y, const int Z, const buildings::available_building_t build) : x(X), y(Y), z(Z), building(build) {}
+			build_request_message() = default;
+			build_request_message(const int new_x, const int new_y, const int new_z, const buildings::available_building_t &build) : x(new_x), y(new_y), z(new_z), building(build) {}
 		};
 
 		thread_safe_message_queue<inventory_changed_message> inventory_changes;
@@ -95,11 +96,61 @@ namespace systems {
 			inventory_changes.enqueue(inventory_changed_message{});
 		}
 
-		void building_request(int x, int y, int z, buildings::available_building_t building) {
+		void building_request(const int x, const int y, const int z, const buildings::available_building_t building) {
 			building_requests.enqueue(build_request_message{ x,y,z,building });
 		}
 
+		static std::map<std::string, int> stock_list;
+
+		static void process_standing_orders()
+		{
+			// Update the stock list
+			if (major_tick) {
+				bengine::each<item_t>([](entity_t &e, item_t &i)
+				{
+					const auto finder = stock_list.find(i.item_tag);
+					if (finder == stock_list.end())
+					{
+						stock_list.insert(std::make_pair(i.item_tag, 1));
+					}
+					else
+					{
+						++finder->second;
+					}
+				});
+			}
+
+			for (const auto &order : building_designations->standing_build_orders)
+			{
+				auto already_ordered = false;
+				for (const auto &o : building_designations->build_orders)
+				{
+					if (order.second.second == o.second)
+					{
+						already_ordered = true;
+						goto skipper;
+					}
+				}
+
+			skipper:
+				if (!already_ordered)
+				{
+					// How many do we have in stock?
+					const auto stock_finder = stock_list.find(order.first);
+					const auto in_stock = stock_finder == stock_list.end() ? 0 : stock_finder->second;
+
+					if (in_stock < order.second.first)
+					{
+						// Enqueue a build order if we can
+						building_designations->build_orders.emplace_back(std::make_pair(1, order.second.second));
+					}
+				}
+			}
+		}
+
 		void run(const double &duration_ms) {
+			process_standing_orders();
+
 			inventory_changes.process_all([](inventory_changed_message &msg) {
 				dirty = true;
 			});

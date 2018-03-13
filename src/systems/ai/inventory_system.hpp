@@ -13,7 +13,7 @@ namespace systems {
 		void pickup_item(const int &ID, const std::size_t &holder);
 		void pickup_item(const int &ID, const std::size_t &holder, const item_location_t &LOC);
 		void destroy_item(const int ID);
-		void building_request(int x, int y, int z, buildings::available_building_t building);
+		void building_request(const int x, const int y, const int z, const buildings::available_building_t building);
 		void inventory_has_changed();
 	}
 }

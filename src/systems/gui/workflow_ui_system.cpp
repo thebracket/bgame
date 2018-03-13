@@ -226,7 +226,7 @@ namespace systems {
 
 		static void render_orders()
 		{
-			std::set<std::string> can_build;
+			std::set<std::tuple<std::string, std::string, std::string>> can_build; // Name, reaction tag, item tag
 
 			auto available_reactions = inventory::get_available_reactions();
 			for (const auto &r : available_reactions)
@@ -238,7 +238,7 @@ namespace systems {
 						const auto item_finder = get_item_def(o.first);
 						if (item_finder)
 						{
-							can_build.insert(item_finder->name);
+							can_build.insert(std::make_tuple(item_finder->name, reaction_finder->tag, item_finder->tag));
 						}
 					}
 				}
@@ -250,11 +250,12 @@ namespace systems {
 			{
 				bengine::zebra_row(zebra);
 				bengine::begin_zebra_col(zebra);
-				ImGui::Text("%s", so.first.c_str());
+				const auto item_finder = get_item_def(so.first);
+				ImGui::Text("%s", item_finder->name.c_str());
 				bengine::end_zebra_col();
 
 				bengine::begin_zebra_col(zebra);
-				ImGui::Text("%d", so.second);
+				ImGui::Text("%d", so.second.first);
 				bengine::end_zebra_col();
 
 				bengine::begin_zebra_col(zebra);
@@ -262,13 +263,13 @@ namespace systems {
 				const std::string btn_minus = std::string("-##") + so.first;
 				if (ImGui::SmallButton(btn_plus.c_str()))
 				{
-					++building_designations->standing_build_orders[so.first];
+					++building_designations->standing_build_orders[so.first].first;
 				}
 				ImGui::SameLine();
 				if (ImGui::SmallButton(btn_minus.c_str()))
 				{
-					--building_designations->standing_build_orders[so.first];
-					if (building_designations->standing_build_orders[so.first] == 0)
+					--building_designations->standing_build_orders[so.first].first;
+					if (building_designations->standing_build_orders[so.first].first == 0)
 					{
 						building_designations->standing_build_orders.erase(so.first);
 					}
@@ -278,11 +279,11 @@ namespace systems {
 
 			for (const auto &it : can_build)
 			{
-				const auto finder = building_designations->standing_build_orders.find(it);
+				const auto finder = building_designations->standing_build_orders.find(std::get<2>(it));
 				if (finder == building_designations->standing_build_orders.end()) {
 					bengine::zebra_row(zebra);
 					bengine::begin_zebra_col(zebra);
-					ImGui::Text("%s", it.c_str());
+					ImGui::Text("%s", std::get<0>(it).c_str());
 					bengine::end_zebra_col();
 
 					bengine::begin_zebra_col(zebra);
@@ -290,10 +291,10 @@ namespace systems {
 					bengine::end_zebra_col();
 
 					bengine::begin_zebra_col(zebra);
-					const std::string btn_plus1 = std::string("+##") + it;
+					const std::string btn_plus1 = std::string("+##") + std::get<2>(it);
 					if (ImGui::SmallButton(btn_plus1.c_str()))
 					{
-						building_designations->standing_build_orders.insert(std::make_pair(it, 1));
+						building_designations->standing_build_orders.insert(std::make_pair(std::get<2>(it), std::make_pair(1, std::get<1>(it))));
 					}
 					bengine::end_zebra_col();
 				}

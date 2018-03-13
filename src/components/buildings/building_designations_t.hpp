@@ -10,6 +10,6 @@ struct building_designations_t {
 
 	std::vector<building_designation_t> buildings;
 	std::vector<std::pair<uint8_t, std::string>> build_orders;
-	std::map<std::string, int> standing_build_orders;
+	std::map<std::string, std::pair<int, std::string>> standing_build_orders; // Item, <#/Reaction>
 
 };
