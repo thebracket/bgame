@@ -159,6 +159,7 @@ namespace systems {
 								case FOOD: inputs += std::string("[food] "); break;
 								case SPICE: inputs += std::string("[spice] "); break;
 								case BLIGHT: inputs += std::string("[blight] "); break;
+								default: inputs += std::string("[?]");
 								}
 							}
 							const auto name = ifinder ? ifinder->name : std::string("");
@@ -224,9 +225,9 @@ namespace systems {
 
 		static bengine::btabs_t unit_tabs{
 			{
-				bengine::btab_t{ win_queue, render_queue },
-				bengine::btab_t{ win_available, render_available },
-				bengine::btab_t{ win_orders, render_orders },
+				bengine::btab_t{ win_queue, render_queue, std::make_pair("Q", GLFW_KEY_Q) },
+				bengine::btab_t{ win_available, render_available, std::make_pair("A", GLFW_KEY_A) },
+				bengine::btab_t{ win_orders, render_orders, std::make_pair("O", GLFW_KEY_O) },
 			}
 		};
 
