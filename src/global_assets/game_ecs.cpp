@@ -237,7 +237,7 @@ void serialize(Archive & archive, building_t &b)
 template<class Archive>
 void serialize(Archive & archive, building_designations_t &b)
 {
-	archive(b.buildings, b.build_orders); // serialize things by passing them to the archive
+	archive(b.buildings, b.build_orders, b.standing_build_orders); // serialize things by passing them to the archive
 }
 
 template<class Archive>

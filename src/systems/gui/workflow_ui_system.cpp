@@ -12,6 +12,7 @@
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
+#include <map>
 
 namespace systems {
 	namespace workflow_ui {
@@ -33,6 +34,11 @@ namespace systems {
 		static bool wo_headings_first_run = true;
 		static std::vector<bengine::table_heading_t> wo_headings{
 			{ "Reaction", -1.0f },{ "Workshop", -1.0f },{ "Inputs", -1.0f },{ "Outputs", -1.0f }, {"# Queued", -1.0f} ,{ "Options", -1.0f }
+		};
+
+		static bool so_headings_first_run = true;
+		static std::vector<bengine::table_heading_t> so_headings{
+			{ "Item", -1.0f },{ "# To Keep In Stock", -1.0f },{ "Options", -1.0f }
 		};
 
 		static void render_queue()
@@ -220,7 +226,80 @@ namespace systems {
 
 		static void render_orders()
 		{
-			
+			std::set<std::string> can_build;
+
+			auto available_reactions = inventory::get_available_reactions();
+			for (const auto &r : available_reactions)
+			{
+				const auto reaction_finder = get_reaction_def(r.first);
+				if (reaction_finder) {
+					for (const auto &o : reaction_finder->outputs)
+					{
+						const auto item_finder = get_item_def(o.first);
+						if (item_finder)
+						{
+							can_build.insert(item_finder->name);
+						}
+					}
+				}
+			}
+
+			bengine::begin_table(so_headings_first_run, so_headings, "so_list_grid", true);
+			auto zebra = true;
+			for (const auto &so : building_designations->standing_build_orders)
+			{
+				bengine::zebra_row(zebra);
+				bengine::begin_zebra_col(zebra);
+				ImGui::Text("%s", so.first.c_str());
+				bengine::end_zebra_col();
+
+				bengine::begin_zebra_col(zebra);
+				ImGui::Text("%d", so.second);
+				bengine::end_zebra_col();
+
+				bengine::begin_zebra_col(zebra);
+				const std::string btn_plus = std::string("+##") + so.first;
+				const std::string btn_minus = std::string("-##") + so.first;
+				if (ImGui::SmallButton(btn_plus.c_str()))
+				{
+					++building_designations->standing_build_orders[so.first];
+				}
+				ImGui::SameLine();
+				if (ImGui::SmallButton(btn_minus.c_str()))
+				{
+					--building_designations->standing_build_orders[so.first];
+					if (building_designations->standing_build_orders[so.first] == 0)
+					{
+						building_designations->standing_build_orders.erase(so.first);
+					}
+				}
+				bengine::end_zebra_col();
+			}
+
+			for (const auto &it : can_build)
+			{
+				const auto finder = building_designations->standing_build_orders.find(it);
+				if (finder == building_designations->standing_build_orders.end()) {
+					bengine::zebra_row(zebra);
+					bengine::begin_zebra_col(zebra);
+					ImGui::Text("%s", it.c_str());
+					bengine::end_zebra_col();
+
+					bengine::begin_zebra_col(zebra);
+					ImGui::Text("%s", "0");
+					bengine::end_zebra_col();
+
+					bengine::begin_zebra_col(zebra);
+					const std::string btn_plus1 = std::string("+##") + it;
+					if (ImGui::SmallButton(btn_plus1.c_str()))
+					{
+						building_designations->standing_build_orders.insert(std::make_pair(it, 1));
+					}
+					bengine::end_zebra_col();
+				}
+			}
+
+			bengine::end_table();
 		}
 
 		static bengine::btabs_t unit_tabs{
@@ -241,52 +320,6 @@ namespace systems {
 				game_master_mode = PLAY;
 				show_window = true;
 			}
-
-			/*
-			std::vector<std::string> worklist;
-			for (const std::pair<uint8_t, std::string> &order : building_designations->build_orders) {
-				auto finder = get_reaction_def(order.second);
-				if (finder != nullptr) {
-					worklist.emplace_back(std::to_string(order.first) + std::string(" ") + finder->name);
-				}
-			}
-			std::vector<const char *> work_listbox_items(worklist.size());
-			for (int i = 0; i<worklist.size(); ++i) {
-				work_listbox_items[i] = worklist[i].c_str();
-			}
-
-			ImGui::Begin(win_workflow.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse);
-			ImGui::ListBox("Queued Jobs", &selected_work_item, &work_listbox_items[0], work_listbox_items.size(), 10);
-
-			std::vector<std::string> buildlist;
-			auto available_reactions = inventory::get_available_reactions();
-			for (const auto &reaction : available_reactions) {
-				buildlist.emplace_back(reaction.second);
-			}
-			std::vector<const char *> buildable_listbox_items(buildlist.size());
-			for (int i = 0; i<buildlist.size(); ++i) {
-				buildable_listbox_items[i] = buildlist[i].c_str();
-			}
-
-			ImGui::ListBox("Available Jobs", &selected_build_item, &buildable_listbox_items[0], buildable_listbox_items.size(), 10);
-			if (ImGui::Button(btn_build.c_str())) {
-				const std::string tag = available_reactions[selected_build_item].first;
-				bool found = false;
-				for (auto &order : building_designations->build_orders) {
-					if (order.second == tag) {
-						++order.first;
-						found = true;
-					}
-				}
-				if (!found) building_designations->build_orders.push_back(std::make_pair(1, tag));
-			}
-			ImGui::SameLine();
-			if (ImGui::Button(btn_close.c_str())) {
-				game_master_mode = PLAY;
-			}
-
-			ImGui::End();
-			*/
 		}
 	}
 }
