@@ -1,7 +1,6 @@
-#include "../../global_assets/game_designations.hpp"
+#include "design_stockpiles.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
-#include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../mouse.hpp"
 #include "../../components/stockpile.hpp"
 #include "../../global_assets/game_mode.hpp"
@@ -58,16 +57,20 @@ namespace systems {
 						auto count = 0;
 						each_stockpile([&sp, &count](stockpile_def_t * it) {
 							if (sp->category.test(it->index)) {
+								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f, 0.6f, 0.0f, 1.0f });
 								const std::string sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->name;
 								if (ImGui::Button(sp_label.c_str())) {
 									sp->category.reset(it->index);
 								}
+								ImGui::PopStyleColor();
 							}
 							else {
+								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.6f, 0.0f, 0.0f, 1.0f });
 								const std::string sp_label = std::string(ICON_FA_TIMES) + std::string(" ") + it->name;
 								if (ImGui::Button(sp_label.c_str())) {
 									sp->category.set(it->index);
 								}
+								ImGui::PopStyleColor();
 							}
 							if (count != 5) ImGui::SameLine();
 							++count;
