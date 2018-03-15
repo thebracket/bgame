@@ -681,6 +681,13 @@ void serialize(Archive & archive, designated_miner_t &m)
 	//archive( );
 }
 
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_stockpiles_t &m)
+{
+	// Nothing to save
+	archive( m.tool_id, m.step, m.destination );
+}
+
 namespace bengine {
 	namespace impl
 	{

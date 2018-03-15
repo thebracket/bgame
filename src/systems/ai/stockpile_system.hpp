@@ -8,8 +8,8 @@
 namespace systems {
 	namespace stockpile_system {
 		struct stockpile_info_t {
-			stockpile_info_t() {}
-			stockpile_info_t(const int &ID, const std::bitset<128> &cat) : id(ID), category(cat) {}
+			stockpile_info_t() = default;
+			stockpile_info_t(const int &new_id, const std::bitset<128> &cat) : id(new_id), category(cat) {}
 
 			int id;
 			std::bitset<128> category;
@@ -18,7 +18,7 @@ namespace systems {
 		};
 
 		struct storable_item_t {
-			storable_item_t() {}
+			storable_item_t() = default;
 			storable_item_t(const int &id, const int &dest) : item_id(id), dest_tile(dest) {}
 
 			int item_id;

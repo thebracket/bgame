@@ -834,6 +834,9 @@
     <ClCompile Include="..\..\src\global_assets\game_ecs.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_work_stockpile.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -1876,6 +1879,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\all_components.hpp">
       <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_work_stockpile.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_stockpiles.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

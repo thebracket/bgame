@@ -26,9 +26,9 @@ namespace systems {
 				stockpiles.emplace_back(std::make_pair(e.id, std::string("Stockpile #" + std::to_string(e.id))));
 			});
 			std::vector<const char *> stockpile_listbox_items(stockpiles.size());
-			for (int i = 0; i<stockpiles.size(); ++i) {
+			for (std::size_t i = 0; i<stockpiles.size(); ++i) {
 				stockpile_listbox_items[i] = stockpiles[i].second.c_str();
-				if (i == selected_stockpile) current_stockpile = stockpiles[i].first;
+				if (i == static_cast<size_t>(selected_stockpile)) current_stockpile = stockpiles[i].first;
 			}
 
 			// Stockpiles list
@@ -39,7 +39,7 @@ namespace systems {
 				ImGui::ListBox("## Stockpiles", &selected_stockpile, &stockpile_listbox_items.at(0), stockpile_listbox_items.size(), 10);
 			}
 			if (ImGui::Button("+ Add Stockpile")) {
-				auto sp = create_entity()->assign(stockpile_t{});
+				const auto sp = create_entity()->assign(stockpile_t{});
 				current_stockpile = sp->id;
 			}
 			ImGui::SameLine();
@@ -58,7 +58,7 @@ namespace systems {
 						each_stockpile([&sp, &count](stockpile_def_t * it) {
 							if (sp->category.test(it->index)) {
 								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f, 0.6f, 0.0f, 1.0f });
-								const std::string sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->name;
+								const auto sp_label = std::string(ICON_FA_CHECK) + std::string(" ") + it->name;
 								if (ImGui::Button(sp_label.c_str())) {
 									sp->category.reset(it->index);
 								}
@@ -66,7 +66,7 @@ namespace systems {
 							}
 							else {
 								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.6f, 0.0f, 0.0f, 1.0f });
-								const std::string sp_label = std::string(ICON_FA_TIMES) + std::string(" ") + it->name;
+								const auto sp_label = std::string(ICON_FA_TIMES) + std::string(" ") + it->name;
 								if (ImGui::Button(sp_label.c_str())) {
 									sp->category.set(it->index);
 								}

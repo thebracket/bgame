@@ -89,10 +89,10 @@ namespace systems {
 				if (finder == stockpile_targets.end()) return; // If there's nowhere interested, escape
 				for (const auto &stockpile_id : finder->second) {
 					if (stockpiles[stockpile_id].free_capacity > 0) {
-						--stockpiles[stockpile_id].free_capacity;
+						//--stockpiles[stockpile_id].free_capacity;
 						int destination_idx = *stockpiles[stockpile_id].open_tiles.begin();
-						stockpiles[stockpile_id].open_tiles.erase(destination_idx);
-						storable_items.push_back(storable_item_t{ e.id, destination_idx });
+						//stockpiles[stockpile_id].open_tiles.erase(destination_idx);
+						storable_items.emplace_back(storable_item_t{ e.id, destination_idx });
 						return; // Bail out since we've done this item
 					}
 				}
