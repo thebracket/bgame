@@ -172,6 +172,17 @@ namespace render {
 		}
 
 		static inline glyph_t get_floor_tile(const int &idx) {
+			if (region::stockpile_id(idx) > 0)
+			{
+				auto glyph = get_material_glyph(idx, '178');
+				glyph.r = 0.5;
+				glyph.g = 0.5;
+				glyph.b = 0.5;
+				glyph.bb = 0.0;
+				glyph.bg = 0.0;
+				glyph.br = 0.0;
+				return glyph;
+			}
 			if (region::flag(idx, CONSTRUCTION)) {
 				auto glyph = get_material_glyph(idx, '+');
 				glyph.bb = 0.0;

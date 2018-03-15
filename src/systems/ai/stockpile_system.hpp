@@ -23,6 +23,7 @@ namespace systems {
 
 			int item_id;
 			int dest_tile;
+			bool deleteme = false;
 		};
 
 		extern std::unordered_map<int, stockpile_info_t> stockpiles;

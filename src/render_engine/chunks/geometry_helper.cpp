@@ -20,6 +20,9 @@ namespace chunks {
 	constexpr float NORMAL_BOTTOM = 5.0f;
 
 	unsigned int get_floor_tex(const int &idx) {
+		// If its a stockpile, render it as such
+		if (region::stockpile_id(idx) > 0) return 3; // TODO: Determine texture
+
 		// We no longer hard-code grass.
 		if (region::veg_type(idx) > 0 && !region::flag(idx, CONSTRUCTION)) {
 			switch (region::veg_lifecycle(idx)) {

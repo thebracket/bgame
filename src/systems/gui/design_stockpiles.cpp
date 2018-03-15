@@ -9,6 +9,7 @@
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../global_assets/game_ecs.hpp"
+#include "../../render_engine/chunks/chunks.hpp"
 
 using namespace tile_flags;
 
@@ -89,6 +90,7 @@ namespace systems {
 						if (stockpile_id(idx) == 0) {
 							set_stockpile_id(idx, current_stockpile);
 							calc_render(idx);
+							chunks::mark_chunk_dirty_by_tileidx(idx);
 						}
 						else {
 							current_stockpile = stockpile_id(idx);
@@ -97,6 +99,7 @@ namespace systems {
 					else if (right_click) {
 						set_stockpile_id(idx, 0);
 						calc_render(idx);
+						chunks::mark_chunk_dirty_by_tileidx(idx);
 					}
 				}
 			}

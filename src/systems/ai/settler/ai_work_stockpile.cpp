@@ -22,22 +22,33 @@ namespace systems {
 		inline void find_item(entity_t &e, ai_tag_work_stockpiles_t &h, ai_tag_my_turn_t &t, position_t &pos) {
 			for (auto &sp : stockpile_system::storable_items)
 			{
-				const auto loc = inventory::get_item_location(sp.item_id);
-				h.current_path = find_path(pos, *loc);
-				if (h.current_path->success)
-				{
-					h.tool_id = sp.item_id;
-					const auto stockpile_id = sp.dest_tile;
-					if (stockpile_system::stockpiles[stockpile_id].free_capacity > 0) {
-						--stockpile_system::stockpiles[stockpile_id].free_capacity;
-						h.destination = *stockpile_system::stockpiles[stockpile_id].open_tiles.begin();
-						stockpile_system::stockpiles[stockpile_id].open_tiles.erase(h.destination);
-						h.step = ai_tag_work_stockpiles_t::GOTO_ITEM;
-						return;
+				if (!sp.deleteme) {
+					const auto loc = inventory::get_item_location(sp.item_id);
+					h.current_path = find_path(pos, *loc);
+					if (h.current_path->success)
+					{
+						h.tool_id = sp.item_id;
+						const auto stockpile_id = sp.dest_tile;
+						if (stockpile_system::stockpiles[stockpile_id].free_capacity > 0) {
+							--stockpile_system::stockpiles[stockpile_id].free_capacity;
+							h.destination = *stockpile_system::stockpiles[stockpile_id].open_tiles.begin();
+							stockpile_system::stockpiles[stockpile_id].open_tiles.erase(h.destination);
+							h.step = ai_tag_work_stockpiles_t::GOTO_ITEM;
+							sp.deleteme = true;
+							goto cleanup;
+						}
 					}
 				}
 			}
 			work.cancel_work_tag(e);
+
+			cleanup:
+			stockpile_system::storable_items.erase(
+				std::remove_if(stockpile_system::storable_items.begin(),
+					stockpile_system::storable_items.end(),
+					[](const auto &si) { return si.deleteme; }),
+				stockpile_system::storable_items.end()
+			);
 		}
 
 		inline void goto_item(entity_t &e, ai_tag_work_stockpiles_t &h, ai_tag_my_turn_t &t, position_t &pos) {
