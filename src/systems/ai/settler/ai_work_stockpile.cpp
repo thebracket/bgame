@@ -27,9 +27,14 @@ namespace systems {
 				if (h.current_path->success)
 				{
 					h.tool_id = sp.item_id;
-					h.destination = sp.dest_tile;
-					h.step = ai_tag_work_stockpiles_t::GOTO_ITEM;
-					return;
+					const auto stockpile_id = sp.dest_tile;
+					if (stockpile_system::stockpiles[stockpile_id].free_capacity > 0) {
+						--stockpile_system::stockpiles[stockpile_id].free_capacity;
+						h.destination = *stockpile_system::stockpiles[stockpile_id].open_tiles.begin();
+						stockpile_system::stockpiles[stockpile_id].open_tiles.erase(h.destination);
+						h.step = ai_tag_work_stockpiles_t::GOTO_ITEM;
+						return;
+					}
 				}
 			}
 			work.cancel_work_tag(e);
