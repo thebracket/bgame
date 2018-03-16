@@ -128,11 +128,14 @@ void main()
     // Discard if we're not above ground
     uint idx = mapidx(position_tmp.rba);
     uint above_ground = terrainFlags.flags[idx] & 2048;
-    if (above_ground == 0) discard;
+    if (above_ground == 0) discard;    
 
     // Lighting
     vec3 base_color = texture(albedo_tex, TexCoords).rgb;
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
+
+    uint visible = terrainFlags.flags[idx] & 512;
+    if (visible == 0) base_color = vec3(dot(base_color.rgb, vec3(0.299, 0.587, 0.114)));
 
     // Material definitions
     vec3 material_lookup = texture(ao_tex, TexCoords).rgb;

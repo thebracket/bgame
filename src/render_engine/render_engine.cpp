@@ -151,6 +151,9 @@ namespace render {
 		}
 		send_samples_to_shader();
 
+		glShaderStorageBlockBinding(lightstage_shader->shader_id, lightstage_shader->terrain_flags, 4);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, chunks::flags_ssbo);
+
 		glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gbuffer->albedo_tex);
         glActiveTexture(GL_TEXTURE1);

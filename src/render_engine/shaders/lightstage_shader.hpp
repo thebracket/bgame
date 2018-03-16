@@ -23,6 +23,8 @@ struct lightstage_shader_t : public bengine::base_shader_t {
 	unsigned int moon_color;
 	unsigned int projection;
 
+	unsigned int terrain_flags;
+
 	void set_vec3(const std::string &name, const glm::vec3 &value) const
 	{
 		glUniform3fv(glGetUniformLocation(shader_id, name.c_str()), 1, &value[0]);

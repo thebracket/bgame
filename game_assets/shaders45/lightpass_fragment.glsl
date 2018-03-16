@@ -16,6 +16,19 @@ uniform mat4 projection;
 uniform vec3 samples[64];
 uniform float useSSAO;
 
+layout (std430, binding=4) readonly buffer terrain_flags
+{ 
+    uint flags[];
+} terrainFlags;
+
+uint mapidx(vec3 position) {
+    int xi = int(ceil(position.x));
+    int yi = int(ceil(position.y));
+    int zi = int(ceil(position.z));
+
+    return (zi * 65536) + (yi * 256) + xi;
+}
+
 #define PI 3.1415926
 
 void main()
@@ -24,6 +37,10 @@ void main()
     if (base_color.r == 0.0 && base_color.g == 0.0 && base_color.b == 0) discard;
     vec3 normal = normalize(texture(normal_tex, TexCoords).rgb);
     vec3 position = texture(position_tex, TexCoords).rgb ;
+
+    uint idx = mapidx(texture(position_tex, TexCoords).rba);
+    uint visible = terrainFlags.flags[idx] & 512;
+    if (visible == 0) base_color = vec3(dot(base_color.rgb, vec3(0.299, 0.587, 0.114)));
 
     // Material definitions
     vec3 material_lookup = texture(ao_tex, TexCoords).rgb;

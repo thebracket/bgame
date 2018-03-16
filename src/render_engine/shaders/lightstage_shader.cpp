@@ -13,4 +13,6 @@ lightstage_shader_t::lightstage_shader_t() {
 	camera_position = get_uniform("camera_position");
 	moon_color = get_uniform("moon_color");
 	projection = get_uniform("projection");
+
+	terrain_flags = get_resource_index("terrain_flags");
 }
