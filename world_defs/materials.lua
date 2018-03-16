@@ -74,6 +74,8 @@ registerTerrainTexture("slipperystone_yellow", "slipperystoneyellow")
 registerTerrainTexture("cement", "cement")
 registerTerrainTexture("oakfloor", "oakfloor")
 registerTerrainTexture("plasteelfloor", "plasteelfloor")
+registerTerrainTexture("ceramictile", "ceramictile")
+registerTerrainTexture("plasteeltile", "plasteeltile")
 
 -- Blight
 registerTerrainTexture("blight", "blight")
@@ -709,7 +711,7 @@ materials = {
         glyph = glyphs['one_quarter_solid'], fg=colors['white'], bg=colors['black'],
         hit_points = 200,
         texture = chunkTex("rubber"), constructed = chunkTex("rubber"),
-        floor = chunkTex("titanium"), floor_constructed=chunkTex("plasteelfloor")
+        floor = chunkTex("titanium"), floor_constructed=chunkTex("plasteeltile")
     },
     cloth = { name = "Cloth", type="organic", 
         glyph = glyphs['one_quarter_solid'], fg=colors['red'], bg=colors['black'],
