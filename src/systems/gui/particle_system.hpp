@@ -13,13 +13,13 @@
 namespace systems {
 	namespace particles {
 		struct particle_t {
-			particle_t() {}
-			particle_t(float X, float Y, float Z, float R, float G, float B, float SZ, uint8_t M, float A) : x(X), y(Y), z(Z), r(R), g(G), b(B), size(SZ), pmode(M), age(A) {}
+			particle_t() = default;
+			particle_t(float X, float Y, float Z, float R, float G, float B, float SZ, uint32_t M, float A) : x(X), y(Y), z(Z), r(R), g(G), b(B), size(SZ), pmode(M), age(A) {}
 
 			float x, y, z;
 			float r, g, b;
 			float size;
-			uint8_t pmode;
+			uint32_t pmode;
 			float age;
 		};
 
