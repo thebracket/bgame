@@ -31,10 +31,9 @@ namespace systems {
 			dirty = true;
 		}
 
-		inline void reveal(const int &idx, viewshed_t &view) {
-			//std::lock_guard<std::mutex> lock(update_guard);
+		static void reveal(const int &idx, viewshed_t &view) {
 			if (view.good_guy_visibility) region::reveal(idx);
-			view.visible_cache.push_back(idx);
+			view.visible_cache.insert(idx);
 		}
 
 		inline void internal_pen_view_to(position_t &pos, viewshed_t &view, int x, int y, int z) {
@@ -52,49 +51,31 @@ namespace systems {
 			});
 		}
 
-		inline void internal_view_to(position_t &pos, viewshed_t &view, int x, int y, int z) {
+		static void internal_view_to(position_t &pos, viewshed_t &view, const int x, const int y, const int z) {
 			using namespace region;
 
 			const float dist_square = view.viewshed_radius * view.viewshed_radius;
 
-			int last_z = pos.z;
-			line_func_3d_cancellable(pos.x, pos.y, pos.z, pos.x + x, pos.y + y, pos.z + z, [&view, &pos, &dist_square, &last_z](int X, int Y, int Z) {
-				if (X < 1 || X > REGION_WIDTH - 1 || Y < 1 || Y > REGION_HEIGHT - 1 || Z < 1 || Z > REGION_DEPTH - 1)
-				{
-					return false;
-				}
-				else {
-					const auto idx = mapidx(X, Y, Z);
-					bool blocked = flag(idx, OPAQUE);
-					if (blocked_visibility.find(idx) != blocked_visibility.end()) blocked = true;
-					if (!blocked && last_z != Z) {
-						//std::cout << "Last Z: " << last_z << ", Z: " << Z << "\n";
-						// Check for ceilings and floors
-						if (last_z > Z) {
-							if (region::tile_type(idx) == tile_type::FLOOR) {
-								blocked = true;
-								//std::cout << "Ceiling block\n";
-							}
-						}
-						else if (last_z < Z) {
-							if (region::tile_type(mapidx(X, Y, last_z)) == tile_type::FLOOR) {
-								blocked = true;
-								//std::cout << "Floor block\n";
-							}
-						}
+			//std::cout << "Starting at " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
+			//std::cout << "Ending at " << pos.x+x << ", " << pos.y+y << ", " << pos.z+z << "\n";
+			reveal(mapidx(pos), view); // Always reveal where we are standing
+
+			auto blocked = false;
+			line_func_3d(pos.x, pos.y, pos.z, pos.x + x, pos.y + y, pos.z + z, [&view, &pos, &dist_square, &blocked] (const int at_x, const int at_y, const int at_z)
+			{
+				if (at_x > 0 && at_x < REGION_WIDTH - 1 && at_y > 0 && at_y < REGION_HEIGHT - 1 && at_z > 0 && at_z < REGION_DEPTH-1) {
+					const auto distance = distance3d_squared(pos.x, pos.y, pos.z, at_x, at_y, at_z);
+					if (distance < dist_square) {
+						//std::cout << " - Visit " << at_x << ", " << at_y << ", " << at_z << "\n";
+						const auto idx = mapidx(at_x, at_y, at_z);
+						if (!blocked) reveal(idx, view);
+						if (region::flag(idx, SOLID)) blocked = true;
 					}
-					if (!blocked || last_z == Z) reveal(idx, view);
-					const float distance = distance3d_squared(pos.x, pos.y, pos.z, X, Y, Z);
-					if (distance > dist_square) {
-						return false;
-					}
-					last_z = Z;
-					return !blocked;
 				}
 			});
 		}
 
-		void update_penetrating_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
+		static void update_penetrating_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
 			view.visible_cache.clear();
 
 			reveal(mapidx(pos.x, pos.y, pos.z), view);
@@ -108,15 +89,15 @@ namespace systems {
 			}
 		}
 
-		void update_normal_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
+		static void update_normal_viewshed(entity_t &e, position_t &pos, viewshed_t &view) {
 			view.visible_cache.clear();
 			reveal(mapidx(pos.x, pos.y, pos.z), view);
-			for (int z = (0 - view.viewshed_radius); z<view.viewshed_radius; ++z) {
-				for (int i = 0 - view.viewshed_radius; i<view.viewshed_radius; ++i) {
-					internal_view_to(pos, view, i, 0 - view.viewshed_radius, z);
+			for (auto z = (0 - view.viewshed_radius); z<view.viewshed_radius; ++z) {
+				for (auto i = 0 - view.viewshed_radius; i<view.viewshed_radius; ++i) {
 					internal_view_to(pos, view, i, view.viewshed_radius, z);
-					internal_view_to(pos, view, 0 - view.viewshed_radius, i, z);
+					internal_view_to(pos, view, i, -view.viewshed_radius, z);
 					internal_view_to(pos, view, view.viewshed_radius, i, z);
+					internal_view_to(pos, view, -view.viewshed_radius, i, z);
 				}
 			}
 		}

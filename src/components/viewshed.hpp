@@ -13,5 +13,5 @@ struct viewshed_t {
 	std::unordered_set<std::size_t> visible_entities;
 
 	// Non-persistent
-	std::vector<int> visible_cache;	
+	std::unordered_set<int> visible_cache;
 };

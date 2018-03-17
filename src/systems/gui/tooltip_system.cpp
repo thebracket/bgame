@@ -74,7 +74,8 @@ namespace systems {
 					if (flag(tile_idx, CAN_GO_SOUTH_EAST)) ss << "SE-";
 					if (flag(tile_idx, CAN_GO_SOUTH_WEST)) ss << "SW-";
 					if (flag(tile_idx, CAN_STAND_HERE)) ss << "Stand-";
-					if (flag(tile_idx, CONSTRUCTION)) ss << "Cons";
+					if (flag(tile_idx, CONSTRUCTION)) ss << "Cons-";
+					if (flag(tile_idx, VISIBLE)) ss << "Vis-";
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + ss.str(), color_cyan));
 				}
 
@@ -171,7 +172,13 @@ namespace systems {
 				// Named entities in the location
 				each<name_t, position_t>([&lines, &world_x, &world_y, &world_z](entity_t &entity, name_t &name, position_t &pos) {
 					if (pos.x == world_x && pos.y == world_y && pos.z == world_z) {
-						lines.emplace_back(color_line(std::string(ICON_FA_USER) + std::string(" ") + name.first_name + std::string(" ") + name.last_name, color_magenta));
+						if (debug::show_flags)
+						{
+							lines.emplace_back(color_line(std::string(ICON_FA_USER) + std::string(" ") + name.first_name + std::string(" ") + name.last_name + std::string(" #") + std::to_string(entity.id), color_magenta));
+						}
+						else {
+							lines.emplace_back(color_line(std::string(ICON_FA_USER) + std::string(" ") + name.first_name + std::string(" ") + name.last_name, color_magenta));
+						}
 					}
 				});
 				// Items on the ground

@@ -340,7 +340,7 @@ namespace chunks {
 			chunks[idx].update_buffer();
 			did_something = true;
 		}
-		if (did_something) update_world_buffer();
+		update_world_buffer(); // Always so that view sheds are visible
     }
 
 }
