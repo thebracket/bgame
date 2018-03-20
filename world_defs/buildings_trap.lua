@@ -27,7 +27,7 @@ buildings["weapon_trap"] = {
     skill = { name="Construction", difficulty=10 },
     provides = { blade_trap={energy_cost=0} },
     render_rex = "cagetrap.xp",
-    vox = voxelId("cage")
+    vox = voxelId("blades_retracted")
 };
 
 buildings["spike_trap"] = {
@@ -37,7 +37,7 @@ buildings["spike_trap"] = {
     skill = { name="Construction", difficulty=12 },
     provides = { spike_trap={energy_cost=0} },
     render_rex = "cagetrap.xp",
-    vox = voxelId("cage")
+    vox = voxelId("spikes_retracted")
 };
 
 buildings["lever"] = {

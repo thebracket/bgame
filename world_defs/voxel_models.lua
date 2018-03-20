@@ -137,8 +137,13 @@ voxel_models = {
     lever_on = { model=vfn("lever-on"), id=124 },
     lever_off = { model=vfn("lever-off"), id=125 },
     pressure_plate = { model=vfn("pressureplate"), id=126 },
-    energy_door_open = { model=vfn("energydoor-open"), id=127 },
-    energy_door_closed = { model=vfn("energydoor-closed"), id=128 },
+    spikes_retracted = { model=vfn("spikes-retracted"), id=127 },
+    energy_door_closed = { model=vfn("spikes-extended"), id=128 },
+    energy_door_open = { model=vfn("energydoor-open"), id=129 },
+    spikes_retracted = { model=vfn("spikes-retracted"), id=130 },
+    spikes_extended = { model=vfn("spikes-extended"), id=131 },
+    blades_retracted = { model=vfn("blades-retracted"), id=132 },
+    blades_extended = { model=vfn("blades-extended"), id=133 },
 }
 
 function voxelId(name)

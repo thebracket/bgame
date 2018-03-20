@@ -28,6 +28,7 @@
 #include "movement_system.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../render_engine/chunks/chunks.hpp"
+#include "door_system.hpp"
 
 using namespace bengine;
 
@@ -287,6 +288,7 @@ namespace systems {
 
 					if (target_door) {
 						target_door->locked = !target_door->locked;
+						doors::doors_changed();
 						// TODO: emit(map_changed_message{});
 						// TODO: emit(door_changed_message{});
 					}
@@ -321,6 +323,7 @@ namespace systems {
 							receiver->active = !receiver->active;
 							if (receiver->active) {
 								renderable->glyph = 325;
+								renderable->glyph = 131;
 								// Attack everything in the tile
 								const auto &[x,y,z] = idxmap(mapidx(*target_pos));
 								auto visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
@@ -336,6 +339,7 @@ namespace systems {
 							}
 							else {
 								renderable->glyph = 324;
+								renderable->glyph = 130;
 							}
 						}
 					}
