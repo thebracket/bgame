@@ -26,6 +26,11 @@
 #include "../../bengine/ecs.hpp"
 #include "../helpers/targeted_flow_map.hpp"
 #include "../../global_assets/game_ecs.hpp"
+#include "../keydamper.hpp"
+#include <GLFW/glfw3.h>
+#include "units_info_system.hpp"
+#include "../../global_assets/game_mode.hpp"
+#include "../../global_assets/game_camera.hpp"
 
 using namespace tile_flags;
 
@@ -37,14 +42,104 @@ namespace systems {
 		static const ImVec4 color_red{ 1.0f, 0.0f, 0.0f, 1.0f };
 		static const ImVec4 color_magenta{ 1.0f, 1.0f, 0.0f, 1.0f };
 
+		static bool context_menu = false;
+		static float popup_x = 0.0f;
+		static float popup_y = 0.0f;
+		static int target_idx = 0;
+
 		static inline std::pair<std::string, ImVec4> color_line(const std::string &s, ImVec4 color = ImVec4{1.0f, 1.0f, 1.0f, 1.0f})
 		{
 			return std::make_pair(s, color);
 		}
 
+		static void render_context_menu()
+		{
+			using namespace region;
+			using namespace bengine;
+
+			ImGui::SetNextWindowPos({ popup_x, popup_y });
+
+			auto[x, y, z] = idxmap(target_idx);
+			ImGui::Begin("Popup", nullptr, ImVec2{ 600, 400 }, 100.0, ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar + ImGuiWindowFlags_NoSavedSettings);
+			
+			if (region::tile_type(target_idx) == tile_type::FLOOR && !flag(target_idx, CONSTRUCTION) && veg_type(target_idx) > 0) {
+				const auto plant = get_plant_def(veg_type(target_idx));
+				if (plant != nullptr) {
+					const std::string plant_menu = std::string(ICON_FA_LEAF) + std::string(" ") + plant->name;
+					if (ImGui::BeginMenu(plant_menu.c_str()))
+					{
+						if (!plant->provides.empty())
+						{
+							const auto harvest = std::string(ICON_FA_LEAF) + std::string(" Harvest");
+							if (ImGui::MenuItem(harvest.c_str()))
+							{
+								farm_designations->harvest.emplace_back(std::make_pair(false, position_t{ x, y, z }));
+							}
+						}
+						ImGui::EndMenu();
+					}
+				}
+			}
+
+			each<name_t, position_t>([&x, &y, &z](entity_t &entity, name_t &name, position_t &pos) {
+				if (pos.x == x && pos.y == y && pos.z == z) {
+					const auto entity_menu = std::string(ICON_FA_USER) + std::string(" ") + name.first_name + std::string(" ") + name.last_name;
+					if (ImGui::BeginMenu(entity_menu.c_str()))
+					{
+						const auto settler = entity.component<settler_ai_t>();
+						if (settler) {
+							const static std::string btn_rogue = std::string(ICON_FA_USER) + " Control";
+							const std::string btn_roguemode = btn_rogue + std::string("##") + std::to_string(entity.id);
+							const std::string btn_viewmode = std::string(ICON_FA_USER_CIRCLE) + std::string(" View##") + std::to_string(entity.id);
+							const std::string btn_followmode = std::string(ICON_FA_VIDEO_CAMERA) + std::string(" Follow##") + std::to_string(entity.id);
+
+							if (ImGui::MenuItem(btn_roguemode.c_str()))
+							{
+								auto pos = entity.component<position_t>();
+								if (pos) {
+									camera_position->region_x = pos->x;
+									camera_position->region_y = pos->y;
+									camera_position->region_z = pos->z;
+								}
+
+								auto ai = entity.component<settler_ai_t>();
+								if (ai) {
+									ai->job_type_major = JOB_IDLE;
+								}
+								game_master_mode = ROGUE;
+								units_ui::selected_settler = entity.id;
+							}
+							if (ImGui::MenuItem(btn_viewmode.c_str()))
+							{
+								game_master_mode = SETTLER;
+								units_ui::selected_settler = entity.id;
+							}
+							if (ImGui::MenuItem(btn_followmode.c_str()))
+							{
+								camera->following = entity.id;
+								game_master_mode = PLAY;
+							}
+							ImGui::EndMenu();
+						}
+					}
+				}
+			});
+
+			ImGui::End();
+
+
+			if (is_key_down(GLFW_KEY_ESCAPE) || left_click) context_menu = false;
+		}
+
 		void run(const double &duration_ms) {
 			using namespace region;
 			using namespace bengine;
+
+			if (context_menu)
+			{
+				render_context_menu();
+				return;
+			}
 
 			if (mouse_wx != 0 && mouse_wy != 0 && mouse_wz != 0) {
 				const int world_x = mouse_wx;
@@ -310,6 +405,13 @@ namespace systems {
 					ImGui::TextColored(s.second, "%s", s.first.c_str());
 				}
 				ImGui::End();
+
+				if (left_click) {
+					context_menu = true;
+					popup_x = mouse_x - (longest + 35.0f);
+					popup_y = mouse_y;
+					target_idx = mapidx(world_x, world_y, world_z);
+				}
 			}
 		}
 	}
