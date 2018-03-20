@@ -1,15 +1,12 @@
 #include "design_mode.hpp"
 #include "../keydamper.hpp"
 #include "../../global_assets/game_mode.hpp"
-#include "../../global_assets/game_pause.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
-#include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../../render_engine/design_render.hpp"
 #include "../../bengine/gl_include.hpp"
 #include <string>
 #include "../../bengine/main_window.hpp"
-#include "../mouse.hpp"
 
 namespace systems {
 	namespace design_mode {

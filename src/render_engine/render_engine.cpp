@@ -24,7 +24,6 @@
 #include "shaders/tonemap_shader.hpp"
 #include "ubo/first_stage_ubo.hpp"
 #include "shaders/skylight_shader.hpp"
-#include <iostream>
 
 namespace render {
 
@@ -76,7 +75,7 @@ namespace render {
 
         glUniform1i(assets::chunkshader->textureArray, 0);
 		glEnable(GL_CULL_FACE);
-		if (game_master_mode == DESIGN) {
+		if (game_master_mode == DESIGN || game_master_mode == LOOK_MODE) {
 			// Render single layer
 			do_design_render();
 		}
@@ -109,7 +108,7 @@ namespace render {
 		glColorMaski(0, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glCheckError();
 
-		if (game_master_mode == DESIGN) {
+		if (game_master_mode == DESIGN || game_master_mode == LOOK_MODE) {
 			// Render single layer
 			do_design_render();
 		}
@@ -245,7 +244,7 @@ namespace render {
 		build_voxel_render_list();
 		build_cursor_geometry();
 		systems::particles::build_buffers();
-		if (game_master_mode == DESIGN) update_design_buffers();
+		if (game_master_mode == DESIGN || game_master_mode == LOOK_MODE) update_design_buffers();
 		glCheckError();
 	}
 

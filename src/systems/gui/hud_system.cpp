@@ -42,6 +42,7 @@ namespace systems {
 		const static std::string menu_camera_view = std::string(ICON_FA_VIDEO_CAMERA) + " Camera Mode (TAB)";
 		const static std::string menu_camera_perspective = std::string(ICON_FA_CUBE) + " Toggle Perspective (^TAB)";
 		const static std::string menu_camera_ascii = std::string(ICON_FA_FONT) + " Toggle ASCII Mode (Shift+TAB)";
+		const static std::string menu_camera_look = std::string(ICON_FA_EYE) + " Look";
 
 		static void change_camera_view(const game_camera_mode_t new_mode)
 		{
@@ -109,6 +110,10 @@ namespace systems {
 			if (ImGui::BeginMenu(menu_main.c_str())) {
 				if (ImGui::MenuItem(menu_main_play.c_str())) {
 					game_master_mode = PLAY;
+				}
+				if (ImGui::MenuItem(menu_camera_look.c_str(), "k"))
+				{
+					game_master_mode = LOOK_MODE;
 				}
 				if (ImGui::BeginMenu(menu_display.c_str())) {
 					if (!camera->ascii_mode) {
@@ -206,6 +211,14 @@ namespace systems {
 				normal_menu();
 
 				// Keyboard shortcuts
+				if (game_master_mode == LOOK_MODE)
+				{
+					ImGui::Begin("Look Mode");
+					ImGui::Text("%s", "Arrow keys to move cursor, shift to move camera, escape to return to play.");
+					ImGui::End();
+					if (is_key_down(GLFW_KEY_ESCAPE)) game_master_mode = PLAY;
+				}
+
 				if (game_master_mode == PLAY) {
 					const auto pressed_control = glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
 					if (is_key_down(GLFW_KEY_U, false)) game_master_mode = UNITS;
@@ -214,6 +227,7 @@ namespace systems {
 					if (is_key_down(GLFW_KEY_J, false)) game_master_mode = JOB_CENTER_MODE;
 					if (pressed_control && is_key_down(GLFW_KEY_W, false)) game_master_mode = WISHMODE;
 					if (is_key_down(GLFW_KEY_APOSTROPHE)) render::depth_test_render = !render::depth_test_render;
+					if (is_key_down(GLFW_KEY_K)) game_master_mode = LOOK_MODE;
 				}
 			} else
 			{

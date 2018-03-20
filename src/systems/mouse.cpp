@@ -81,7 +81,7 @@ namespace systems {
 				last_mouse_x = mouse_x;
 				last_mouse_y = mouse_y;
 			}
-			else if (game_master_mode == DESIGN) {
+			else if (game_master_mode == DESIGN || game_master_mode == LOOK_MODE) {
 				pause_mode = PAUSED; // Always pause while designing
 				mouse_wz = camera_position->region_z;
 

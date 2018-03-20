@@ -192,7 +192,7 @@ namespace systems {
 			const auto shift = (glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
 			const auto control = (glfwGetKey(bengine::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(bengine::main_window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS);
 
-			if (game_master_mode != DESIGN || (shift && !control)) {
+			if ((game_master_mode != DESIGN && game_master_mode != LOOK_MODE) || (shift && !control)) {
 				normal_keys();
 			}
 		}
