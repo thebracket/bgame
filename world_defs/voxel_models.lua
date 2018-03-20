@@ -133,6 +133,10 @@ voxel_models = {
     nitrogen_extractor = { model=vfn("nitrogen_extractor"), id=121 },
     leatherworker = { model=vfn("leatherworker"), id=122 },
     refinery = { model=vfn("refinery"), id=123 },
+
+    lever_on = { model=vfn("lever-on"), id=124 },
+    lever_off = { model=vfn("lever-off"), id=125 },
+    pressure_plate = { model=vfn("pressureplate"), id=126 },
 }
 
 function voxelId(name)

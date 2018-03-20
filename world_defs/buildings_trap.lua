@@ -55,5 +55,6 @@ buildings["lever"] = {
         width=1, height=1, tiles={
             {glyph=glyphs['marker'], foreground = colors['red'], background = colors['black']}
         }
-    }
+    },
+    vox = voxelId("lever_off")
 };

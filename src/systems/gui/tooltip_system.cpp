@@ -125,6 +125,36 @@ namespace systems {
 				}
 			});
 
+			const auto building_on_tile = get_building_id(target_idx);
+			if (building_on_tile > 0) {
+				auto building_entity = entity(building_on_tile);
+				if (building_entity) {
+					const auto building = building_entity->component<building_t>();
+					std::string building_name = "Unknown Building";
+					if (building) {
+						const auto finder = get_building_def(building->tag);
+						if (finder) {
+							if (building->complete) {
+								building_name = finder->name + std::string(" (") + std::to_string(building->hit_points)
+									+ std::string("/") + std::to_string(building->max_hit_points) + std::string(")");
+
+								if (building_entity->component<claimed_t>()) building_name += " (c)";
+							}
+							else {
+								building_name = std::string("(") + finder->name + std::string(") - Incomplete");
+							}
+						}
+						const std::string building_menu = std::string(ICON_FA_BUILDING) + std::string(" ") + building_name;
+						if (ImGui::BeginMenu(building_menu.c_str()))
+						{
+							ImGui::MenuItem("Building Information");
+							ImGui::MenuItem("Deconstruct");
+							ImGui::EndMenu();
+						}
+					}
+				}
+			}
+
 			ImGui::End();
 
 
@@ -406,9 +436,9 @@ namespace systems {
 				}
 				ImGui::End();
 
-				if (left_click) {
+				if (left_click && (game_master_mode == PLAY || game_master_mode == LOOK_MODE )) {
 					context_menu = true;
-					popup_x = mouse_x - (longest + 35.0f);
+					popup_x = mouse_x;
 					popup_y = mouse_y;
 					target_idx = mapidx(world_x, world_y, world_z);
 				}
