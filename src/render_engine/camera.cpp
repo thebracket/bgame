@@ -57,7 +57,7 @@ namespace render
 				const auto pos = following->component<position_t>();
 				if (pos) {
 					const auto looking_at = bengine::project_angle(0, 0, 10.0, (static_cast<double>(pos->rotation + 90) * 3.14159265358979323846) / 180.0);
-					camera_position_v = { camera_x, camera_z + 0.5f, camera_y };
+					camera_position_v = { camera_x, camera_z, camera_y };
 					glm::vec3 fps_target = camera_position_v;
 					fps_target.x += looking_at.first;
 					fps_target.z += looking_at.second;
