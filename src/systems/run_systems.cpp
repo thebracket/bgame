@@ -376,6 +376,10 @@ namespace systems {
 			if (game_design_mode == DIGGING) run_system(design_mining::run, duration_ms, DESIGN_GUARDPOINTS_SYSTEM);
 			if (game_design_mode == STOCKPILES) run_system(design_stockpiles::run, duration_ms, DESIGN_GUARDPOINTS_SYSTEM);
 		}
+		if (game_master_mode == TRIGGER_MANAGEMENT)
+		{
+			triggers::edit_triggers();
+		}
 		run_system(inventory_system::run, duration_ms, INVENTORY_SYSTEM);
 		run_system(particles::run, duration_ms, PARTICLE_SYSTEM);
 

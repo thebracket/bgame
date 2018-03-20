@@ -342,7 +342,6 @@ namespace systems {
 		void run(const double &duration_ms) {
 			manage_triggers();
 			pull_levers();
-			edit_triggers();
 			pulled_levers();
 		}
 	}

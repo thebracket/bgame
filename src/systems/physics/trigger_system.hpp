@@ -7,6 +7,7 @@ namespace systems {
 	namespace triggers {
 		void run(const double &duration_ms);
 		void entry_trigger_firing(const systems::movement::entity_moved_message &msg);
+		void edit_triggers();
 
 		struct triggers_changed_message {
 		};

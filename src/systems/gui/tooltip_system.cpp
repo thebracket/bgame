@@ -32,6 +32,7 @@
 #include "../../global_assets/game_camera.hpp"
 #include "../physics/trigger_system.hpp"
 #include "../physics/door_system.hpp"
+#include "../../global_assets/game_pause.hpp"
 
 using namespace tile_flags;
 
@@ -161,6 +162,8 @@ namespace systems {
 								if (ImGui::MenuItem("Manage Lever Connections"))
 								{
 									triggers::trigger_details.enqueue(triggers::trigger_details_requested{ building_entity->id });
+									game_master_mode = TRIGGER_MANAGEMENT;
+									pause_mode = PAUSED;
 								}
 							}
 
