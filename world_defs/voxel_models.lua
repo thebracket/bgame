@@ -137,6 +137,8 @@ voxel_models = {
     lever_on = { model=vfn("lever-on"), id=124 },
     lever_off = { model=vfn("lever-off"), id=125 },
     pressure_plate = { model=vfn("pressureplate"), id=126 },
+    energy_door_open = { model=vfn("energydoor-open"), id=127 },
+    energy_door_closed = { model=vfn("energydoor-closed"), id=128 },
 }
 
 function voxelId(name)

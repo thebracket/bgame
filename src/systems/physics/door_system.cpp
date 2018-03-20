@@ -6,6 +6,7 @@
 #include "../../components/buildings/construct_provides_door.hpp"
 #include "../../bengine/ecs.hpp"
 #include "../../global_assets/game_ecs.hpp"
+#include "../../render_engine/chunks/chunks.hpp"
 
 using namespace bengine;
 using namespace region;
@@ -38,6 +39,7 @@ namespace systems {
 							}
 						}
 					}
+					chunks::mark_chunk_dirty_by_tileidx(idx);
 				});
 				//emit(recalculate_mining_message{});
 				//emit(renderables_changed_message{});

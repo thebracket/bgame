@@ -81,7 +81,6 @@ namespace chunks {
 		case tile_type::TREE_LEAF: return true;
 		case tile_type::TREE_TRUNK: return true;
 		case tile_type::SEMI_MOLTEN_ROCK: return true;
-		case tile_type::CLOSED_DOOR: return true;
 		default: return false;
 		}
 	}

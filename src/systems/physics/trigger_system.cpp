@@ -1,4 +1,4 @@
-#include "door_system.hpp"
+#include "trigger_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../components/buildings/entry_trigger.hpp"
 #include "../../components/position.hpp"
@@ -10,7 +10,6 @@
 #include "../../components/buildings/bridge.hpp"
 #include "../../components/buildings/construct_provides_door.hpp"
 #include "../../bengine/imgui.h"
-#include "../../bengine/imgui_impl_glfw_gl3.h"
 #include "../../components/buildings/receives_signal.hpp"
 #include "../../components/buildings/building.hpp"
 #include "../../components/grazer_ai.hpp"
@@ -19,7 +18,6 @@
 #include "../../components/items/item_stored.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/items.hpp"
-#include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
 #include "../../components/renderable.hpp"
@@ -47,31 +45,7 @@ namespace systems {
 		const std::string win_trigger_mgmt = std::string(ICON_FA_COG) + " Trigger Management";
 		const std::string btn_remove_link = std::string(ICON_FA_MINUS) + " Remove Link";
 		const std::string btn_add_link = std::string(ICON_FA_PLUS) + " Add Link";
-		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";
-
-		struct triggers_changed_message {
-		};
-
-		struct request_lever_pull_message {
-			request_lever_pull_message() {}
-			request_lever_pull_message(const std::size_t &lid) : lever_id(lid) {}
-			std::size_t lever_id;
-		};
-
-		struct leverpull_changed_message {
-		};
-
-		struct trigger_details_requested {
-			trigger_details_requested() {}
-			trigger_details_requested(const std::size_t &lid) : lever_id(lid) {}
-			std::size_t lever_id;
-		};
-
-		struct lever_pulled_message {
-			lever_pulled_message() {}
-			lever_pulled_message(const std::size_t &lid) : lever_id(lid) {}
-			std::size_t lever_id;
-		};
+		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";		
 
 		thread_safe_message_queue<triggers_changed_message> triggers_changed;
 		thread_safe_message_queue<request_lever_pull_message> lever_pull_requests;

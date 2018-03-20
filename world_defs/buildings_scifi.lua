@@ -4,7 +4,7 @@
 -- Cordex starts with a small replicator on board. It's deliberately not very useful, but can get you started.
 ------------------------------------------------------------------------------------------------------------------------
 buildings["small_replicator"] = {
-    name = "A small replicator",
+    name = "Small replicator",
     description = "A portable device that can convert energy into matter, according to pre-programmed recipes. This model is designed for field-trips and can make tea and sandwiches.",
     components = { { item="replicator_unit", qty=1} },
     skill = { name="Construction", difficulty=10 },

@@ -24,13 +24,14 @@
 #include "../ai/distance_map_system.hpp"
 #include "../../raws/items.hpp"
 #include "../../bengine/ecs.hpp"
-#include "../helpers/targeted_flow_map.hpp"
 #include "../../global_assets/game_ecs.hpp"
 #include "../keydamper.hpp"
 #include <GLFW/glfw3.h>
 #include "units_info_system.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_camera.hpp"
+#include "../physics/trigger_system.hpp"
+#include "../physics/door_system.hpp"
 
 using namespace tile_flags;
 
@@ -149,6 +150,40 @@ namespace systems {
 						{
 							ImGui::MenuItem("Building Information");
 							ImGui::MenuItem("Deconstruct");
+
+							const auto blever = building_entity->component<lever_t>();
+							if (blever)
+							{
+								if (ImGui::MenuItem("Pull Lever"))
+								{
+									triggers::lever_pull_requests.enqueue(triggers::request_lever_pull_message{ building_entity->id });
+								}
+								if (ImGui::MenuItem("Manage Lever Connections"))
+								{
+									triggers::trigger_details.enqueue(triggers::trigger_details_requested{ building_entity->id });
+								}
+							}
+
+							const auto bdoor = building_entity->component<construct_door_t>();
+							if (bdoor)
+							{
+								if (bdoor->locked)
+								{
+									if (ImGui::MenuItem("Open Door"))
+									{
+										bdoor->locked = false;
+										doors::doors_changed();
+									}
+								} else
+								{
+									if (ImGui::MenuItem("Lock Door"))
+									{
+										bdoor->locked = true;
+										doors::doors_changed();
+									}
+								}
+							}
+
 							ImGui::EndMenu();
 						}
 					}

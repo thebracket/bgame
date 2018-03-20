@@ -129,6 +129,9 @@ namespace chunks {
 							else if (tiletype == tile_type::STAIRS_UPDOWN) {
 								static_voxel_models[25].push_back(std::make_tuple(region_x, region_y, region_z));
 							}
+							else if (tiletype == tile_type::CLOSED_DOOR) {
+								static_voxel_models[128].push_back(std::make_tuple(region_x, region_y, region_z));
+							}
 						}
                     }
                 }

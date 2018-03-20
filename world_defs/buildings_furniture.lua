@@ -11,7 +11,7 @@ buildings["cryo_bed"] = {
 };
 
 buildings["storage_locker"] = {
-    name = "A storage locker",
+    name = "Storage locker",
     description = "A ship-mounted storage locker, pre-shipped with enough to survive settling a new world.",
     components = { { item="storage_locker", qty=1} },
     skill = { name="Construction", difficulty=10 },
@@ -67,7 +67,7 @@ buildings["energy_door"] = {
     skill = { name="Construction", difficulty=10 },
     provides = { door={energy_cost=10} },
     render_rex = "door.xp",
-    vox=voxelId("door_ground")
+    vox=voxelId("energy_door_open")
 };
 
 buildings["bed_simple"] = {
