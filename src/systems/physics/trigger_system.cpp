@@ -27,6 +27,7 @@
 #include "../../components/health.hpp"
 #include "movement_system.hpp"
 #include "../../bengine/IconsFontAwesome.h"
+#include "../../render_engine/chunks/chunks.hpp"
 
 using namespace bengine;
 
@@ -268,9 +269,11 @@ namespace systems {
 				if (renderable) {
 					if (lever_component->active) {
 						renderable->glyph = 326;
+						renderable->vox = 124;
 					}
 					else {
 						renderable->glyph = 327;
+						renderable->vox = 125;
 					}
 				}
 
@@ -294,6 +297,7 @@ namespace systems {
 							for (int i = 0; i<REGION_TILES_COUNT; ++i) {
 								if (bridge_id(i) == id) {
 									make_open_space(i);
+									chunks::mark_chunk_dirty_by_tileidx(i);
 								}
 							}
 						}
@@ -302,6 +306,7 @@ namespace systems {
 							for (int i = 0; i<REGION_TILES_COUNT; ++i) {
 								if (bridge_id(i) == id) {
 									make_floor(i);
+									chunks::mark_chunk_dirty_by_tileidx(i);
 								}
 							}
 						}
