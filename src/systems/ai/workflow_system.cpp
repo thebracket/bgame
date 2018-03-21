@@ -47,18 +47,18 @@ namespace systems {
 							}
 						}
 					}
-				});
-
-				// Erase all completed jobs
-				building_designations->build_orders.erase(
-					std::remove_if(building_designations->build_orders.begin(),
-						building_designations->build_orders.end(),
-						[](auto order_pair) { return order_pair.first == 0; }),
-					building_designations->build_orders.end());
+				});				
 
 				// Not dirty anymore!
 				dirty = false;
 			}
+
+			// Erase all completed jobs
+			building_designations->build_orders.erase(
+				std::remove_if(building_designations->build_orders.begin(),
+					building_designations->build_orders.end(),
+					[](auto order_pair) { return order_pair.first < 1; }),
+				building_designations->build_orders.end());
 		}
 	}
 }

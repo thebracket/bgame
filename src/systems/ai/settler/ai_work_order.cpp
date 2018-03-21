@@ -93,7 +93,7 @@ namespace systems {
 								),
 								building_designations->build_orders.end()
 							);
-						}
+						}						
 					}
 
 					if (!autojob) {
