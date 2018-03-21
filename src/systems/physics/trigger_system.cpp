@@ -222,7 +222,7 @@ namespace systems {
 								else if (trigger_def->type == TRIGGER_STONEFALL && (grazer || (sentient && sentient->hostile))) {
 									//std::cout << "Stonefall triggered\n";
 									// Stonefalls only affect hostiles
-									auto name = target_entity->component<name_t>();
+									const auto name = target_entity->component<name_t>();
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is hit by a falling rock trap!");
@@ -230,9 +230,8 @@ namespace systems {
 										logging::log(msg);
 									}
 
-									// TODO: Add a random chance with some dex involved
 									// Spawn some damage!
-									// TODO: emit(inflict_damage_message{ msg.entity_id, rng.roll_dice(3,6), "falling rocks" });
+									damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.entity_id, rng.roll_dice(3, 6), "falling rocks" });
 
 									// Remove the trap
 									delete_entity(finder->second);
@@ -241,7 +240,7 @@ namespace systems {
 								else if (trigger_def->type == TRIGGER_BLADE && (grazer || (sentient && sentient->hostile))) {
 									//std::cout << "Blade trap triggered\n";
 									// Blades only affect hostiles, and don't auto-destruct
-									auto name = target_entity->component<name_t>();
+									const auto name = target_entity->component<name_t>();
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is hit by a blade trap!");
@@ -251,7 +250,7 @@ namespace systems {
 
 									// TODO: Add a random chance with some dex involved
 									// Spawn some damage!
-									// TODO: emit(inflict_damage_message{ msg.entity_id, rng.roll_dice(3,8), "spinning blades" });
+									damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.entity_id, rng.roll_dice(3,8), "spinning blades" });
 								}
 							}
 						}

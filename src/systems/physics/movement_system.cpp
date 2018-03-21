@@ -72,6 +72,7 @@ namespace systems {
 			wander_requests.process_all([](entity_wants_to_move_randomly_message msg) {
 				const auto e = entity(msg.entity_id);
 				const auto original = e->component<position_t>();
+				if (!original) return;
 
 				auto dest = position_t{};
 				dest.x = original->x;
@@ -221,6 +222,7 @@ namespace systems {
 			flee_requests.process_all([](entity_wants_to_flee_message msg) {
 				auto pos = entity(msg.entity_id)->component<position_t>();
 				auto other_pos = entity(msg.flee_from_id)->component<position_t>();
+				if (!pos || !other_pos) return;
 
 				if (pos->x > other_pos->x && flag(mapidx(pos->x, pos->y, pos->z), CAN_GO_EAST)) {
 					move_requests.enqueue(entity_wants_to_move_message{ msg.entity_id, position_t{ pos->x + 1, pos->y, pos->z } });
