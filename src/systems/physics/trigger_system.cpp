@@ -29,6 +29,9 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "door_system.hpp"
+#include "../power/power_system.hpp"
+#include "../damage/damage_system.hpp"
+#include "../../global_assets/rng.hpp"
 
 using namespace bengine;
 
@@ -109,9 +112,10 @@ namespace systems {
 				auto target_entity = entity(target);
 				if (target_entity) {
 					std::string prefix = "";
+					const auto building_component = target_entity->component<building_t>();
 					if (target_entity->component<bridge_t>()) prefix = "Bridge";
 					if (target_entity->component<construct_door_t>()) prefix = "Door";
-					// Spikes, etc.
+					if (target_entity && building_component->tag == "spike_trap") prefix = "Spikes";
 
 					const std::string target_info = prefix + std::string(" #") + std::to_string(target);
 					linked_to.emplace_back(std::pair<std::size_t, std::string>{target, target_info});
@@ -258,30 +262,28 @@ namespace systems {
 
 		void pulled_levers() {
 			lever_pulled.process_all([](const lever_pulled_message &msg) {
-				//std::cout << "Lever pulled: " << msg.lever_id << "\n";
+				std::cout << "Lever pulled: " << msg.lever_id << "\n";
 				auto lever_entity = entity(msg.lever_id);
 				if (!lever_entity) return;
 				auto lever_component = lever_entity->component<lever_t>();
 				if (!lever_component) return;
-				auto renderable = lever_entity->component<renderable_t>();
-				//std::cout << "All good on lever\n";
+				auto lever_building = lever_entity->component<building_t>();
+				std::cout << "All good on lever\n";
 
 				lever_component->active = !lever_component->active;
-				if (renderable) {
+				if (lever_building) {
 					if (lever_component->active) {
-						renderable->glyph = 326;
-						renderable->vox = 124;
+						lever_building->vox_model = 124;
 					}
 					else {
-						renderable->glyph = 327;
-						renderable->vox = 125;
+						lever_building->vox_model = 125;
 					}
 				}
 
 				for (const auto &id : lever_component->targets) {
 					auto target_entity = entity(id);
 					if (!target_entity) break;
-					// TODO: emit(power_consumed_message{ 10 });
+					systems::power::consume_power("Lever", 10);
 					auto target_door = target_entity->component<construct_door_t>();
 					auto target_bridge = target_entity->component<bridge_t>();
 					auto target_building = target_entity->component<building_t>();
@@ -289,8 +291,6 @@ namespace systems {
 					if (target_door) {
 						target_door->locked = !target_door->locked;
 						doors::doors_changed();
-						// TODO: emit(map_changed_message{});
-						// TODO: emit(door_changed_message{});
 					}
 					if (target_bridge) {
 						target_bridge->retracted = !target_bridge->retracted;
@@ -313,17 +313,18 @@ namespace systems {
 							}
 						}
 						tile_recalc_all();
-						// TODO: emit_deferred(map_changed_message{});
 					}
 					if (target_building && target_building->tag == "spike_trap") {
 						auto receiver = target_entity->component<receives_signal_t>();
-						auto renderable = target_entity->component<renderable_t>();
 						auto target_pos = target_entity->component<position_t>();
-						if (receiver && renderable && target_pos) {
+
+						if (receiver) std::cout << "Has receiver\n";
+						if (target_pos) std::cout << "Has position\n";
+
+						if (receiver && target_pos) {
 							receiver->active = !receiver->active;
 							if (receiver->active) {
-								renderable->glyph = 325;
-								renderable->glyph = 131;
+								target_building->vox_model = 130;
 								// Attack everything in the tile
 								const auto &[x,y,z] = idxmap(mapidx(*target_pos));
 								auto visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
@@ -332,14 +333,13 @@ namespace systems {
 									if (victim_entity) {
 										auto health = victim_entity->component<health_t>();
 										if (health) {
-											// TODO: emit_deferred(inflict_damage_message{ v, rng.roll_dice(2,8), "floor spikes" });
+											systems::damage_system::inflict_damage(systems::damage_system::inflict_damage_message{ v, rng.roll_dice(2,8), "Floor Spikes" });
 										}
 									}
 								}
 							}
 							else {
-								renderable->glyph = 324;
-								renderable->glyph = 130;
+								target_building->vox_model = 129;
 							}
 						}
 					}

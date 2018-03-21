@@ -248,17 +248,22 @@ namespace systems {
 						|| provides.provides == provides_stairs_up
 						|| provides.provides == provides_stairs_down ||
 						provides.provides == provides_stairs_updown
-						|| provides.provides == provides_ramp || provides.provides == provides_stonefall_trap
-						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap
-						|| provides.provides == provides_spikes)
+						|| provides.provides == provides_ramp)
 					{
 						topology::perform_construction(b.building_target.building_entity, tag, material);
 					}
-					else if (provides.provides == provides_signal_recipient) {
+					else if (provides.provides == provides_signal_recipient || provides.provides == provides_spikes) {
 						entity(b.building_target.building_entity)->assign(receives_signal_t{});
 					}
 					else if (provides.provides == provides_lever) {
 						entity(b.building_target.building_entity)->assign(lever_t{});
+					}
+					else if (provides.provides == provides_stonefall_trap
+						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap)
+					{
+						if (provides.provides == provides_stonefall_trap) entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_STONEFALL });
+						if (provides.provides == provides_cage_trap) entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_CAGE });
+						if (provides.provides == provides_blades_trap) entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_BLADE });
 					}
 				}
 				if (finder->emits_smoke) {

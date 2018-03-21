@@ -396,6 +396,7 @@ namespace systems {
 								else {
 									building_name = std::string("(") + finder->name + std::string(") - Incomplete");
 								}
+								if (debug::show_flags && building_entity->component<receives_signal_t>()) building_name += " (rs)";
 							}
 							lines.push_back(color_line(std::string(ICON_FA_BUILDING) + std::string(" ") + building_name, color_yellow));
 

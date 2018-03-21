@@ -191,34 +191,6 @@ namespace systems {
 					set_tile_type(index, tile_type::RAMP);
 					set_tile_material(index, e.material);
 				}
-				else if (provides.provides == provides_cage_trap) {
-					// Create a new entity for the trap
-					// Add an entry_trigger and a position to it
-					const auto [x,y,z] = idxmap(index);
-					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ TRIGGER_CAGE });
-					entity_should_be_deleted = false;
-				}
-				else if (provides.provides == provides_stonefall_trap) {
-					// Create a new entity for the trap
-					// Add an entry_trigger and a position to it
-					const auto &[x,y,z] = idxmap(index);
-					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ TRIGGER_STONEFALL });
-					entity_should_be_deleted = false;
-				}
-				else if (provides.provides == provides_blades_trap) {
-					// Create a new entity for the trap
-					// Add an entry_trigger and a position to it
-					const auto &[x,y,z] = idxmap(index);
-					create_entity()->assign(position_t{ x, y, z })->assign(entry_trigger_t{ TRIGGER_BLADE });
-					entity_should_be_deleted = false;
-				}
-				else if (provides.provides == provides_spikes) {
-					// Create a new entity for the trap
-					// Add an entry_trigger and a position to it
-					const auto [x,y,z] = idxmap(index);
-					create_entity()->assign(position_t{ x, y, z })->assign(receives_signal_t{});
-					entity_should_be_deleted = false;
-				}
 			}
 
 			tile_calculate(construction_pos->x, construction_pos->y, construction_pos->z);
