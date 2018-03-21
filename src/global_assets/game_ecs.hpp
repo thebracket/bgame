@@ -41,12 +41,6 @@ namespace bengine {
 		return impl::ecs.entities_with_component<C>();
 	}
 
-	template <class C, class F>
-	inline void all_components(const F& func) noexcept
-	{
-		impl::ecs.all_components<C>(func);
-	}
-
 	template <class...Components, class F>
 	inline void each(const F &func) noexcept
 	{
@@ -63,11 +57,6 @@ namespace bengine {
 	inline void each_without(const F &func) noexcept
 	{
 		impl::ecs.each_without<Exclude, Components...>(func);
-	}
-
-	inline void ecs_garbage_collect() noexcept
-	{
-		impl::ecs.garbage_collect();
 	}
 
 	void ecs_save(std::unique_ptr<std::ofstream> &lbfile) noexcept;

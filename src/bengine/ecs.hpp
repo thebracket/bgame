@@ -29,26 +29,12 @@ namespace bengine
 		return std::disjunction_v<std::is_same<T, Ts>...>;
 	}
 
-	template<class Component>
-	struct component_holder
-	{
-		bool is_deleted = false;
-		int entity_id = 0;
-		Component c;
-
-		template<class Archive>
-		void serialize(Archive & archive)
-		{
-			archive(is_deleted, entity_id, c); // serialize things by passing them to the archive
-		}
-	};
-
 	template<class ... Components>
 	class ecs_t
 	{
 	public:
 		template<typename ...Ts, size_t... I>
-		void setup_index(std::tuple<std::pair<size_t, std::vector<Ts>>...> &tuple, std::index_sequence<I...>) noexcept
+		void setup_index(std::tuple<std::pair<size_t, std::map<int, Ts>>...> &tuple, std::index_sequence<I...>) noexcept
 		{
 			(void)(std::initializer_list<int> {
 				(std::get<I>(tuple).first = I, 0)...
@@ -56,10 +42,10 @@ namespace bengine
 		}
 
 		template<typename ...Ts, size_t... I>
-		void delete_components_for_entity(std::tuple<std::pair<size_t, std::vector<Ts>>...> &tuple, std::index_sequence<I...>, const int &entity_id) noexcept
+		void delete_components_for_entity(std::tuple<std::pair<size_t, std::map<int, Ts>>...> &tuple, std::index_sequence<I...>, const int &entity_id) noexcept
 		{
 			(void)(std::initializer_list<int> {
-				(std::for_each(std::get<I>(tuple).second.begin(), std::get<I>(tuple).second.end(), [&entity_id](auto &c) { if (c.entity_id == entity_id) c.is_deleted = true; }), 0)...
+				(std::get<I>(tuple).second.erase(entity_id), 0)...
 			});
 		}
 
@@ -125,11 +111,7 @@ namespace bengine
 				}
 
 				// Now flag the component as deleted
-				std::for_each(
-					std::get < std::pair<size_t, std::vector<component_holder<ComponentToDelete>>>>(storage).second.begin(),
-					std::get < std::pair<size_t, std::vector<component_holder<ComponentToDelete>>>>(storage).second.end(),
-					[&id](auto &ch) { if (ch.entity_id == id) ch.is_deleted = true; }
-				);
+				std::get<std::pair<size_t, std::map<int, ComponentToDelete>>>(storage).second.erase(id);
 			}
 		}		
 
@@ -137,7 +119,7 @@ namespace bengine
 		constexpr size_t get_component_family_id() const noexcept
 		{
 			static_assert(!contains<Component>(), "ECS type unregistered.");
-			return std::get<std::pair<size_t, std::vector<component_holder<Component>>>>(storage).first;
+			return std::get<std::pair<size_t, std::map<int, Component>>>(storage).first;
 		}
 
 		template <class Component>
@@ -153,24 +135,17 @@ namespace bengine
 			return result;
 		}
 
-		template <class Component, class Function>
-		void all_components(const Function && f) noexcept
-		{
-			std::for_each(
-				std::get<std::pair<size_t, std::vector<component_holder<Component>>>>(storage).second.begin(),
-				std::get<std::pair<size_t, std::vector<component_holder<Component>>>>(storage).second.end(),
-				[&f](auto & ch) { f(ch.c); }
-			);
-		}
-
 		template <class Component>
 		Component * entity_component(const int &id) noexcept
 		{
-			for (auto &ch : std::get<std::pair<size_t, std::vector<component_holder<Component>>>>(storage).second)
+			const auto finder = std::get<std::pair<size_t, std::map<int, Component>>>(storage).second.find(id);
+			if (finder == std::get<std::pair<size_t, std::map<int, Component>>>(storage).second.end())
 			{
-				if (!ch.is_deleted && ch.entity_id == id) return &ch.c;
+				return nullptr;
+			} else
+			{
+				return &finder->second;
 			}
-			return nullptr;
 		}
 
 		template <class ... ComponentsToIterate>
@@ -322,23 +297,6 @@ namespace bengine
 			}
 		}
 
-		template<typename ...Ts, size_t... I>
-		void garbage_collect_impl(std::tuple<std::pair<size_t, std::vector<Ts>>...> &tuple, std::index_sequence<I...>) noexcept
-		{
-			(void)(std::initializer_list<int> {
-				(std::get<I>(tuple).second.erase(
-					std::remove_if(std::get<I>(tuple).second.begin(), std::get<I>(tuple).second.end(), [](const auto &ch) { return ch.is_deleted; }),
-					std::get<I>(tuple).second.end()
-				)
-					, 0)...
-			});
-		}
-
-		void garbage_collect() noexcept
-		{
-			garbage_collect_impl(storage, std::index_sequence_for<Components...>{});
-		}
-
 		template<class Archive>
 		void serialize(Archive & archive)
 		{
@@ -347,7 +305,7 @@ namespace bengine
 
 		int entity_counter = 0;
 		std::map<int, entity_t> entities;
-		std::tuple<std::pair<size_t, std::vector<component_holder<Components>>>...> storage;
+		std::tuple<std::pair<size_t, std::map<int, Components>>...> storage;
 		std::map<int, std::bitset<sizeof...(Components)>> component_mask;
 	};
 
@@ -367,9 +325,8 @@ namespace bengine
 				std::terminate();
 			}
 
-			component_holder<Component> ch{ false, id, component };
-			auto * target_vector = &std::get<std::pair<size_t, std::vector<component_holder<Component>>>>(ecs->storage).second;
-			target_vector->emplace_back(ch);
+			auto * target_map = &std::get<std::pair<size_t, std::map<int, Component>>>(ecs->storage).second;
+			target_map->insert(std::make_pair(id, component));
 			const auto family_id = ecs->get_component_family_id<Component>();
 			ecs->component_mask[id].set(family_id);
 			return this;

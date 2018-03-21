@@ -132,7 +132,6 @@ namespace play_game {
 			}
 
             systems::run(duration_ms);
-	        bengine::ecs_garbage_collect();
         }
 
         ImGui::Render();
