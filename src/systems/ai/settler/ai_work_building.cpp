@@ -21,6 +21,7 @@
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../distance_map_system.hpp"
 #include "../../../global_assets/game_ecs.hpp"
+#include "../../physics/trigger_system.hpp"
 
 namespace systems {
 	namespace ai_building {
@@ -264,6 +265,7 @@ namespace systems {
 						if (provides.provides == provides_stonefall_trap) entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_STONEFALL });
 						if (provides.provides == provides_cage_trap) entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_CAGE });
 						if (provides.provides == provides_blades_trap) entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_BLADE });
+						systems::triggers::triggers_changed.enqueue(triggers::triggers_changed_message{});
 					}
 				}
 				if (finder->emits_smoke) {

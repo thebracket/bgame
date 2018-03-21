@@ -82,7 +82,7 @@ namespace systems {
 				sentient.hostile = false;
 			}
 
-			if (sentient.goal == SENTIENT_GOAL_KILL) {
+			if (sentient.goal == SENTIENT_GOAL_KILL && pos) {
 				sentient.hostile = true;
 				//std::cout << "Sentient kill mode\n";
 				// Close for the kill!
