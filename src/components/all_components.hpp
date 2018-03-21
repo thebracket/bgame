@@ -80,6 +80,7 @@
 #include "item_tags/item_farming.hpp"
 #include "item_tags/item_fertilizer_t.hpp"
 #include "item_tags/item_food_t.hpp"
+#include "item_tags/item_food_prepared_t.hpp"
 #include "item_tags/item_hide_t.hpp"
 #include "item_tags/item_leather_t.hpp"
 #include "item_tags/item_melee_t.hpp"
@@ -118,7 +119,7 @@ namespace bengine {
 			item_ammo_t, item_bone_t, item_chopping_t, item_digging_t, item_drink_t, item_farming_t, item_fertilizer_t,
 			item_food_t, item_hide_t, item_leather_t, item_melee_t, item_ranged_t, item_seed_t, item_skull_t, item_spice_t,
 			item_topsoil_t, item_t, item_carried_t, item_creator_t, item_quality_t, item_stored_t, item_wear_t, designated_miner_t,
-			mining_designations_t, ai_tag_work_stockpiles_t
+			mining_designations_t, ai_tag_work_stockpiles_t, item_food_prepared_t
 		>;
 	}
 }

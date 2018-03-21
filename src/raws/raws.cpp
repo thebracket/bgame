@@ -126,6 +126,7 @@ void decorate_item_categories(bengine::entity_t &item, std::bitset<NUMBER_OF_ITE
 	if (categories.test(ITEM_SEED)) item.assign(item_seed_t{});
 	if (categories.test(ITEM_TOPSOIL)) item.assign(item_topsoil_t{});
 	if (categories.test(ITEM_FERTILIZER)) item.assign(item_fertilizer_t{});
+	if (categories.test(ITEM_FOOD_PREPARED)) item.assign(item_food_prepared_t{});
 }
 
 void spawn_item_on_ground(const int x, const int y, const int z, const std::string &tag, const std::size_t &material, uint8_t quality, uint8_t wear, int creator_id, std::string creator_name) noexcept

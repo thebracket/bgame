@@ -22,6 +22,7 @@ constexpr int ITEM_FARMING = 13;
 constexpr int ITEM_SEED = 14;
 constexpr int ITEM_TOPSOIL = 15;
 constexpr int ITEM_FERTILIZER = 16;
+constexpr int ITEM_FOOD_PREPARED = 17;
 
 struct stockpile_def_t {
     int index = 0;

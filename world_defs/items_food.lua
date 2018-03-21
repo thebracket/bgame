@@ -4,7 +4,7 @@
 items["tiny_marshmallow"] = {
     name = "Tiny Marshmallow",
     description = "A tiny lump of congealed sugar",
-    itemtype = {"food"},
+    itemtype = {"food-prepared"},
     glyph = glyphs['squared'],
     glyph_ascii = glyphs['squared'],
     foreground = colors['magenta'],
@@ -26,7 +26,7 @@ items["tea_replicated"] = {
 items["sandwich_replicated"] = {
     name = "Stale-tasting sandwich",
     description = "A replicated sandwich that sort-of tastes like chicken",
-    itemtype = {"food"},
+    itemtype = {"food-prepared"},
     glyph = glyphs['squared'],
     glyph_ascii = glyphs['squared'],
     foreground = colors['wood_brown'],
@@ -51,7 +51,7 @@ items["meat"] = {
 items["roast_simple"] = {
     name="Roasted",
     description = "Roasted food",
-    itemtype = { "food" }, glyph = glyphs["inv_exclaim"],
+    itemtype = { "food-prepared" }, glyph = glyphs["inv_exclaim"],
     glyph_ascii = glyphs['inv_exclaim'],
     foreground=colors['brown'], background=colors['black'],
     stockpile=stockpiles['food'],

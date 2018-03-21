@@ -571,6 +571,13 @@ void serialize(Archive & archive, item_fertilizer_t &tag)
 }
 
 template<class Archive>
+void serialize(Archive & archive, item_food_prepared_t &f)
+{
+	// Nothing to save
+	//archive( );
+}
+
+template<class Archive>
 void serialize(Archive & archive, item_food_t &f)
 {
 	// Nothing to save
