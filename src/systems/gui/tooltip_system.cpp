@@ -80,6 +80,7 @@ namespace systems {
 								farm_designations->harvest.emplace_back(std::make_pair(false, position_t{ x, y, z }));
 							}
 						}
+						context_menu = false;
 						ImGui::EndMenu();
 					}
 				}
@@ -112,16 +113,19 @@ namespace systems {
 								}
 								game_master_mode = ROGUE;
 								units_ui::selected_settler = entity.id;
+								context_menu = false;
 							}
 							if (ImGui::MenuItem(btn_viewmode.c_str()))
 							{
 								game_master_mode = SETTLER;
 								units_ui::selected_settler = entity.id;
+								context_menu = false;
 							}
 							if (ImGui::MenuItem(btn_followmode.c_str()))
 							{
 								camera->following = entity.id;
 								game_master_mode = PLAY;
+								context_menu = false;
 							}
 							ImGui::EndMenu();
 						}
@@ -155,6 +159,7 @@ namespace systems {
 							if (ImGui::MenuItem("Deconstruct"))
 							{
 								designations->deconstructions.emplace_back(true, building_entity->id);
+								context_menu = false;
 							}
 
 							const auto blever = building_entity->component<lever_t>();
@@ -163,12 +168,14 @@ namespace systems {
 								if (ImGui::MenuItem("Pull Lever"))
 								{
 									triggers::lever_pull_requests.enqueue(triggers::request_lever_pull_message{ building_entity->id });
+									context_menu = false;
 								}
 								if (ImGui::MenuItem("Manage Lever Connections"))
 								{
 									triggers::trigger_details.enqueue(triggers::trigger_details_requested{ building_entity->id });
 									game_master_mode = TRIGGER_MANAGEMENT;
 									pause_mode = PAUSED;
+									context_menu = false;
 								}
 							}
 
@@ -181,6 +188,7 @@ namespace systems {
 									{
 										bdoor->locked = false;
 										doors::doors_changed();
+										context_menu = false;
 									}
 								} else
 								{
@@ -188,6 +196,7 @@ namespace systems {
 									{
 										bdoor->locked = true;
 										doors::doors_changed();
+										context_menu = false;
 									}
 								}
 							}
