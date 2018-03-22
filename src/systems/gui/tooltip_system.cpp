@@ -78,9 +78,9 @@ namespace systems {
 							if (ImGui::MenuItem(harvest.c_str()))
 							{
 								farm_designations->harvest.emplace_back(std::make_pair(false, position_t{ x, y, z }));
+								context_menu = false;
 							}
 						}
-						context_menu = false;
 						ImGui::EndMenu();
 					}
 				}
