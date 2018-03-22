@@ -2,6 +2,7 @@
 #include "../helpers/targeted_flow_map.hpp"
 #include "../damage/damage_system.hpp"
 #include "../../global_assets/rng.hpp"
+#include "../../raws/raws.hpp"
 
 namespace systems {
 	namespace gravity {
@@ -14,6 +15,17 @@ namespace systems {
 				const auto idx = mapidx(pos);
 				if (!region::flag(idx, tile_flags::CAN_STAND_HERE))
 				{
+					const auto building = e.component<building_t>();
+					if (building)
+					{
+						// We need to desconstruct it
+						for (const auto &component : building->built_with)
+						{
+							// tag, material
+							spawn_item_on_ground(pos.x, pos.y, pos.z, component.first, component.second);
+						}
+						delete_entity(e.id);
+					}
 					e.assign(falling_t{0});
 				}
 			});
