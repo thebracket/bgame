@@ -86,6 +86,7 @@
 #include "../global_assets/debug_flags.hpp"
 #include "ai/settler/ai_work_stockpile.hpp"
 #include "ai/settler/ai_deconstruct.hpp"
+#include "gui/building_info.hpp"
 
 namespace systems {
 	constexpr int CAMERA_SYSTEM = 1;
@@ -168,6 +169,7 @@ namespace systems {
 	constexpr int AI_BUTCHER_SYSTEM = 78;
 	constexpr int AI_STOCKPILE_SYSTEM = 79;
 	constexpr int AI_DECONSTRUCT_SYSTEM = 80;
+	constexpr int BUILDING_INFO_SYS = 81;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -271,6 +273,7 @@ namespace systems {
 		system_names[AI_BUTCHER_SYSTEM] = "Butcher System";
 		system_names[AI_STOCKPILE_SYSTEM] = "AI Stockpiling";
 		system_names[AI_DECONSTRUCT_SYSTEM] = "Deconstruction";
+		system_names[BUILDING_INFO_SYS] = "Building Info";
 		game_master_mode = PLAY;
     }
 
@@ -304,6 +307,9 @@ namespace systems {
 		}
 		else if (game_master_mode == WISHMODE) {
 			run_system(wishmode::run, duration_ms, WISH_MODE_SYSTEM);
+		}
+		else if (game_master_mode == BUILDING_INFO) {
+			run_system(building_info::run, duration_ms, WISH_MODE_SYSTEM);
 		}
 
         // Items that only run if the simulation has ticked

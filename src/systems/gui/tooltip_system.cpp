@@ -35,6 +35,7 @@
 #include "../../global_assets/game_pause.hpp"
 #include "../../global_assets/building_designations.hpp"
 #include "../../global_assets/game_designations.hpp"
+#include "building_info.hpp"
 
 using namespace tile_flags;
 
@@ -155,7 +156,12 @@ namespace systems {
 						const std::string building_menu = std::string(ICON_FA_BUILDING) + std::string(" ") + building_name;
 						if (ImGui::BeginMenu(building_menu.c_str()))
 						{
-							ImGui::MenuItem("Building Information");
+							if (ImGui::MenuItem("Building Information"))
+							{
+								game_master_mode = BUILDING_INFO;
+								building_info::selected_building = building_on_tile;
+								context_menu = false;
+							}
 							if (ImGui::MenuItem("Deconstruct"))
 							{
 								designations->deconstructions.emplace_back(true, building_entity->id);

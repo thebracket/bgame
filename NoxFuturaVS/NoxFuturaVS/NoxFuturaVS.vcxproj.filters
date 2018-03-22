@@ -840,6 +840,9 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_deconstruct.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\building_info.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -1900,6 +1903,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_deconstruct.hpp">
       <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\building_info.hpp">
+      <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
