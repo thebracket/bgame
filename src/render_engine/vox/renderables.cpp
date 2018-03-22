@@ -9,11 +9,8 @@
 #include "../../components/renderable.hpp"
 #include "../../components/grazer_ai.hpp"
 #include "../../components/sentient_ai.hpp"
-#include "../../raws/defs/item_def_t.hpp"
 #include "voxel_model.hpp"
 #include "voxreader.hpp"
-#include "../../global_assets/shader_storage.hpp"
-#include "../../global_assets/texture_storage.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../../raws/buildings.hpp"
@@ -29,9 +26,6 @@
 #include "../camera.hpp"
 #include "../../components/sleep_clock_t.hpp"
 #include "../../components/health.hpp"
-#include "../shaders/voxel_shader.hpp"
-#include "../shaders/voxel_shadow_shader.hpp"
-#include "../ubo/first_stage_ubo.hpp"
 #include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
@@ -42,7 +36,6 @@ namespace render {
 	static std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
 	std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
 	static std::vector<std::tuple<int, int, int, bengine::color_t, uint16_t>> glyphs;
-	static std::vector<float> glyph_buffer;
 	static unsigned int sprite_vao = 0;
 	static unsigned int sprite_vbo = 0;
 	static unsigned int glyph_vao = 0;
@@ -83,7 +76,7 @@ namespace render {
 						}
 
 						add_voxel_model(b.vox_model, x, y, z, red, green, blue, static_cast<float>(pos.rotation) * 3.14159265358979323846f, 0.0f, 1.0f, 0.0f);
-					} // TODO: Add ASCII support
+					}
 				}
 			}
 		});
@@ -158,8 +151,7 @@ namespace render {
 		const auto sleepy = e.component<sleep_clock_t>();
 		if (sleepy && sleepy->is_sleeping) return true;
 		const auto health = e.component<health_t>();
-		if (health && health->unconscious) return true;
-		return false;
+		return (health && health->unconscious);
 	}
 	
 	struct composite_cache_t
@@ -226,7 +218,7 @@ namespace render {
 
 				// Add items
 				using namespace bengine;
-				each<item_t, item_carried_t>([&pos, &e, &inner_x, &inner_y, &inner_z, &rotation, &rot1, &rot2, &rot3, &cc](entity_t &E, item_t &item, item_carried_t &carried) {
+				each<item_t, item_carried_t>([&e, &inner_x, &inner_y, &inner_z, &rotation, &rot1, &rot2, &rot3, &cc](entity_t &E, item_t &item, item_carried_t &carried) {
 					if (carried.carried_by == e.id && item.clothing_layer > 0) {
 						add_voxel_model(item.clothing_layer, inner_x, inner_y, inner_z, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b, rotation, rot1, rot2, rot3);
 						cc.emplace_back(composite_cache_t{ item.clothing_layer, item.clothing_color.r, item.clothing_color.g, item.clothing_color.b });
@@ -267,8 +259,6 @@ namespace render {
 				for (auto &model : target->static_voxel_models) {
 					for (auto &pos : model.second) {
 						if (std::get<2>(pos) <= camera_position->region_z) {
-							//std::cout << model.first << "\n";
-							auto finder = models_to_render->find(model.first);
 							const auto &[a, c, b] = pos;
 							add_voxel_model(model.first, static_cast<float>(a), static_cast<float>(b), static_cast<float>(c), 1.0f, 1.0f, 1.0f);
 						}

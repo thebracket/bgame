@@ -11,7 +11,7 @@ struct camera_options_t {
     bool ascii_mode = false;
     int zoom_level = 12;
 	bool perspective = true;
-	size_t following = 0;
+	int following = 0;
 	bool fps = false;
 };
 
