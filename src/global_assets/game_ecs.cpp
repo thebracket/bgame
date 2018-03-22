@@ -695,6 +695,13 @@ void serialize(Archive & archive, ai_tag_work_stockpiles_t &m)
 	archive( m.tool_id, m.step, m.destination );
 }
 
+template<class Archive>
+void serialize(Archive & archive, flying_t &m)
+{
+	// Nothing to save
+	//archive( );
+}
+
 namespace bengine {
 	namespace impl
 	{

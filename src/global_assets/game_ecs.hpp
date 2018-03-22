@@ -59,6 +59,12 @@ namespace bengine {
 		impl::ecs.each_without<Exclude, Components...>(func);
 	}
 
+	template <class Exclude, class Exclude2, class ... Components, class F>
+	inline void each_without_both(const F &func) noexcept
+	{
+		impl::ecs.each_without_both<Exclude, Exclude2, Components...>(func);
+	}
+
 	void ecs_save(std::unique_ptr<std::ofstream> &lbfile) noexcept;
 	void ecs_load(std::unique_ptr<std::ifstream> &lbfile) noexcept;
 }

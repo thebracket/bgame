@@ -1889,6 +1889,9 @@
     <ClInclude Include="..\..\src\components\item_tags\item_food_prepared_t.hpp">
       <Filter>Header Files\components\item_tags</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\components\flying_t.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset.hpp">

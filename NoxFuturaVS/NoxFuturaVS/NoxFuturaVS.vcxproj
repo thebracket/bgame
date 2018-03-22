@@ -509,6 +509,7 @@
     <ClInclude Include="..\..\src\components\farming\designated_farmer.hpp" />
     <ClInclude Include="..\..\src\components\farming\designated_hunter.hpp" />
     <ClInclude Include="..\..\src\components\farming\farm_designs.hpp" />
+    <ClInclude Include="..\..\src\components\flying_t.hpp" />
     <ClInclude Include="..\..\src\components\game_stats.hpp" />
     <ClInclude Include="..\..\src\components\grazer_ai.hpp" />
     <ClInclude Include="..\..\src\components\health.hpp" />

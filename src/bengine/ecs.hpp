@@ -297,6 +297,24 @@ namespace bengine
 			}
 		}
 
+		template <class ComponentToIgnore, class ComponentToIgnore2, class ... ComponentsToIterate, typename Function>
+		void each_without_both(const Function &callback) noexcept
+		{
+			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
+			for (auto &entity : entities)
+			{
+				const auto entity_id = entity.second.id;
+				if (!entity.second.is_deleted)
+				{
+					if (entity_does_not_have<ComponentToIgnore>(entity.second) && entity_does_not_have<ComponentToIgnore2>(entity.second) && entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
+					{
+						// It matches!
+						callback(entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
+					}
+				}
+			}
+		}
+
 		template<class Archive>
 		void serialize(Archive & archive)
 		{
