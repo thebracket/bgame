@@ -143,6 +143,7 @@ voxel_models = {
     spikes_extended = { model=vfn("spikes-extended"), id=130 },
     blades_retracted = { model=vfn("blades-retracted"), id=131 },
     blades_extended = { model=vfn("blades-extended"), id=132 },
+    stonefall = { model=vfn("stonefall"), id=133 },
 }
 
 function voxelId(name)

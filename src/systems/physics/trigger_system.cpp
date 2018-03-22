@@ -251,6 +251,13 @@ namespace systems {
 									// TODO: Add a random chance with some dex involved
 									// Spawn some damage!
 									damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.entity_id, rng.roll_dice(3,8), "spinning blades" });
+
+									// Extend the blades
+									auto building = target_entity->component<building_t>();
+									if (building)
+									{
+										building->vox_model = 132;
+									}
 								}
 							}
 						}

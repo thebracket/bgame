@@ -35,7 +35,6 @@ namespace render {
 	bool models_changed = true;
 	static std::unique_ptr<boost::container::flat_map<int, std::vector<vox::instance_t>>> models_to_render;
 	std::vector<std::unique_ptr<vox::voxel_render_buffer_t>> model_buffers;
-	static std::vector<std::tuple<int, int, int, bengine::color_t, uint16_t>> glyphs;
 	static unsigned int sprite_vao = 0;
 	static unsigned int sprite_vbo = 0;
 	static unsigned int glyph_vao = 0;
@@ -136,10 +135,8 @@ namespace render {
 						auto x = static_cast<float>(pos.x);
 						const auto y = static_cast<float>(pos.z);
 						auto z = static_cast<float>(pos.y);
+
 						add_voxel_model(r.vox, x, y, z, 1.0f, 1.0f, 1.0f);
-					}
-					else if (r.glyph_ascii > 0) {
-						glyphs.emplace_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ pos.x, pos.y, pos.z, r.foreground, r.glyph });
 					}
 				}
 			}
@@ -274,17 +271,12 @@ namespace render {
 			if (visible_chunk_set.find(chunkidx) != visible_chunk_set.end()) {
 				if (r.vox != 0) {
 					//std::cout << "Found critter " << r.vox << "\n";
-					auto finder = models_to_render->find(r.vox);
-					vox::instance_t render_model{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(render_model);
-					}
-					else {
-						models_to_render->insert(std::make_pair(r.vox, std::vector<vox::instance_t>{ render_model }));
-					}
-				}
-				else {
-					glyphs.emplace_back(std::tuple<int, int, int, bengine::color_t, uint16_t>{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), r.foreground, r.glyph_ascii });
+					const auto is_upright = true;
+					const auto rotation = is_upright ? (static_cast<float>(pos.rotation) * 3.14159265358979323846f) / 180.0f : 1.5707963267948966192313216916398f;
+					const auto rot1 = is_upright ? 0.0f : 1.0f;
+					const auto rot2 = is_upright ? 1.0f : 0.0f;
+					const auto rot3 = 0.0f;
+					add_voxel_model(r.vox, static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), 1.0f, 1.0f, 1.0f, rotation, rot1, rot2, rot3);
 				}
 			}
 		});
@@ -298,14 +290,13 @@ namespace render {
 				const int chunkidx = chunks::chunk_id_by_world_pos(pos.x, pos.y, pos.z);
 				if (visible_chunk_set.find(chunkidx) != visible_chunk_set.end()) {
 					//std::cout << "Found critter " << r.vox << "\n";
-					auto finder = models_to_render->find(def->voxel_model);
-					vox::instance_t render_model{ static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f };
-					if (finder != models_to_render->end()) {
-						finder->second.push_back(render_model);
-					}
-					else {
-						models_to_render->insert(std::make_pair(def->voxel_model, std::vector<vox::instance_t>{ render_model }));
-					}
+					const auto is_upright = true;
+					const auto rotation = is_upright ? (static_cast<float>(pos.rotation) * 3.14159265358979323846f) / 180.0f : 1.5707963267948966192313216916398f;
+					const auto rot1 = is_upright ? 0.0f : 1.0f;
+					const auto rot2 = is_upright ? 1.0f : 0.0f;
+					const auto rot3 = 0.0f;
+
+					add_voxel_model(def->voxel_model, static_cast<float>(pos.x), static_cast<float>(pos.z), static_cast<float>(pos.y), 1.0f, 1.0f, 1.0f, rotation, rot1, rot2, rot3);
 				}
 			}
 		});
@@ -324,7 +315,6 @@ namespace render {
 		if (models_changed) {
 			models_to_render->clear();
 			model_buffers.clear();
-			glyphs.clear();
 
 			build_chunk_models();
 			build_voxel_buildings();

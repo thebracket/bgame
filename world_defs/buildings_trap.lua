@@ -17,7 +17,7 @@ buildings["stonefall_trap"] = {
     skill = { name="Construction", difficulty=10 },
     provides = { stonefall_trap={energy_cost=0} },
     render_rex = "cagetrap.xp",
-    vox = voxelId("cage")
+    vox = voxelId("stonefall")
 };
 
 buildings["weapon_trap"] = {

@@ -209,6 +209,7 @@ namespace systems {
 					mount_pos->offset_x = epos->offset_x;
 					mount_pos->offset_y = epos->offset_y;
 					mount_pos->offset_z = epos->offset_z;
+					mount_pos->rotation = epos->rotation;
 				}
 
 				move_completions.enqueue(entity_moved_message{ msg.entity_id, origin, msg.destination });
