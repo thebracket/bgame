@@ -33,6 +33,8 @@
 #include "../physics/trigger_system.hpp"
 #include "../physics/door_system.hpp"
 #include "../../global_assets/game_pause.hpp"
+#include "../../global_assets/building_designations.hpp"
+#include "../../global_assets/game_designations.hpp"
 
 using namespace tile_flags;
 
@@ -150,7 +152,10 @@ namespace systems {
 						if (ImGui::BeginMenu(building_menu.c_str()))
 						{
 							ImGui::MenuItem("Building Information");
-							ImGui::MenuItem("Deconstruct");
+							if (ImGui::MenuItem("Deconstruct"))
+							{
+								designations->deconstructions.emplace_back(true, building_entity->id);
+							}
 
 							const auto blever = building_entity->component<lever_t>();
 							if (blever)

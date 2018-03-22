@@ -26,7 +26,9 @@ namespace systems {
 						}
 						delete_entity(e.id);
 					}
-					e.assign(falling_t{0});
+					else {
+						e.assign(falling_t{ 0 });
+					}
 				}
 			});
 

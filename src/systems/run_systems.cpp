@@ -85,6 +85,7 @@
 #include <boost/container/flat_map.hpp>
 #include "../global_assets/debug_flags.hpp"
 #include "ai/settler/ai_work_stockpile.hpp"
+#include "ai/settler/ai_deconstruct.hpp"
 
 namespace systems {
 	constexpr int CAMERA_SYSTEM = 1;
@@ -166,6 +167,7 @@ namespace systems {
 	constexpr int ARCHITECTURE_SYSTEM = 77;
 	constexpr int AI_BUTCHER_SYSTEM = 78;
 	constexpr int AI_STOCKPILE_SYSTEM = 79;
+	constexpr int AI_DECONSTRUCT_SYSTEM = 80;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -268,6 +270,7 @@ namespace systems {
 		system_names[ARCHITECTURE_SYSTEM] = "Architecture System";
 		system_names[AI_BUTCHER_SYSTEM] = "Butcher System";
 		system_names[AI_STOCKPILE_SYSTEM] = "AI Stockpiling";
+		system_names[AI_DECONSTRUCT_SYSTEM] = "Deconstruction";
 		game_master_mode = PLAY;
     }
 
@@ -349,6 +352,7 @@ namespace systems {
 			run_system(ai_hunt::run, duration_ms, AI_WORK_HUNT);
 			run_system(ai_butcher::run, duration_ms, AI_BUTCHER_SYSTEM);
 			run_system(ai_work_stockpiles::run, duration_ms, AI_STOCKPILE_SYSTEM);
+			run_system(ai_deconstruction::run, duration_ms, AI_DECONSTRUCT_SYSTEM);
 			run_system(ai_idle_time::run, duration_ms, AI_IDLE);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
 			run_system(triggers::run, duration_ms, TRIGGER_SYSTEM);

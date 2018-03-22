@@ -345,6 +345,7 @@
     <ClCompile Include="..\..\src\systems\ai\inventory_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\mining_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\sentient_ai_system.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_deconstruct.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_idle_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_new_arrival.cpp" />
@@ -472,6 +473,7 @@
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_architect.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_building.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_butcher.hpp" />
+    <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_deconstruct.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\aI_tag_work_farm_clear.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\aI_tag_work_farm_fertilize.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\aI_tag_work_farm_fixsoil.hpp" />
@@ -691,6 +693,7 @@
     <ClInclude Include="..\..\src\systems\ai\inventory_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\mining_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\sentient_ai_system.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_deconstruct.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_idle.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_idle_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_time.hpp" />

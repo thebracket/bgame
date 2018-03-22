@@ -182,7 +182,19 @@ namespace systems {
 					inventory_system::pickup_item(w.current_tool, e.id );
 
 					w.step = ai_tag_work_order::work_steps::GO_TO_WORKSHOP;
-					auto reactor_pos = entity(w.reaction_target.building_id)->component<position_t>();
+					const auto reactor_e = entity(w.reaction_target.building_id);
+					if (!reactor_e)
+					{
+						unclaim_by_id(w.current_tool);
+						work.cancel_work_tag(e);
+						delete_component<claimed_t>(w.reaction_target.building_id); // Unclaim the workshop
+						for (const auto &item : w.reaction_target.components)
+						{
+							delete_component<claimed_t>(item.first);
+						}
+						return;
+					}
+					const auto reactor_pos = reactor_e->component<position_t>();
 					w.current_path = find_path(pos, position_t{ reactor_pos->x, reactor_pos->y, reactor_pos->z });
 					return;
 				}

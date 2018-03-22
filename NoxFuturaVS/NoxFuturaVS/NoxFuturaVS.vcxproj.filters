@@ -837,6 +837,9 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_work_stockpile.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_deconstruct.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
@@ -1891,6 +1894,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\flying_t.hpp">
       <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_deconstruct.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\ai_tag_work_deconstruct.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

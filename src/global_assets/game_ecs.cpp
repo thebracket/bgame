@@ -702,6 +702,13 @@ void serialize(Archive & archive, flying_t &m)
 	//archive( );
 }
 
+template<class Archive>
+void serialize(Archive & archive, ai_tag_work_deconstruct &m)
+{
+	// Nothing to save
+	archive(m.step, m.target_building);
+}
+
 namespace bengine {
 	namespace impl
 	{
