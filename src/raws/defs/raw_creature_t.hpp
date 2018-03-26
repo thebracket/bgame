@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "../../bengine/color_t.hpp"
+#include <unordered_map>
 
 /*
  * Defines a creature's built-in attack type.

@@ -1,11 +1,8 @@
+#include "stdafx.h"
 #include "door_system.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_planet.hpp"
 #include "../../global_assets/rng.hpp"
-#include "../../components/position.hpp"
-#include "../../components/buildings/construct_provides_door.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 
 using namespace bengine;

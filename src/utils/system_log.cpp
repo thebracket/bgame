@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "system_log.hpp"
-#include <array>
-#include <vector>
 #include <mutex>
 #include <iostream>
 

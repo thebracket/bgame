@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "civ_ui_system.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_planet.hpp"

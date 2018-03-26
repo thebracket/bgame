@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "keydamper.hpp"
 #include "../bengine/imgui.h"
 

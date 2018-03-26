@@ -6,7 +6,7 @@
 #include <memory>
 
 namespace bengine {
-	struct entity_t;
+	class entity_t;
 }
 
 namespace workflow {

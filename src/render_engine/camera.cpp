@@ -3,8 +3,6 @@
 #include "chunks/chunks.hpp"
 #include "../bengine/main_window.hpp"
 #include "../bengine/geometry.hpp"
-#include "../bengine/ecs.hpp"
-#include "../components/position.hpp"
 #include "ubo/first_stage_ubo.hpp"
 #include "../global_assets/game_ecs.hpp"
 

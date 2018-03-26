@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "camera_system.hpp"
 #include "../../bengine/imgui.h"
 #include "../../global_assets/game_camera.hpp"
@@ -9,13 +10,9 @@
 #include "../../bengine/analytics.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../bengine/main_window.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../components/position.hpp"
 #include "../../bengine/imgui.h"
 #include "../../bengine/IconsFontAwesome.h"
-#include "../../components/name.hpp"
 #include "../../global_assets/game_mode.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
     namespace camerasys {

@@ -1,13 +1,8 @@
+#include "stdafx.h"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include "../../components/items/item_carried.hpp"
-#include "../../components/items/item.hpp"
-#include "../../components/position.hpp"
 #include "../../global_assets/spatial_db.hpp"
-#include "../../components/items/item_stored.hpp"
-#include "../../components/claimed_t.hpp"
 #include "../../global_assets/game_building.hpp"
 #include "../helpers/inventory_assistant.hpp"
-#include "../../components/buildings/building.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../render_engine/vox/renderables.hpp"
 #include "../../raws/buildings.hpp"
@@ -16,7 +11,6 @@
 #include "../../planet/region/region.hpp"
 #include "distance_map_system.hpp"
 #include "../../global_assets/building_designations.hpp"
-#include "../../global_assets/game_ecs.hpp"
 #include "../../bengine/btabs.hpp"
 
 namespace systems {

@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "game_stats.hpp"
-#include "../components/logger.hpp"
 #include "../systems/gui/log_system.hpp"
 #include "../utils/system_log.hpp"
 

@@ -32,8 +32,8 @@
 #include "buildings/construct_power.hpp"
 #include "buildings/construct_provides_door.hpp"
 #include "buildings/construct_provides_sleep.hpp"
-#include "buildings/entry_trigger.hpp"
-#include "buildings/receives_signal.hpp"
+#include "machinery/entry_trigger.hpp"
+#include "machinery/receives_signal.hpp"
 #include "buildings/smoke_emitter.hpp"
 #include "buildings/turret_t.hpp"
 #include "farming/designated_farmer.hpp"
@@ -52,7 +52,7 @@
 #include "grazer_ai.hpp"
 #include "health.hpp"
 #include "initiative.hpp"
-#include "lever.hpp"
+#include "machinery/lever.hpp"
 #include "lightsource.hpp"
 #include "logger.hpp"
 #include "natural_attacks_t.hpp"
@@ -98,9 +98,15 @@
 #include "mining/designated_miner.hpp"
 #include "mining/mining_designations.hpp"
 #include "ai_tags/ai_tag_work_deconstruct.hpp"
+#include "machinery/sends_signal_t.hpp"
 #include "helpers/reaction_task_t.hpp"
 #include "flying_t.hpp"
 #include "../bengine/ecs.hpp"
+#include "machinery/signal_processor_t.hpp"
+#include "machinery/float_gauge_t.hpp"
+#include "machinery/pressure_plate_t.hpp"
+#include "machinery/proximity_sensor_t.hpp"
+#include "helpers/standing_orders.hpp"
 
 namespace bengine {
 	template<class ... Components>
@@ -121,7 +127,8 @@ namespace bengine {
 			item_ammo_t, item_bone_t, item_chopping_t, item_digging_t, item_drink_t, item_farming_t, item_fertilizer_t,
 			item_food_t, item_hide_t, item_leather_t, item_melee_t, item_ranged_t, item_seed_t, item_skull_t, item_spice_t,
 			item_topsoil_t, item_t, item_carried_t, item_creator_t, item_quality_t, item_stored_t, item_wear_t, designated_miner_t,
-			mining_designations_t, ai_tag_work_stockpiles_t, item_food_prepared_t, flying_t, ai_tag_work_deconstruct
+			mining_designations_t, ai_tag_work_stockpiles_t, item_food_prepared_t, flying_t, ai_tag_work_deconstruct, sends_signal_t, 
+			signal_processor_t, float_gauge_t, pressure_plate_t, proximity_sensor_t
 		>;
 	}
 }

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "design_mode.hpp"
 #include "../keydamper.hpp"
 #include "../../global_assets/game_mode.hpp"

@@ -8,9 +8,6 @@
 #include "../global_assets/shader_storage.hpp"
 #include "../bengine/textures.hpp"
 #include "../render_engine/fbo/buffertest.hpp"
-#include "../components/renderable.hpp"
-#include "../components/buildings/building.hpp"
-#include "../components/renderable_composite.hpp"
 #include "../systems/mouse.hpp"
 #include "../global_assets/game_mode.hpp"
 #include "../global_assets/game_designations.hpp"
@@ -27,8 +24,6 @@
 #include "../systems/gui/design_harvest.hpp"
 #include "../global_assets/farming_designations.hpp"
 #include "../systems/gui/design_architecture.hpp"
-#include <array>
-#include "../bengine/ecs.hpp"
 #include "../utils/system_log.hpp"
 #include "../global_assets/game_config.hpp"
 #include "../render_engine/shaders/ascii_base_shader.hpp"

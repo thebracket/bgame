@@ -1,19 +1,12 @@
+#include "stdafx.h"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
-#include "../../components/settler_ai.hpp"
-#include "../../components/name.hpp"
-#include "../../components/game_stats.hpp"
-#include "../../components/species.hpp"
-#include "../../components/grazer_ai.hpp"
-#include "../../components/sentient_ai.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../global_assets/game_camera.hpp"
 #include "../../render_engine/camera.hpp"
 #include "../../render_engine/vox/renderables.hpp"
-#include "../../components/health.hpp"
 #include "../../bengine/btabs.hpp"
 #include "../../bengine/main_window.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace units_ui {

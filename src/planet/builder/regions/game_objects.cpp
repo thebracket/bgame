@@ -1,15 +1,7 @@
 #include "game_objects.hpp"
-#include "../../../components/calendar.hpp"
-#include "../../../bengine/ecs.hpp"
-#include "../../../components/world_position.hpp"
 #include "../../region/region.hpp"
-#include "../../../components/designations.hpp"
-#include "../../../components/logger.hpp"
-#include "../../../components/camera_options.hpp"
-#include "../../../components/mining/mining_designations.hpp"
 #include "../../../global_assets/farming_designations.hpp"
-#include "../../../components/buildings/building_designations_t.hpp"
-#include "../../../components/buildings/architecture_designations_t.hpp"
+#include "../../../components/helpers/shift.hpp"
 #include "../../../global_assets/game_ecs.hpp"
 
 void build_game_components(const int crash_x, const int crash_y, const int crash_z, const bool &ascii_mode) noexcept {

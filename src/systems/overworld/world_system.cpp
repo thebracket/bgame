@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "world_system.hpp"
 
 namespace systems {

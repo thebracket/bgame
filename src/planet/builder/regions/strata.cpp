@@ -1,12 +1,10 @@
 #include "strata.hpp"
 #include "../../planet_builder.hpp"
-#include "../../../components/water_spawner.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/plants.hpp"
 #include "../../../raws/defs/plant_t.hpp"
 #include "../../region/region.hpp"
 #include "../../../raws/materials.hpp"
-#include "../../../bengine/ecs.hpp"
 
 using namespace region;
 

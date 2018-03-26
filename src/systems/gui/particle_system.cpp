@@ -1,15 +1,12 @@
+#include "stdafx.h"
 #include "particle_system.hpp"
-#include "../../components/buildings/smoke_emitter.hpp"
 #include "../../global_assets/game_pause.hpp"
-#include "../../components/position.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../global_assets/shader_storage.hpp"
 #include "../../bengine/geometry.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../render_engine/shaders/particle_shader.hpp"
 #include "../../render_engine/ubo/first_stage_ubo.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace particles {

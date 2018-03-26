@@ -1,17 +1,10 @@
+#include "stdafx.h"
 #include "ai_work_building.hpp"
 #include "templated_work_steps_t.hpp"
-#include "../../../components/ai_tags/ai_tag_work_building.hpp"
 #include "../../helpers/inventory_assistant.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/buildings.hpp"
 #include "../../../raws/defs/building_def_t.hpp"
-#include "../../../components/buildings/building.hpp"
-#include "../../../components/buildings/construct_provides_sleep.hpp"
-#include "../../../components/lightsource.hpp"
-#include "../../../components/buildings/construct_provides_door.hpp"
-#include "../../../components/lever.hpp"
-#include "../../../components/buildings/receives_signal.hpp"
-#include "../../../components/buildings/smoke_emitter.hpp"
 #include "../../physics/visibility_system.hpp"
 #include "../workflow_system.hpp"
 #include "../../physics/topology_system.hpp"
@@ -20,7 +13,6 @@
 #include <fmt/ostream.h>
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../distance_map_system.hpp"
-#include "../../../global_assets/game_ecs.hpp"
 #include "../../physics/trigger_system.hpp"
 
 namespace systems {

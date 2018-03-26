@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "design_architecture.hpp"
 #include "../../bengine/gl_include.hpp"
 #include "../../global_assets/architecture_designations.hpp"
@@ -5,7 +6,6 @@
 #include "../../bengine/imgui.h"
 #include "../mouse.hpp"
 #include "../helpers/inventory_assistant.hpp"
-#include "../../components/buildings/bridge.hpp"
 #include "../../planet/region/region.hpp"
 #include "../ai/architecture_system.hpp"
 #include "../../global_assets/game_camera.hpp"
@@ -15,7 +15,6 @@
 #include "../keydamper.hpp"
 #include "../../bengine/btabs.hpp"
 #include <cereal/archives/xml.hpp>
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace design_architecture {

@@ -1,15 +1,12 @@
+#include "stdafx.h"
 #include "movement_system.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include "../../components/slidemove.hpp"
-#include "../../components/initiative.hpp"
-#include "../../components/riding_t.hpp"
 #include "../../global_assets/spatial_db.hpp"
 #include "trigger_system.hpp"
 #include "visibility_system.hpp"
 #include "../../render_engine/vox/renderables.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

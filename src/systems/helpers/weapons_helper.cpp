@@ -1,22 +1,16 @@
+#include "stdafx.h"
 #include "weapons_helper.hpp"
-#include "../../components/items/item_carried.hpp"
-#include "../../components/items/item.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
-#include "../../components/natural_attacks_t.hpp"
-#include "../../components/grazer_ai.hpp"
 #include "../../raws/species.hpp"
 #include "../../raws/defs/raw_creature_t.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
-#include "../../components/species.hpp"
 #include "../../raws/creatures.hpp"
 #include "../../raws/clothing.hpp"
 #include "../../raws/defs/clothing_t.hpp"
 #include "../ai/inventory_system.hpp"
-#include "../../components/items/item_quality.hpp"
 #include "../../utils/system_log.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace weapons {
 

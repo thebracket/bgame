@@ -1,7 +1,6 @@
+#include "stdafx.h"
 #include "ai_deconstruct.hpp"
 #include "templated_work_steps_t.hpp"
-#include "../../../components/ai_tags/ai_tag_work_deconstruct.hpp"
-#include "../../../bengine/ecs.hpp"
 #include "jobs_board.hpp"
 #include "../../../global_assets/game_designations.hpp"
 #include "../../../raws/raws.hpp"

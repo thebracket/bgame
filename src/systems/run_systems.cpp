@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "run_systems.hpp"
 #include "io/camera_system.hpp"
 #include "gui/tooltip_system.hpp"

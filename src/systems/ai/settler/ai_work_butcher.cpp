@@ -1,18 +1,14 @@
+#include "stdafx.h"
 #include "ai_work_butcher.hpp"
 #include "templated_work_steps_t.hpp"
-#include "../../../components/ai_tags/ai_tag_work_butcher.hpp"
-#include "../../../components/corpse_harvestable.hpp"
-#include "../../../components/buildings/building.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/creatures.hpp"
 #include "../../../raws/defs/raw_creature_t.hpp"
-#include "../../../components/name.hpp"
 #include "../../helpers/targeted_flow_map.hpp"
 #include "../distance_map_system.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
 #include "../../../raws/defs/material_def_t.hpp"
-#include "../../../components/farming/designated_hunter.hpp"
 
 namespace systems {
 	namespace ai_butcher {

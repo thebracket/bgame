@@ -1,13 +1,12 @@
+#include "stdafx.h"
 #include "settler_spawner_system.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_planet.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../../planet/builder/settler_builder.hpp"
 #include "../gui/log_system.hpp"
-#include "../../components/logger.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../global_assets/game_pause.hpp"
-#include <sstream>
 
 namespace systems {
 	namespace settler_spawner {

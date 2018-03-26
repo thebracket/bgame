@@ -1,4 +1,4 @@
-#include "../../global_assets/game_ecs.hpp"
+#include "stdafx.h"
 #include "../helpers/targeted_flow_map.hpp"
 #include "../damage/damage_system.hpp"
 #include "../../global_assets/rng.hpp"

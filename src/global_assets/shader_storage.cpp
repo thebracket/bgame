@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "shader_storage.hpp"
 #include "../bengine/shaders.hpp"
 #include "../render_engine/shaders/chunk_shader.hpp"

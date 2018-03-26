@@ -1,18 +1,11 @@
+#include "stdafx.h"
 #include "damage_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include "../../components/buildings/building.hpp"
-#include "../../components/logger.hpp"
 #include "../gui/log_system.hpp"
-#include "../../components/health.hpp"
 #include "../../global_assets/rng.hpp"
-#include "../../components/position.hpp"
 #include "../../planet/region/region.hpp"
 #include "kill_system.hpp"
-#include "../../components/items/item_carried.hpp"
-#include "../../components/items/item.hpp"
-#include "../../components/items/item_wear.hpp"
 #include "../helpers/inventory_assistant.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

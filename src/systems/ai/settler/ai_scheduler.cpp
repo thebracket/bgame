@@ -1,15 +1,8 @@
-#include "../../../components/ai_tags/ai_mode_idle.hpp"
-#include "../../../components/ai_tags/ai_tag_my_turn.hpp"
-#include "../../../components/settler_ai.hpp"
-#include "../../../components/sleep_clock_t.hpp"
+#include "stdafx.h"
+#include "ai_scheduler.hpp"
 #include "../../../global_assets/game_calendar.hpp"
-#include "../../../components/ai_tags/ai_tag_leisure_shift.hpp"
-#include "../../../components/ai_tags/ai_tag_sleep_shift.hpp"
-#include "../../../components/ai_tags/ai_tag_work_shift.hpp"
-#include "../../../components/ai_tags/ai_tag_work_guarding.hpp"
 #include "../../../global_assets/game_designations.hpp"
 #include "jobs_board.hpp"
-#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_scheduler {

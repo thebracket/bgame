@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "texture_storage.hpp"
 #include "../bengine/textures.hpp"
 

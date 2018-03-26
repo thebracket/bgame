@@ -1,16 +1,8 @@
+#include "stdafx.h"
 #include "ai_visibility_scan.hpp"
-#include "../../../components/sentient_ai.hpp"
-#include "../../../components/settler_ai.hpp"
-#include "../../../components/grazer_ai.hpp"
 #include "../../../global_assets/game_planet.hpp"
 #include "../../../global_assets/game_designations.hpp"
-#include "../../../components/ai_tags/ai_tag_my_turn.hpp"
-#include "../../../components/viewshed.hpp"
-#include "../../../components/initiative.hpp"
-#include "../../../components/buildings/turret_t.hpp"
-#include "../../../components/health.hpp"
 #include "../../physics/movement_system.hpp"
-#include "../../../components/riding_t.hpp"
 #include "../../helpers/weapons_helper.hpp"
 #include "../../damage/creature_attacks_system.hpp"
 #include "../distance_map_system.hpp"
@@ -18,9 +10,7 @@
 #include "../../damage/settler_melee_attacks_system.hpp"
 #include "../../damage/settler_ranged_attack_system.hpp"
 #include "../../damage/turret_ranged_attack_system.hpp"
-#include "../../../components/helpers/standing_orders.hpp"
 #include "../../../bengine/geometry.hpp"
-#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_visibility_scan {

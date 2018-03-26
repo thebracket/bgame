@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "dijkstra_map.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../bengine/threadpool.h"

@@ -1,14 +1,11 @@
+#include "stdafx.h"
 #include "turret_ranged_attack_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include "../../components/buildings/turret_t.hpp"
-#include "../../components/position.hpp"
 #include "../gui/log_system.hpp"
-#include "../../components/logger.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../helpers/weapons_helper.hpp"
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace turret_attacks {

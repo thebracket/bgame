@@ -1,20 +1,14 @@
+#include "stdafx.h"
 #include "ai_idle_time.hpp"
-#include "../../../components/ai_tags/ai_tag_my_turn.hpp"
-#include "../../../components/grazer_ai.hpp"
-#include "../../../components/sentient_ai.hpp"
 #include "../../../planet/region/region.hpp"
 #include "../../../global_assets/rng.hpp"
 #include "../../../raws/raws.hpp"
 #include "../../../raws/materials.hpp"
-#include "../../../components/riding_t.hpp"
 #include "../../../global_assets/game_planet.hpp"
 #include "../distance_map_system.hpp"
 #include "../../physics/movement_system.hpp"
-#include "../../../components/settler_ai.hpp"
-#include "../../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../physics/vegetation_system.hpp"
-#include "../../../components/name.hpp"
 
 namespace systems {
 	namespace ai_idle_time {

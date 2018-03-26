@@ -9,16 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header Files\bengine">
-      <UniqueIdentifier>{8bc3edcf-a461-492d-a921-7a46ce6c4480}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\bengine">
-      <UniqueIdentifier>{a5f21348-cddd-4fea-b632-f0322dfb2cc6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\components">
       <UniqueIdentifier>{eca970fd-d6c3-4a4d-8dfa-9fba3588b1a7}</UniqueIdentifier>
     </Filter>
@@ -42,66 +32,6 @@
     </Filter>
     <Filter Include="Source Files\main_loops">
       <UniqueIdentifier>{e843a5b0-4b3e-49b7-8efd-c8774aeb6d34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\planet">
-      <UniqueIdentifier>{31b21b29-66b7-42b6-865a-1bdc6b74a752}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\planet">
-      <UniqueIdentifier>{11cd465c-d1d1-4b9f-a514-7111dbef9640}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\planet\region">
-      <UniqueIdentifier>{d3c3a941-cf4f-44f6-beb6-80ace23793d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\planet\region">
-      <UniqueIdentifier>{af19210f-37e9-4ea1-b334-c6f45f735be2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\planet\builder">
-      <UniqueIdentifier>{5a8f2939-2fb4-4a96-a986-16f7e84c17b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\planet\builder">
-      <UniqueIdentifier>{59700f52-920d-4ba2-8d6a-83d0e22479a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\planet\builder\regions">
-      <UniqueIdentifier>{5af18141-8593-4884-8f69-6f3a37058c73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\raws">
-      <UniqueIdentifier>{4cff4228-229d-4107-9ae1-cd3dce4e9429}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\raws\defs">
-      <UniqueIdentifier>{72715704-a259-40d0-9e0d-649dec3509ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\raws">
-      <UniqueIdentifier>{5e4b4bb8-6852-4c1c-a62d-0806bfc837a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\render_engine">
-      <UniqueIdentifier>{416a2fb0-3382-4760-add4-180be2f23a03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\render_engine">
-      <UniqueIdentifier>{e0ce5261-d1b7-4bc2-b882-4d872a9c830c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\render_engine\chunks">
-      <UniqueIdentifier>{754fef50-b796-415b-a66f-27a46af9a87d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\render_engine\chunks">
-      <UniqueIdentifier>{4557ae54-db6c-4fb8-9a7f-ecc4fc36bf8b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\render_engine\fbo">
-      <UniqueIdentifier>{f94fa44f-aad9-4366-8ac8-4aa5934cdc7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\render_engine\fbo">
-      <UniqueIdentifier>{161bac40-46ee-4c20-9fa7-ff8da12ac0e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\render_engine\shaders">
-      <UniqueIdentifier>{6aef8dfd-2bcc-448e-9c4f-5c2a73a0b580}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\render_engine\shaders">
-      <UniqueIdentifier>{2ce1cfb2-3d33-45c6-9b55-fe2da9fcb736}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\render_engine\vox">
-      <UniqueIdentifier>{ca12dc31-1274-4873-a642-d3f731cf2aa5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\render_engine\vox">
-      <UniqueIdentifier>{c85c5b69-88d4-4975-b2d8-db71daacd1e6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\systems">
       <UniqueIdentifier>{dc4a2726-6f01-4003-983a-f28e481775a0}</UniqueIdentifier>
@@ -154,9 +84,6 @@
     <Filter Include="Source Files\systems\world">
       <UniqueIdentifier>{0f143cbb-af27-49d3-a444-8ec21511a7e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\planet\builder\regions">
-      <UniqueIdentifier>{754acf2a-03f4-4014-bfbe-1f709a1f9521}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\systems\helpers">
       <UniqueIdentifier>{e7f01155-5949-41d9-914a-de211d7df063}</UniqueIdentifier>
     </Filter>
@@ -174,12 +101,6 @@
     </Filter>
     <Filter Include="Source Files\systems\damage">
       <UniqueIdentifier>{e8e5aab8-7781-41e1-a53d-b482d472f648}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ascii_engine">
-      <UniqueIdentifier>{d66fbf4e-f0e9-4e0b-8ec3-318f317653ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ascii_engine">
-      <UniqueIdentifier>{45274e9d-f981-4510-852e-898e69a00be6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\components\item_tags">
       <UniqueIdentifier>{3042033d-a2b2-4ecf-97f6-4ee30d44dcfc}</UniqueIdentifier>
@@ -202,67 +123,13 @@
     <Filter Include="Source Files\utils">
       <UniqueIdentifier>{ede68fdd-5816-4fbc-b7d8-f568ad396951}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\render_engine\ubo">
-      <UniqueIdentifier>{d9603923-ded7-475c-aefd-401db50eed00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\render_engine\ubo">
-      <UniqueIdentifier>{91475391-248c-45d8-a6bf-0d042b19ab77}</UniqueIdentifier>
+    <Filter Include="Header Files\components\machinery">
+      <UniqueIdentifier>{7db62ef9-2beb-49fd-b5e1-fc573f393f35}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\FastNoise.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\filesystem.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\geometry.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\imgui.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\imgui_draw.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\imgui_impl_glfw_gl3.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\main_window.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\octree.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\random_number_generator.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\rexspeeder.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\shaders.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\simple_sprite.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\stb_image.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\string_utils.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\telemetry.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\textures.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\threadpool.cpp">
-      <Filter>Source Files\bengine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\components\calendar.cpp">
       <Filter>Source Files\components</Filter>
@@ -287,132 +154,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\main_loops\worldgen.cpp">
       <Filter>Source Files\main_loops</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\planet.cpp">
-      <Filter>Source Files\planet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\planet_builder.cpp">
-      <Filter>Source Files\planet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\region\region.cpp">
-      <Filter>Source Files\planet\region</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\biome_builder.cpp">
-      <Filter>Source Files\planet\builder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\history_builder.cpp">
-      <Filter>Source Files\planet\builder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\map_builder.cpp">
-      <Filter>Source Files\planet\builder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\region_builder.cpp">
-      <Filter>Source Files\planet\builder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\river_builder.cpp">
-      <Filter>Source Files\planet\builder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\sentient_builder.cpp">
-      <Filter>Source Files\planet\builder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\settler_builder.cpp">
-      <Filter>Source Files\planet\builder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\blight_builder.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\buildings.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\decorators.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\heightmap.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\starting_point.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\strata.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\trees.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\water_features.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\biomes.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\clothing.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\creatures.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\health_factory.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\items.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\life_events.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\lua_bridge.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\materials.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\plants.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\profession.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\raws.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\reactions.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\string_table.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\render_engine.cpp">
-      <Filter>Source Files\render_engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\chunks\chunks.cpp">
-      <Filter>Source Files\render_engine\chunks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\fbo\base_lit_buffer.cpp">
-      <Filter>Source Files\render_engine\fbo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\fbo\buffertest.cpp">
-      <Filter>Source Files\render_engine\fbo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\fbo\gbuffer.cpp">
-      <Filter>Source Files\render_engine\fbo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\fbo\hdr_buffer.cpp">
-      <Filter>Source Files\render_engine\fbo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\chunk_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\vox\renderables.cpp">
-      <Filter>Source Files\render_engine\vox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\vox\voxel_model.cpp">
-      <Filter>Source Files\render_engine\vox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp">
-      <Filter>Source Files\render_engine\vox</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\systems\keydamper.cpp">
       <Filter>Source Files\systems</Filter>
@@ -452,12 +193,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\systems\scheduler\tick_system.cpp">
       <Filter>Source Files\systems\scheduler</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\species_raw.cpp">
-      <Filter>Source Files\raws</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\raws\buildings_raw.cpp">
-      <Filter>Source Files\raws</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\settler_info_system.cpp">
       <Filter>Source Files\systems\gui</Filter>
@@ -654,9 +389,6 @@
     <ClCompile Include="..\..\src\systems\physics\vegetation_system.cpp">
       <Filter>Source Files\systems\physics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\chunks\cursors.cpp">
-      <Filter>Source Files\render_engine\chunks</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\design_lumberjack.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
@@ -668,15 +400,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\design_buildings.cpp">
       <Filter>Source Files\systems\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\pcg_basic.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\camera.cpp">
-      <Filter>Source Files\render_engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp">
-      <Filter>Source Files\render_engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\design_guardpoints.cpp">
       <Filter>Source Files\systems\gui</Filter>
@@ -693,44 +416,14 @@
     <ClCompile Include="..\..\src\systems\gui\design_stockpiles.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\design_render.cpp">
-      <Filter>Source Files\render_engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\chunks\geometry_helper.cpp">
-      <Filter>Source Files\render_engine\chunks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shadow_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\ssao.cpp">
-      <Filter>Source Files\render_engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\systems\gui\workflow_ui_system.cpp">
       <Filter>Source Files\systems\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\analytics.cpp">
-      <Filter>Source Files\bengine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\main_loops\first_run_screen.cpp">
       <Filter>Source Files\main_loops</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\fbo\point_light_buffer.cpp">
-      <Filter>Source Files\render_engine\fbo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\pointlights.cpp">
-      <Filter>Source Files\render_engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\systems\ai\settler\ai_idle_time.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\chunks\water_render.cpp">
-      <Filter>Source Files\render_engine\chunks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ascii_engine\ascii_mode.cpp">
-      <Filter>Source Files\ascii_engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\components\items\item.cpp">
       <Filter>Source Files\components\items</Filter>
@@ -774,9 +467,6 @@
     <ClCompile Include="..\..\src\global_assets\debug_flags.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\bengine\color_t.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\global_assets\building_designations.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
@@ -786,50 +476,8 @@
     <ClCompile Include="..\..\src\global_assets\architecture_designations.cpp">
       <Filter>Source Files\global_assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\planet\builder\regions\game_objects.cpp">
-      <Filter>Source Files\planet\builder\regions</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utils\system_log.cpp">
       <Filter>Source Files\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\stb_image_resize.cpp">
-      <Filter>Source Files\bengine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\chunk_depth_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\ascii_base_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\ascii_light_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\worldgen_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\cursor_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\lighter_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\particle_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\pointlight_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\tonemap_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\ubo\first_stage_ubo.cpp">
-      <Filter>Source Files\render_engine\ubo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\ubo\lighting_ubo.cpp">
-      <Filter>Source Files\render_engine\ubo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render_engine\shaders\skylight_shader.cpp">
-      <Filter>Source Files\render_engine\shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\global_assets\game_ecs.cpp">
       <Filter>Source Files\global_assets</Filter>
@@ -843,98 +491,11 @@
     <ClCompile Include="..\..\src\systems\gui\building_info.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\bengine\cereal_include.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\ctpl.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\ecs.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\FastNoise.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\filesystem.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\geometry.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\gl_include.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\IconsFontAwesome.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\imconfig.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\imgui.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\imgui_impl_glfw_gl3.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\imgui_internal.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\imgui_style.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\main_window.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\octree.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\pcg_basic.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\random_number_generator.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\rexspeeder.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\serialization_utils.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\shaders.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\simple_sprite.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\stb_image.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\stb_rect_pack.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\stb_textedit.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\stb_truetype.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\string_utils.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\telemetry.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\textures.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\threadpool.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\threadsafequeue.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\components\calendar.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
@@ -969,9 +530,6 @@
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\initiative.hpp">
-      <Filter>Header Files\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\lever.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\lightsource.hpp">
@@ -1108,204 +666,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\main_loops\worldgen.hpp">
       <Filter>Header Files\main_loops</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\civilizations.hpp">
-      <Filter>Header Files\planet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\constants.hpp">
-      <Filter>Header Files\planet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\history.hpp">
-      <Filter>Header Files\planet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\indices.hpp">
-      <Filter>Header Files\planet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\planet.hpp">
-      <Filter>Header Files\planet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\planet_builder.hpp">
-      <Filter>Header Files\planet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\tile.hpp">
-      <Filter>Header Files\planet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\region\region.hpp">
-      <Filter>Header Files\planet\region</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\biome_builder.hpp">
-      <Filter>Header Files\planet\builder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\history_builder.hpp">
-      <Filter>Header Files\planet\builder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\map_builder.hpp">
-      <Filter>Header Files\planet\builder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\noise_helper.hpp">
-      <Filter>Header Files\planet\builder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\region_builder.hpp">
-      <Filter>Header Files\planet\builder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\river_builder.hpp">
-      <Filter>Header Files\planet\builder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\sentient_builder.hpp">
-      <Filter>Header Files\planet\builder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\settler_builder.hpp">
-      <Filter>Header Files\planet\builder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\blight_builder.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\buildings.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\decorators.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\heightmap.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\starting_point.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\strata.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\trees.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\water_features.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\biome_type_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\building_def_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\civilization_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\clothing_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\item_def_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\life_event_template.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\material_def_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\plant_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\profession_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\raw_creature_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\defs\reaction_t.hpp">
-      <Filter>Header Files\raws\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\apihelper.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\biomes.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\buildings.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\clothing.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\creatures.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\graphviz.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\health_factory.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\items.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\life_events.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\lua_bridge.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\materials.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\plants.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\profession.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\raws.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\reaction_input.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\reactions.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\species.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\raws\string_table.hpp">
-      <Filter>Header Files\raws</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\frustrum.hpp">
-      <Filter>Header Files\render_engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\render_engine.hpp">
-      <Filter>Header Files\render_engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\chunks\chunks.hpp">
-      <Filter>Header Files\render_engine\chunks</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\chunks\constants.hpp">
-      <Filter>Header Files\render_engine\chunks</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\fbo\base_lit_buffer.hpp">
-      <Filter>Header Files\render_engine\fbo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\fbo\buffertest.hpp">
-      <Filter>Header Files\render_engine\fbo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\fbo\gbuffer.hpp">
-      <Filter>Header Files\render_engine\fbo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\fbo\hdr_buffer.hpp">
-      <Filter>Header Files\render_engine\fbo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\chunk_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\vox\renderables.hpp">
-      <Filter>Header Files\render_engine\vox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\vox\voxel_model.hpp">
-      <Filter>Header Files\render_engine\vox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp">
-      <Filter>Header Files\render_engine\vox</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\keydamper.hpp">
       <Filter>Header Files\systems</Filter>
@@ -1550,9 +910,6 @@
     <ClInclude Include="..\..\src\systems\physics\vegetation_system.hpp">
       <Filter>Header Files\systems\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\chunks\cursors.hpp">
-      <Filter>Header Files\render_engine\chunks</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\design_lumberjack.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
@@ -1564,12 +921,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\design_buildings.hpp">
       <Filter>Header Files\systems\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\camera.hpp">
-      <Filter>Header Files\render_engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\renderbuffers.hpp">
-      <Filter>Header Files\render_engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\design_guardpoints.hpp">
       <Filter>Header Files\systems\gui</Filter>
@@ -1586,26 +937,8 @@
     <ClInclude Include="..\..\src\systems\gui\design_stockpiles.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\design_render.hpp">
-      <Filter>Header Files\render_engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\chunks\geometry_helper.hpp">
-      <Filter>Header Files\render_engine\chunks</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shadow_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\ssao.hpp">
-      <Filter>Header Files\render_engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\systems\gui\workflow_ui_system.hpp">
       <Filter>Header Files\systems\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\analytics.hpp">
-      <Filter>Header Files\bengine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\main_loops\first_run_screen.hpp">
       <Filter>Header Files\main_loops</Filter>
@@ -1613,20 +946,8 @@
     <ClInclude Include="..\..\src\main_loops\asset_loader.hpp">
       <Filter>Header Files\main_loops</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\fbo\point_light_buffer.hpp">
-      <Filter>Header Files\render_engine\fbo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\pointlights.hpp">
-      <Filter>Header Files\render_engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\systems\ai\settler\ai_idle_time.hpp">
       <Filter>Header Files\systems\ai\settler</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\chunks\water_render.hpp">
-      <Filter>Header Files\render_engine\chunks</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp">
-      <Filter>Header Files\ascii_engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\item_tags\item_chopping_t.hpp">
       <Filter>Header Files\components\item_tags</Filter>
@@ -1772,9 +1093,6 @@
     <ClInclude Include="..\..\src\global_assets\debug_flags.hpp">
       <Filter>Header Files\global_assets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\bengine\color_t.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\components\buildings\building.hpp">
       <Filter>Header Files\components\buildings</Filter>
     </ClInclude>
@@ -1791,12 +1109,6 @@
       <Filter>Header Files\components\buildings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\buildings\construct_provides_sleep.hpp">
-      <Filter>Header Files\components\buildings</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\buildings\entry_trigger.hpp">
-      <Filter>Header Files\components\buildings</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\components\buildings\receives_signal.hpp">
       <Filter>Header Files\components\buildings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\buildings\smoke_emitter.hpp">
@@ -1826,59 +1138,14 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_idle.hpp">
       <Filter>Header Files\systems\ai</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp">
-      <Filter>Header Files\planet\builder\regions</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\system_log.hpp">
       <Filter>Header Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\stb_image_resize.h">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\chunk_depth_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\systems\helpers\targeted_flow_map.hpp">
       <Filter>Header Files\systems\helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\components\farming\designated_hunter.hpp">
       <Filter>Header Files\components\farming</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\btabs.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\ascii_base_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\ascii_light_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\worldgen_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\cursor_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\lighter_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\particle_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\pointlight_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\tonemap_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\ubo\first_stage_ubo.hpp">
-      <Filter>Header Files\render_engine\ubo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\ubo\lighting_ubo.hpp">
-      <Filter>Header Files\render_engine\ubo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\render_engine\shaders\skylight_shader.hpp">
-      <Filter>Header Files\render_engine\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\global_assets\game_ecs.hpp">
       <Filter>Header Files\global_assets</Filter>
@@ -1907,10 +1174,32 @@
     <ClInclude Include="..\..\src\systems\gui\building_info.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\src\bengine\bitset.hpp">
-      <Filter>Header Files\bengine</Filter>
-    </None>
+    <ClInclude Include="..\..\src\components\machinery\sends_signal_t.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\machinery\lever.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\machinery\entry_trigger.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\machinery\receives_signal.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\machinery\signal_processor_t.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\machinery\float_gauge_t.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\machinery\pressure_plate_t.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\machinery\proximity_sensor_t.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

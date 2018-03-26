@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"

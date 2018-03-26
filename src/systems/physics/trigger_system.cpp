@@ -1,29 +1,17 @@
+#include "stdafx.h"
 #include "trigger_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include "../../components/buildings/entry_trigger.hpp"
-#include "../../components/position.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../global_assets/game_pause.hpp"
 #include "../../global_assets/game_mode.hpp"
-#include "../../components/lever.hpp"
-#include "../../components/buildings/bridge.hpp"
-#include "../../components/buildings/construct_provides_door.hpp"
 #include "../../bengine/imgui.h"
-#include "../../components/buildings/receives_signal.hpp"
-#include "../../components/buildings/building.hpp"
-#include "../../components/grazer_ai.hpp"
-#include "../../components/sentient_ai.hpp"
-#include "../../components/name.hpp"
-#include "../../components/items/item_stored.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
-#include "../../components/logger.hpp"
 #include "../gui/log_system.hpp"
 #include "../../global_assets/spatial_db.hpp"
-#include "../../components/health.hpp"
 #include "movement_system.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../render_engine/chunks/chunks.hpp"
@@ -99,6 +87,7 @@ namespace systems {
 
 			ImGui::Begin(win_trigger_mgmt.c_str());
 
+			/*
 			// Input options
 			if (is_lever) {
 				ImGui::Text("Levers have no input options; their input is triggered when a settler pulls the lever.");
@@ -165,10 +154,12 @@ namespace systems {
 			if (ImGui::Button(btn_close.c_str())) {
 				game_master_mode = PLAY;
 			}
+			*/
 			ImGui::End();
 		}
 
 		void entry_trigger_firing(const systems::movement::entity_moved_message &msg) {
+			/*
 			//std::cout << "Received an entity move message. There are " << triggers.size() << " triggers.\n";
 			const auto tile_index = mapidx(msg.destination);
 			const auto finder = triggers.find(tile_index);
@@ -266,10 +257,11 @@ namespace systems {
 						}
 					}
 				}
-			}
+			}*/
 		}
 
 		void pulled_levers() {
+			/*
 			lever_pulled.process_all([](const lever_pulled_message &msg) {
 				auto lever_entity = entity(msg.lever_id);
 				if (!lever_entity) return;
@@ -352,7 +344,7 @@ namespace systems {
 					}
 				}
 			}
-			);
+			);*/
 		}
 
 		void run(const double &duration_ms) {

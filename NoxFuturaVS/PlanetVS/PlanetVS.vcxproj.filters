@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;*.h;*.hpp</Extensions>
+    </Filter>
+    <Filter Include="Source Files\builder">
+      <UniqueIdentifier>{8218cfe4-0420-4135-b5de-4280ab2c91db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\region">
+      <UniqueIdentifier>{ead1f08f-4ffd-46e2-b41a-e9f04fd76eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\builder\regions">
+      <UniqueIdentifier>{7c6721d6-b4ca-4236-8c85-fd3a1a6453b2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\planet\planet_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\planet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\region\region.cpp">
+      <Filter>Source Files\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\blight_builder.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\buildings.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\decorators.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\game_objects.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\heightmap.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\starting_point.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\strata.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\trees.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\regions\water_features.cpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\biome_builder.cpp">
+      <Filter>Source Files\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\history_builder.cpp">
+      <Filter>Source Files\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\map_builder.cpp">
+      <Filter>Source Files\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\region_builder.cpp">
+      <Filter>Source Files\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\river_builder.cpp">
+      <Filter>Source Files\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\sentient_builder.cpp">
+      <Filter>Source Files\builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\planet\builder\settler_builder.cpp">
+      <Filter>Source Files\builder</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\planet\civilizations.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\constants.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\history.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\indices.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\planet.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\planet_builder.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\tile.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\region\region.hpp">
+      <Filter>Source Files\region</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\blight_builder.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\buildings.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\decorators.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\heightmap.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\starting_point.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\strata.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\trees.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\regions\water_features.hpp">
+      <Filter>Source Files\builder\regions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\settler_builder.hpp">
+      <Filter>Source Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\sentient_builder.hpp">
+      <Filter>Source Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\river_builder.hpp">
+      <Filter>Source Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\region_builder.hpp">
+      <Filter>Source Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\noise_helper.hpp">
+      <Filter>Source Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\map_builder.hpp">
+      <Filter>Source Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\history_builder.hpp">
+      <Filter>Source Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\planet\builder\biome_builder.hpp">
+      <Filter>Source Files\builder</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

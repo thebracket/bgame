@@ -1,11 +1,5 @@
+#include "stdafx.h"
 #include "inventory_assistant.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../components/items/item.hpp"
-#include "../../components/buildings/building.hpp"
-#include "../../components/items/item_stored.hpp"
-#include "../../components/items/item_carried.hpp"
-#include "../../components/position.hpp"
-#include "../../components/claimed_t.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../bengine/geometry.hpp"
@@ -18,9 +12,7 @@
 #include "../../raws/defs/clothing_t.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "../ai/inventory_system.hpp"
-#include "../../components/item_tags/item_ammo_t.hpp"
 #include "targeted_flow_map.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 using namespace bengine;
 using namespace buildings;

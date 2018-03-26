@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "game_config.hpp"
 #include "../bengine/string_utils.hpp"
 #include "../bengine/filesystem.hpp"

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "mouse.hpp"
 #include "../bengine/imgui.h"
 #include "../bengine/main_window.hpp"

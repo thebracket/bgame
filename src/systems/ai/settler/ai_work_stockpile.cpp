@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ai_work_stockpile.hpp"
 #include "../stockpile_system.hpp"
 #include "jobs_board.hpp"

@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;*.h;*.hpp</Extensions>
+    </Filter>
+    <Filter Include="Source Files\defs">
+      <UniqueIdentifier>{a723b6fb-668e-4dad-9b0d-29e1791ee92e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\raws\defs\biome_type_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\building_def_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\civilization_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\clothing_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\item_def_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\life_event_template.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\material_def_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\plant_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\profession_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\raw_creature_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\defs\reaction_t.hpp">
+      <Filter>Source Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\apihelper.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\biomes.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\buildings.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\clothing.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\creatures.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\graphviz.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\health_factory.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\items.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\life_events.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\lua_bridge.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\materials.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\plants.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\profession.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\raws.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\reactions.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\reaction_input.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\species.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raws\string_table.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\raws\biomes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\buildings_raw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\clothing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\creatures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\health_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\items.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\life_events.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\lua_bridge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\materials.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\plants.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\profession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\raws.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\reactions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\species_raw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\raws\string_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

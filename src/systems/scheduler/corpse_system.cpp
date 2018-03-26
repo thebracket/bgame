@@ -1,11 +1,7 @@
+#include "stdafx.h"
 #include "corpse_system.hpp"
-#include "../../components/corpse_settler.hpp"
-#include "../../components/corpse_harvestable.hpp"
-#include "../../components/position.hpp"
 #include "../../global_assets/rng.hpp"
-#include "../../bengine/ecs.hpp"
 #include <mutex>
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
     namespace corpse_system {

@@ -1,20 +1,15 @@
+#include "stdafx.h"
 #include "ai_work_farm_plant.hpp"
 #include "templated_work_steps_t.hpp"
-#include "../../../components/ai_tags/ai_tag_work_farm_plant.hpp"
-#include "../../../components/farming/designated_farmer.hpp"
 #include "../../../global_assets/farming_designations.hpp"
-#include "../../../components/claimed_t.hpp"
-#include "../../../components/item_tags/item_farming.hpp"
 #include "../../helpers/inventory_assistant.hpp"
 #include "../../damage/damage_system.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "ai_work_farm_plant.hpp"
-#include "../../../components/item_tags/item_seed_t.hpp"
 #include "../../../bengine/telemetry.hpp"
 #include "../../../raws/plants.hpp"
 #include "../../../raws/defs/plant_t.hpp"
 #include "../../../planet/region/region.hpp"
-#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_farm_plant {

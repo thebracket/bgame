@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "calendar.hpp"
 #include <iomanip>
 #include <sstream>

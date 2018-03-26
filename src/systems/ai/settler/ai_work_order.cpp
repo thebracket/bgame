@@ -1,17 +1,14 @@
+#include "stdafx.h"
 #include "jobs_board.hpp"
 #include "ai_work_template.hpp"
-#include "../../../components/ai_tags/ai_tag_work_order.hpp"
 #include "../../helpers/workflow_assistant.hpp"
 #include "../../helpers/inventory_assistant.hpp"
 #include "../../../raws/reactions.hpp"
 #include "../../../raws/defs/reaction_t.hpp"
 #include "../../gui/particle_system.hpp"
 #include "../../../bengine/telemetry.hpp"
-#include "../../../components/name.hpp"
 #include "../../../global_assets/building_designations.hpp"
-#include "../../../components/helpers/reaction_task_t.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
-#include "../../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_workorder {

@@ -3,7 +3,6 @@
 #include "../../raws/species.hpp"
 #include "../../raws/string_table.hpp"
 #include "../../bengine/string_utils.hpp"
-#include "../../components/game_stats.hpp"
 #include "../../raws/lua_bridge.hpp"
 #include "../../raws/defs/civilization_t.hpp"
 #include <map>

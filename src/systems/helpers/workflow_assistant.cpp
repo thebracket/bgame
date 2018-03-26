@@ -1,11 +1,10 @@
+#include "stdafx.h"
 #include "workflow_assistant.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "inventory_assistant.hpp"
-#include "../../components/buildings/building.hpp"
 #include "../ai/workflow_system.hpp"
 #include "../../global_assets/building_designations.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace workflow {
 	std::unordered_map<std::size_t, std::vector<std::string>> automatic_reactions;

@@ -2,7 +2,6 @@
 #include "lua_bridge.hpp"
 #include "clothing.hpp"
 #include "defs/profession_t.hpp"
-#include <vector>
 #include "../utils/system_log.hpp"
 
 std::vector<profession_t> starting_professions;

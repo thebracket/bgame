@@ -6,9 +6,9 @@
 #include "geometry_helper.hpp"
 #include "../../global_assets/farming_designations.hpp"
 #include "../../bengine/gl_include.hpp"
-#include "../../global_assets/game_ecs.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/defs/building_def_t.hpp"
+#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

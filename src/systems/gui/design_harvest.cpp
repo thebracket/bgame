@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "design_harvest.hpp"
 #include "../../global_assets/farming_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"
@@ -8,12 +9,7 @@
 #include "../../raws/defs/plant_t.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../components/claimed_t.hpp"
-#include "../../components/item_tags/item_seed_t.hpp"
-#include "../../components/items/item.hpp"
 #include "../../bengine/btabs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

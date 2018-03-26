@@ -1,15 +1,8 @@
+#include "stdafx.h"
 #include "visibility_system.hpp"
-#include "../../components/viewshed.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../bengine/geometry.hpp"
-#include "../../components/buildings/building.hpp"
-#include "../../components/grazer_ai.hpp"
-#include "../../components/sentient_ai.hpp"
-#include "../../components/settler_ai.hpp"
-#include "../../components/buildings/turret_t.hpp"
 #include "../../global_assets/spatial_db.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 using namespace bengine;
 using namespace tile_flags;

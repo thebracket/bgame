@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;hpp;h</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ascii_engine">
+      <UniqueIdentifier>{30761ab3-af52-4b83-ad97-3eda381df8bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render_engine">
+      <UniqueIdentifier>{da2f7750-a306-4a60-a8ad-3d5d857c6253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render_engine\chunks">
+      <UniqueIdentifier>{38382ea0-33f9-4d35-8db0-8ff7a8dd1bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render_engine\fbo">
+      <UniqueIdentifier>{87dc0597-135b-4f18-a166-78278ec23fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render_engine\shaders">
+      <UniqueIdentifier>{bbc111ae-6794-4453-8602-9dba6ec27c23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render_engine\vox">
+      <UniqueIdentifier>{e9d10098-2304-498c-91db-f56eb4529510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render_engine\ubo">
+      <UniqueIdentifier>{12bf08f5-b88e-460b-80c5-e1f2bf22abd8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ascii_engine\ascii_mode.cpp">
+      <Filter>Source Files\ascii_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\camera.cpp">
+      <Filter>render_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\design_render.cpp">
+      <Filter>render_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\pointlights.cpp">
+      <Filter>render_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp">
+      <Filter>render_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\render_engine.cpp">
+      <Filter>render_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\ssao.cpp">
+      <Filter>render_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\chunks\chunks.cpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\chunks\cursors.cpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\chunks\geometry_helper.cpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\chunks\water_render.cpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\fbo\base_lit_buffer.cpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\fbo\buffertest.cpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\fbo\gbuffer.cpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\fbo\hdr_buffer.cpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\fbo\point_light_buffer.cpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\ascii_base_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\ascii_light_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\chunk_depth_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\chunk_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\cursor_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\lighter_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\particle_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\pointlight_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\skylight_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\tonemap_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shadow_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\shaders\worldgen_shader.cpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\vox\renderables.cpp">
+      <Filter>render_engine\vox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\vox\voxel_model.cpp">
+      <Filter>render_engine\vox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp">
+      <Filter>render_engine\vox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\ubo\first_stage_ubo.cpp">
+      <Filter>render_engine\ubo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_engine\ubo\lighting_ubo.cpp">
+      <Filter>render_engine\ubo</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp">
+      <Filter>Source Files\ascii_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\camera.hpp">
+      <Filter>render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\design_render.hpp">
+      <Filter>render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\frustrum.hpp">
+      <Filter>render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\pointlights.hpp">
+      <Filter>render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\render_engine.hpp">
+      <Filter>render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\renderbuffers.hpp">
+      <Filter>render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\ssao.hpp">
+      <Filter>render_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\chunks\chunks.hpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\chunks\constants.hpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\chunks\cursors.hpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\chunks\geometry_helper.hpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\chunks\water_render.hpp">
+      <Filter>render_engine\chunks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\fbo\base_lit_buffer.hpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\fbo\buffertest.hpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\fbo\gbuffer.hpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\fbo\hdr_buffer.hpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\fbo\point_light_buffer.hpp">
+      <Filter>render_engine\fbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\ascii_base_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\ascii_light_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\chunk_depth_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\chunk_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\cursor_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\lighter_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\particle_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\pointlight_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\skylight_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\tonemap_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shadow_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\shaders\worldgen_shader.hpp">
+      <Filter>render_engine\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\ubo\first_stage_ubo.hpp">
+      <Filter>render_engine\ubo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\ubo\lighting_ubo.hpp">
+      <Filter>render_engine\ubo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\vox\renderables.hpp">
+      <Filter>render_engine\vox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\vox\voxel_model.hpp">
+      <Filter>render_engine\vox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp">
+      <Filter>render_engine\vox</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

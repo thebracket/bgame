@@ -1,7 +1,4 @@
-#include "ai_status_effects.hpp"
-#include "../../components/sentient_ai.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
+#include "stdafx.h"
 
 namespace systems {
 	namespace sentient_ai_system {

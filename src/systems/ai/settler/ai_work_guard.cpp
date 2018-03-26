@@ -1,9 +1,8 @@
+#include "stdafx.h"
 #include "jobs_board.hpp"
 #include "../../../global_assets/game_designations.hpp"
 #include "../../helpers/weapons_helper.hpp"
 #include "../../../bengine/geometry.hpp"
-#include "../../../components/ai_tags/ai_tag_work_guarding.hpp"
-#include "../../../components/ai_tags/ai_tag_my_turn.hpp"
 #include "ai_work_template.hpp"
 
 namespace systems {

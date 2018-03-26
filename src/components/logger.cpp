@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "logger.hpp"
-#include "../bengine/ecs.hpp"
-#include "../global_assets/game_ecs.hpp"
 
 LOG * LOG::text(const std::string &txt) {
     for (std::size_t i=0; i<txt.size(); ++i) {

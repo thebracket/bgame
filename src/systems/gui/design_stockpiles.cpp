@@ -1,14 +1,12 @@
+#include "stdafx.h"
 #include "design_stockpiles.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"
 #include "../mouse.hpp"
-#include "../../components/stockpile.hpp"
 #include "../../global_assets/game_mode.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 
 using namespace tile_flags;

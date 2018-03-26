@@ -1,7 +1,5 @@
 #include "lighting_ubo.hpp"
 #include "../../bengine/gl_include.hpp"
-#include <vector>
-#include <map>
 
 namespace render
 {

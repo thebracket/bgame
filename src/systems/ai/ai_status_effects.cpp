@@ -1,8 +1,5 @@
+#include "stdafx.h"
 #include "ai_status_effects.hpp"
-#include "../../components/health.hpp"
-#include "../../components/ai_tags/ai_tag_my_turn.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace ai_status_effects {

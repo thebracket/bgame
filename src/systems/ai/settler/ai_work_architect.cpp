@@ -1,11 +1,8 @@
+#include "stdafx.h"
 #include "ai_work_architect.hpp"
 #include "templated_work_steps_t.hpp"
-#include "../../../components/ai_tags/ai_tag_work_architect.hpp"
 #include "../../../global_assets/architecture_designations.hpp"
 #include "../../../bengine/telemetry.hpp"
-#include "../../../components/buildings/bridge.hpp"
-#include "../../../components/buildings/receives_signal.hpp"
-#include "../../../components/claimed_t.hpp"
 #include "../../../render_engine/chunks/chunks.hpp"
 #include "../mining_system.hpp"
 #include "../../helpers/inventory_assistant.hpp"
@@ -14,7 +11,6 @@
 #include "../../helpers/targeted_flow_map.hpp"
 #include "../../../render_engine/vox/renderables.hpp"
 #include "../../physics/movement_system.hpp"
-#include "../../../global_assets/game_ecs.hpp"
 
 using namespace tile_flags;
 

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "game_camera.hpp"
 #include <cstdint>
 

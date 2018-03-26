@@ -166,24 +166,27 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableModules>true</EnableModules>
+      <EnableModules>false</EnableModules>
       <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <AdditionalOptions>/await /bigobj</AdditionalOptions>
       <EnablePREfast>false</EnablePREfast>
       <StringPooling>true</StringPooling>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>C:\Users\Herbert\Development\github\bgame\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
-      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Publish|x64'">
@@ -218,28 +221,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\ascii_engine\ascii_mode.cpp" />
-    <ClCompile Include="..\..\src\bengine\analytics.cpp" />
-    <ClCompile Include="..\..\src\bengine\color_t.cpp" />
-    <ClCompile Include="..\..\src\bengine\FastNoise.cpp" />
-    <ClCompile Include="..\..\src\bengine\filesystem.cpp" />
-    <ClCompile Include="..\..\src\bengine\geometry.cpp" />
-    <ClCompile Include="..\..\src\bengine\imgui.cpp" />
-    <ClCompile Include="..\..\src\bengine\imgui_draw.cpp" />
-    <ClCompile Include="..\..\src\bengine\imgui_impl_glfw_gl3.cpp" />
-    <ClCompile Include="..\..\src\bengine\main_window.cpp" />
-    <ClCompile Include="..\..\src\bengine\octree.cpp" />
-    <ClCompile Include="..\..\src\bengine\pcg_basic.cpp" />
-    <ClCompile Include="..\..\src\bengine\random_number_generator.cpp" />
-    <ClCompile Include="..\..\src\bengine\rexspeeder.cpp" />
-    <ClCompile Include="..\..\src\bengine\shaders.cpp" />
-    <ClCompile Include="..\..\src\bengine\simple_sprite.cpp" />
-    <ClCompile Include="..\..\src\bengine\stb_image.cpp" />
-    <ClCompile Include="..\..\src\bengine\stb_image_resize.cpp" />
-    <ClCompile Include="..\..\src\bengine\string_utils.cpp" />
-    <ClCompile Include="..\..\src\bengine\telemetry.cpp" />
-    <ClCompile Include="..\..\src\bengine\textures.cpp" />
-    <ClCompile Include="..\..\src\bengine\threadpool.cpp" />
     <ClCompile Include="..\..\src\components\calendar.cpp" />
     <ClCompile Include="..\..\src\components\game_stats.cpp" />
     <ClCompile Include="..\..\src\components\items\item.cpp" />
@@ -270,74 +251,7 @@
     <ClCompile Include="..\..\src\main_loops\play_game.cpp" />
     <ClCompile Include="..\..\src\main_loops\splash_screen.cpp" />
     <ClCompile Include="..\..\src\main_loops\worldgen.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\biome_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\history_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\map_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\blight_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\buildings.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\decorators.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\game_objects.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\heightmap.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\starting_point.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\strata.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\trees.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\regions\water_features.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\region_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\river_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\sentient_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\builder\settler_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\planet.cpp" />
-    <ClCompile Include="..\..\src\planet\planet_builder.cpp" />
-    <ClCompile Include="..\..\src\planet\region\region.cpp" />
-    <ClCompile Include="..\..\src\raws\biomes.cpp" />
-    <ClCompile Include="..\..\src\raws\buildings_raw.cpp" />
-    <ClCompile Include="..\..\src\raws\clothing.cpp" />
-    <ClCompile Include="..\..\src\raws\creatures.cpp" />
-    <ClCompile Include="..\..\src\raws\health_factory.cpp" />
-    <ClCompile Include="..\..\src\raws\items.cpp" />
-    <ClCompile Include="..\..\src\raws\life_events.cpp" />
-    <ClCompile Include="..\..\src\raws\lua_bridge.cpp" />
-    <ClCompile Include="..\..\src\raws\materials.cpp" />
-    <ClCompile Include="..\..\src\raws\plants.cpp" />
-    <ClCompile Include="..\..\src\raws\profession.cpp" />
-    <ClCompile Include="..\..\src\raws\raws.cpp" />
-    <ClCompile Include="..\..\src\raws\reactions.cpp" />
-    <ClCompile Include="..\..\src\raws\species_raw.cpp" />
-    <ClCompile Include="..\..\src\raws\string_table.cpp" />
-    <ClCompile Include="..\..\src\render_engine\camera.cpp" />
-    <ClCompile Include="..\..\src\render_engine\chunks\chunks.cpp" />
-    <ClCompile Include="..\..\src\render_engine\chunks\cursors.cpp" />
-    <ClCompile Include="..\..\src\render_engine\chunks\geometry_helper.cpp" />
-    <ClCompile Include="..\..\src\render_engine\chunks\water_render.cpp" />
-    <ClCompile Include="..\..\src\render_engine\design_render.cpp" />
-    <ClCompile Include="..\..\src\render_engine\fbo\base_lit_buffer.cpp" />
-    <ClCompile Include="..\..\src\render_engine\fbo\buffertest.cpp" />
-    <ClCompile Include="..\..\src\render_engine\fbo\gbuffer.cpp" />
-    <ClCompile Include="..\..\src\render_engine\fbo\hdr_buffer.cpp" />
-    <ClCompile Include="..\..\src\render_engine\fbo\point_light_buffer.cpp" />
-    <ClCompile Include="..\..\src\render_engine\pointlights.cpp" />
-    <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp" />
-    <ClCompile Include="..\..\src\render_engine\render_engine.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\ascii_base_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\ascii_light_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\chunk_depth_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\chunk_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\cursor_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\lighter_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\particle_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\pointlight_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\skylight_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\tonemap_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shadow_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\shaders\worldgen_shader.cpp" />
-    <ClCompile Include="..\..\src\render_engine\ssao.cpp" />
-    <ClCompile Include="..\..\src\render_engine\ubo\first_stage_ubo.cpp" />
-    <ClCompile Include="..\..\src\render_engine\ubo\lighting_ubo.cpp" />
-    <ClCompile Include="..\..\src\render_engine\vox\renderables.cpp" />
-    <ClCompile Include="..\..\src\render_engine\vox\voxel_model.cpp" />
-    <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp" />
+    <ClCompile Include="..\..\src\stdafx.cpp" />
     <ClCompile Include="..\..\src\systems\ai\ai_status_effects.cpp" />
     <ClCompile Include="..\..\src\systems\ai\ai_stuck.cpp" />
     <ClCompile Include="..\..\src\systems\ai\architecture_system.cpp" />
@@ -431,41 +345,6 @@
     <ClCompile Include="..\..\src\utils\system_log.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp" />
-    <ClInclude Include="..\..\src\bengine\analytics.hpp" />
-    <ClInclude Include="..\..\src\bengine\btabs.hpp" />
-    <ClInclude Include="..\..\src\bengine\cereal_include.hpp" />
-    <ClInclude Include="..\..\src\bengine\color_t.hpp" />
-    <ClInclude Include="..\..\src\bengine\ctpl.h" />
-    <ClInclude Include="..\..\src\bengine\ecs.hpp" />
-    <ClInclude Include="..\..\src\bengine\FastNoise.h" />
-    <ClInclude Include="..\..\src\bengine\filesystem.hpp" />
-    <ClInclude Include="..\..\src\bengine\geometry.hpp" />
-    <ClInclude Include="..\..\src\bengine\gl_include.hpp" />
-    <ClInclude Include="..\..\src\bengine\IconsFontAwesome.h" />
-    <ClInclude Include="..\..\src\bengine\imconfig.h" />
-    <ClInclude Include="..\..\src\bengine\imgui.h" />
-    <ClInclude Include="..\..\src\bengine\imgui_impl_glfw_gl3.h" />
-    <ClInclude Include="..\..\src\bengine\imgui_internal.h" />
-    <ClInclude Include="..\..\src\bengine\imgui_style.hpp" />
-    <ClInclude Include="..\..\src\bengine\main_window.hpp" />
-    <ClInclude Include="..\..\src\bengine\octree.hpp" />
-    <ClInclude Include="..\..\src\bengine\pcg_basic.h" />
-    <ClInclude Include="..\..\src\bengine\random_number_generator.hpp" />
-    <ClInclude Include="..\..\src\bengine\rexspeeder.hpp" />
-    <ClInclude Include="..\..\src\bengine\serialization_utils.hpp" />
-    <ClInclude Include="..\..\src\bengine\shaders.hpp" />
-    <ClInclude Include="..\..\src\bengine\simple_sprite.hpp" />
-    <ClInclude Include="..\..\src\bengine\stb_image.h" />
-    <ClInclude Include="..\..\src\bengine\stb_image_resize.h" />
-    <ClInclude Include="..\..\src\bengine\stb_rect_pack.h" />
-    <ClInclude Include="..\..\src\bengine\stb_textedit.h" />
-    <ClInclude Include="..\..\src\bengine\stb_truetype.h" />
-    <ClInclude Include="..\..\src\bengine\string_utils.hpp" />
-    <ClInclude Include="..\..\src\bengine\telemetry.hpp" />
-    <ClInclude Include="..\..\src\bengine\textures.hpp" />
-    <ClInclude Include="..\..\src\bengine\threadpool.h" />
-    <ClInclude Include="..\..\src\bengine\threadsafequeue.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_mode_idle.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_settler_new_arrival.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_leisure_shift.hpp" />
@@ -506,7 +385,7 @@
     <ClInclude Include="..\..\src\components\corpse_settler.hpp" />
     <ClInclude Include="..\..\src\components\designated_lumberjack.hpp" />
     <ClInclude Include="..\..\src\components\designations.hpp" />
-    <ClInclude Include="..\..\src\components\buildings\entry_trigger.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\entry_trigger.hpp" />
     <ClInclude Include="..\..\src\components\explosion_t.hpp" />
     <ClInclude Include="..\..\src\components\falling.hpp" />
     <ClInclude Include="..\..\src\components\farming\designated_farmer.hpp" />
@@ -547,15 +426,20 @@
     <ClInclude Include="..\..\src\components\item_tags\item_skull_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_spice_t.hpp" />
     <ClInclude Include="..\..\src\components\item_tags\item_topsoil_t.hpp" />
-    <ClInclude Include="..\..\src\components\lever.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\float_gauge_t.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\lever.hpp" />
     <ClInclude Include="..\..\src\components\lightsource.hpp" />
     <ClInclude Include="..\..\src\components\logger.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\pressure_plate_t.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\proximity_sensor_t.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\sends_signal_t.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\signal_processor_t.hpp" />
     <ClInclude Include="..\..\src\components\mining\designated_miner.hpp" />
     <ClInclude Include="..\..\src\components\mining\mining_designations.hpp" />
     <ClInclude Include="..\..\src\components\name.hpp" />
     <ClInclude Include="..\..\src\components\natural_attacks_t.hpp" />
     <ClInclude Include="..\..\src\components\position.hpp" />
-    <ClInclude Include="..\..\src\components\buildings\receives_signal.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\receives_signal.hpp" />
     <ClInclude Include="..\..\src\components\renderable.hpp" />
     <ClInclude Include="..\..\src\components\renderable_composite.hpp" />
     <ClInclude Include="..\..\src\components\riding_t.hpp" />
@@ -597,96 +481,7 @@
     <ClInclude Include="..\..\src\main_loops\play_game.hpp" />
     <ClInclude Include="..\..\src\main_loops\splash_screen.hpp" />
     <ClInclude Include="..\..\src\main_loops\worldgen.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\biome_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\history_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\map_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\noise_helper.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\blight_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\buildings.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\decorators.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\game_objects.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\heightmap.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\starting_point.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\strata.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\trees.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\regions\water_features.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\region_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\river_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\sentient_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\builder\settler_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\civilizations.hpp" />
-    <ClInclude Include="..\..\src\planet\constants.hpp" />
-    <ClInclude Include="..\..\src\planet\history.hpp" />
-    <ClInclude Include="..\..\src\planet\indices.hpp" />
-    <ClInclude Include="..\..\src\planet\planet.hpp" />
-    <ClInclude Include="..\..\src\planet\planet_builder.hpp" />
-    <ClInclude Include="..\..\src\planet\region\region.hpp" />
-    <ClInclude Include="..\..\src\planet\tile.hpp" />
-    <ClInclude Include="..\..\src\raws\apihelper.hpp" />
-    <ClInclude Include="..\..\src\raws\biomes.hpp" />
-    <ClInclude Include="..\..\src\raws\buildings.hpp" />
-    <ClInclude Include="..\..\src\raws\clothing.hpp" />
-    <ClInclude Include="..\..\src\raws\creatures.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\biome_type_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\building_def_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\civilization_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\clothing_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\item_def_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\life_event_template.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\material_def_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\plant_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\profession_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\raw_creature_t.hpp" />
-    <ClInclude Include="..\..\src\raws\defs\reaction_t.hpp" />
-    <ClInclude Include="..\..\src\raws\graphviz.hpp" />
-    <ClInclude Include="..\..\src\raws\health_factory.hpp" />
-    <ClInclude Include="..\..\src\raws\items.hpp" />
-    <ClInclude Include="..\..\src\raws\life_events.hpp" />
-    <ClInclude Include="..\..\src\raws\lua_bridge.hpp" />
-    <ClInclude Include="..\..\src\raws\materials.hpp" />
-    <ClInclude Include="..\..\src\raws\plants.hpp" />
-    <ClInclude Include="..\..\src\raws\profession.hpp" />
-    <ClInclude Include="..\..\src\raws\raws.hpp" />
-    <ClInclude Include="..\..\src\raws\reactions.hpp" />
-    <ClInclude Include="..\..\src\raws\reaction_input.hpp" />
-    <ClInclude Include="..\..\src\raws\species.hpp" />
-    <ClInclude Include="..\..\src\raws\string_table.hpp" />
-    <ClInclude Include="..\..\src\render_engine\camera.hpp" />
-    <ClInclude Include="..\..\src\render_engine\chunks\chunks.hpp" />
-    <ClInclude Include="..\..\src\render_engine\chunks\constants.hpp" />
-    <ClInclude Include="..\..\src\render_engine\chunks\cursors.hpp" />
-    <ClInclude Include="..\..\src\render_engine\chunks\geometry_helper.hpp" />
-    <ClInclude Include="..\..\src\render_engine\chunks\water_render.hpp" />
-    <ClInclude Include="..\..\src\render_engine\design_render.hpp" />
-    <ClInclude Include="..\..\src\render_engine\fbo\base_lit_buffer.hpp" />
-    <ClInclude Include="..\..\src\render_engine\fbo\buffertest.hpp" />
-    <ClInclude Include="..\..\src\render_engine\fbo\gbuffer.hpp" />
-    <ClInclude Include="..\..\src\render_engine\fbo\hdr_buffer.hpp" />
-    <ClInclude Include="..\..\src\render_engine\fbo\point_light_buffer.hpp" />
-    <ClInclude Include="..\..\src\render_engine\frustrum.hpp" />
-    <ClInclude Include="..\..\src\render_engine\pointlights.hpp" />
-    <ClInclude Include="..\..\src\render_engine\renderbuffers.hpp" />
-    <ClInclude Include="..\..\src\render_engine\render_engine.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\ascii_base_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\ascii_light_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\chunk_depth_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\chunk_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\cursor_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\lighter_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\particle_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\pointlight_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\skylight_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\tonemap_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shadow_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\shaders\worldgen_shader.hpp" />
-    <ClInclude Include="..\..\src\render_engine\ssao.hpp" />
-    <ClInclude Include="..\..\src\render_engine\ubo\first_stage_ubo.hpp" />
-    <ClInclude Include="..\..\src\render_engine\ubo\lighting_ubo.hpp" />
-    <ClInclude Include="..\..\src\render_engine\vox\renderables.hpp" />
-    <ClInclude Include="..\..\src\render_engine\vox\voxel_model.hpp" />
-    <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp" />
+    <ClInclude Include="..\..\src\stdafx.h" />
     <ClInclude Include="..\..\src\systems\ai\ai_status_effects.hpp" />
     <ClInclude Include="..\..\src\systems\ai\ai_stuck.hpp" />
     <ClInclude Include="..\..\src\systems\ai\architecture_system.hpp" />
@@ -787,7 +582,18 @@
     <ClInclude Include="..\..\src\utils\thread_safe_message_queue.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\src\bengine\bitset.hpp" />
+    <ProjectReference Include="..\BEngineVS\BEngineVS.vcxproj">
+      <Project>{ffa0f87d-66c5-494d-a8bc-7879546dd3aa}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\PlanetVS\PlanetVS.vcxproj">
+      <Project>{503b9537-aaa4-4333-bdae-3605a2275cac}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RawsVS\RawsVS.vcxproj">
+      <Project>{d5d0e0c7-f9c8-4779-8d16-05217bf9564b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RenderVS\RenderVS.vcxproj">
+      <Project>{ab1ac6b4-bea8-4a44-b5cd-19764019776d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

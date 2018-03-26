@@ -1,13 +1,9 @@
+#include "stdafx.h"
 #include "ai_work_hunt.hpp"
 #include "templated_work_steps_t.hpp"
-#include "../../../components/buildings/building.hpp"
-#include "../../../components/ai_tags/ai_tag_work_hunting.hpp"
-#include "../../../components/farming/designated_hunter.hpp"
 #include "../distance_map_system.hpp"
 #include "../../helpers/targeted_flow_map.hpp"
 #include "../../helpers/weapons_helper.hpp"
-#include "../../../components/name.hpp"
-#include <string>
 
 namespace systems {
 	namespace ai_hunt {

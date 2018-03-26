@@ -5,7 +5,6 @@
 #include "../global_assets/texture_storage.hpp"
 #include "../bengine/main_window.hpp"
 #include "fbo/buffertest.hpp"
-#include "../components/buildings/building.hpp"
 #include "../global_assets/game_calendar.hpp"
 #include "vox/renderables.hpp"
 #include "chunks/cursors.hpp"

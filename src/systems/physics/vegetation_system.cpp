@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "explosive_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../global_assets/game_pause.hpp"

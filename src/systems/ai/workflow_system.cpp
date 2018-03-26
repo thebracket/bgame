@@ -1,11 +1,9 @@
+#include "stdafx.h"
 #include "../helpers/workflow_assistant.hpp"
-#include "../../components/buildings/building.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/reactions.hpp"
 #include "../../raws/defs/reaction_t.hpp"
 #include "../../global_assets/building_designations.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace workflow_system {

@@ -1,7 +1,7 @@
+#include "stdafx.h"
 #include "topology_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../../planet/region/region.hpp"
-#include "../../components/items/item.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"
@@ -9,16 +9,12 @@
 #include "../../raws/raws.hpp"
 #include "../../raws/buildings.hpp"
 #include "../../raws/defs/building_def_t.hpp"
-#include "../../components/buildings/entry_trigger.hpp"
-#include "../../components/buildings/receives_signal.hpp"
 #include "../../render_engine/vox/renderables.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "../gui/particle_system.hpp"
 #include "../ai/mining_system.hpp"
 #include "../ai/distance_map_system.hpp"
-#include "../../components/mining/mining_designations.hpp"
 #include "../ai/architecture_system.hpp"
-#include "../../bengine/ecs.hpp"
 
 using namespace bengine;
 using namespace tile_flags;

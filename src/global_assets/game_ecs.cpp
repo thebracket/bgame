@@ -1,4 +1,4 @@
-#include "game_ecs.hpp"
+#include "stdafx.h"
 #include <fstream>
 #include <cereal/types/unordered_set.hpp>
 #include <cereal/types/array.hpp>
@@ -273,7 +273,7 @@ void serialize(Archive & archive, entry_trigger_t &t)
 template<class Archive>
 void serialize(Archive & archive, receives_signal_t &s)
 {
-	archive(s.active); // serialize things by passing them to the archive
+	archive(s.active, s.receives_from); // serialize things by passing them to the archive
 }
 
 template<class Archive>
@@ -403,7 +403,37 @@ void serialize(Archive & archive, initiative_t &i)
 template<class Archive>
 void serialize(Archive & archive, lever_t &l)
 {
+	//archive(l.active, l.targets); // serialize things by passing them to the archive
+}
+
+template<class Archive>
+void serialize(Archive & archive, float_gauge_t &l)
+{
+	//archive(l.active, l.targets); // serialize things by passing them to the archive
+}
+
+template<class Archive>
+void serialize(Archive & archive, pressure_plate_t &l)
+{
+	//archive(l.active, l.targets); // serialize things by passing them to the archive
+}
+
+template<class Archive>
+void serialize(Archive & archive, proximity_sensor_t &l)
+{
+	//archive(l.active, l.targets); // serialize things by passing them to the archive
+}
+
+template<class Archive>
+void serialize(Archive & archive, sends_signal_t &l)
+{
 	archive(l.active, l.targets); // serialize things by passing them to the archive
+}
+
+template<class Archive>
+void serialize(Archive & archive, signal_processor_t &l)
+{
+	//archive(l.active, l.targets); // serialize things by passing them to the archive
 }
 
 template<class Archive>

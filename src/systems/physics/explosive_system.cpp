@@ -1,21 +1,15 @@
+#include "stdafx.h"
 #include "explosive_system.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_planet.hpp"
 #include "../../global_assets/rng.hpp"
-#include "../../components/position.hpp"
-#include "../../components/game_stats.hpp"
-#include "../../components/health.hpp"
-#include "../../components/water_spawner.hpp"
 #include "../../render_engine/chunks/chunks.hpp"
-#include "../../components/explosion_t.hpp"
 #include "../../bengine/geometry.hpp"
-#include "../../components/renderable.hpp"
 #include "../../global_assets/spatial_db.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../raws/raws.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
-#include "../../bengine/ecs.hpp"
 
 using namespace bengine;
 using namespace region;

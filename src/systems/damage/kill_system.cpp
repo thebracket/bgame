@@ -1,21 +1,11 @@
+#include "stdafx.h"
 #include "kill_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include "../../components/position.hpp"
-#include "../../components/items/item_carried.hpp"
-#include "../../components/settler_ai.hpp"
-#include "../../components/name.hpp"
-#include "../../components/renderable.hpp"
-#include "../../components/corpse_settler.hpp"
 #include "../../bengine/telemetry.hpp"
-#include "../../components/sentient_ai.hpp"
-#include "../../components/species.hpp"
-#include "../../components/corpse_harvestable.hpp"
 #include "../../global_assets/spatial_db.hpp"
 #include "../ai/inventory_system.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../../global_assets/game_planet.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace kill_system {

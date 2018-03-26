@@ -1,7 +1,7 @@
+#include "stdafx.h"
 #include "mining_system.hpp"
 #include "../../planet/region/region.hpp"
 #include "../../global_assets/game_mining.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../helpers/targeted_flow_map.hpp"
 
 namespace systems {

@@ -1,17 +1,6 @@
+#include "stdafx.h"
 #include "initiative_system.hpp"
-#include "../../components/position.hpp"
-#include "../../components/slidemove.hpp"
-#include "../../components/settler_ai.hpp"
-#include "../../components/sentient_ai.hpp"
-#include "../../components/grazer_ai.hpp"
-#include "../../components/riding_t.hpp"
-#include "../../components/buildings/turret_t.hpp"
-#include "../../components/initiative.hpp"
-#include "../../components/ai_tags/ai_tag_my_turn.hpp"
-#include "../../components/game_stats.hpp"
 #include "../../global_assets/rng.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace initiative {

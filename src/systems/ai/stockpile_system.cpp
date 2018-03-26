@@ -1,13 +1,8 @@
+#include "stdafx.h"
 #include "stockpile_system.hpp"
 #include "../../planet/region/region.hpp"
-#include "../../components/stockpile.hpp"
-#include "../../components/items/item_stored.hpp"
-#include "../../components/items/item.hpp"
-#include "../../components/claimed_t.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/items.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace stockpile_system {

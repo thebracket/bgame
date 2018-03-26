@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "ai_status_effects.hpp"
-#include "../../components/wildlife_group.hpp"
 #include "../../global_assets/game_planet.hpp"
 #include "../../raws/biomes.hpp"
 #include "../../raws/defs/biome_type_t.hpp"
@@ -7,20 +7,10 @@
 #include "../../raws/creatures.hpp"
 #include "../../raws/defs/raw_creature_t.hpp"
 #include "../../global_assets/rng.hpp"
-#include "../../components/renderable.hpp"
-#include "../../components/name.hpp"
-#include "../../components/health.hpp"
-#include "../../components/game_stats.hpp"
-#include "../../components/grazer_ai.hpp"
-#include "../../components/viewshed.hpp"
-#include "../../components/initiative.hpp"
-#include "../../components/ai_tags/ai_mode_idle.hpp"
 #include "../../raws/health_factory.hpp"
 #include "../../bengine/telemetry.hpp"
 #include "distance_map_system.hpp"
 #include "../../bengine/color_t.hpp"
-#include "../../bengine/ecs.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace wildlife_population {

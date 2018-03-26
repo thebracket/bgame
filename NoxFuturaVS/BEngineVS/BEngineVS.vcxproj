@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{FFA0F87D-66C5-494D-A8BC-7879546DD3AA}</ProjectGuid>
+    <RootNamespace>BEngineVS</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\bengine\analytics.hpp" />
+    <ClInclude Include="..\..\src\bengine\btabs.hpp" />
+    <ClInclude Include="..\..\src\bengine\cereal_include.hpp" />
+    <ClInclude Include="..\..\src\bengine\color_t.hpp" />
+    <ClInclude Include="..\..\src\bengine\ctpl.h" />
+    <ClInclude Include="..\..\src\bengine\ecs.hpp" />
+    <ClInclude Include="..\..\src\bengine\FastNoise.h" />
+    <ClInclude Include="..\..\src\bengine\filesystem.hpp" />
+    <ClInclude Include="..\..\src\bengine\geometry.hpp" />
+    <ClInclude Include="..\..\src\bengine\gl_include.hpp" />
+    <ClInclude Include="..\..\src\bengine\IconsFontAwesome.h" />
+    <ClInclude Include="..\..\src\bengine\imconfig.h" />
+    <ClInclude Include="..\..\src\bengine\imgui.h" />
+    <ClInclude Include="..\..\src\bengine\imgui_impl_glfw_gl3.h" />
+    <ClInclude Include="..\..\src\bengine\imgui_internal.h" />
+    <ClInclude Include="..\..\src\bengine\imgui_style.hpp" />
+    <ClInclude Include="..\..\src\bengine\main_window.hpp" />
+    <ClInclude Include="..\..\src\bengine\octree.hpp" />
+    <ClInclude Include="..\..\src\bengine\pcg_basic.h" />
+    <ClInclude Include="..\..\src\bengine\random_number_generator.hpp" />
+    <ClInclude Include="..\..\src\bengine\rexspeeder.hpp" />
+    <ClInclude Include="..\..\src\bengine\serialization_utils.hpp" />
+    <ClInclude Include="..\..\src\bengine\shaders.hpp" />
+    <ClInclude Include="..\..\src\bengine\simple_sprite.hpp" />
+    <ClInclude Include="..\..\src\bengine\stb_image.h" />
+    <ClInclude Include="..\..\src\bengine\stb_image_resize.h" />
+    <ClInclude Include="..\..\src\bengine\stb_rect_pack.h" />
+    <ClInclude Include="..\..\src\bengine\stb_textedit.h" />
+    <ClInclude Include="..\..\src\bengine\stb_truetype.h" />
+    <ClInclude Include="..\..\src\bengine\string_utils.hpp" />
+    <ClInclude Include="..\..\src\bengine\telemetry.hpp" />
+    <ClInclude Include="..\..\src\bengine\textures.hpp" />
+    <ClInclude Include="..\..\src\bengine\threadpool.h" />
+    <ClInclude Include="..\..\src\bengine\threadsafequeue.hpp" />
+    <None Include="..\..\src\bengine\bitset.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\bengine\analytics.cpp" />
+    <ClCompile Include="..\..\src\bengine\color_t.cpp" />
+    <ClCompile Include="..\..\src\bengine\FastNoise.cpp" />
+    <ClCompile Include="..\..\src\bengine\filesystem.cpp" />
+    <ClCompile Include="..\..\src\bengine\geometry.cpp" />
+    <ClCompile Include="..\..\src\bengine\imgui.cpp" />
+    <ClCompile Include="..\..\src\bengine\imgui_draw.cpp" />
+    <ClCompile Include="..\..\src\bengine\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="..\..\src\bengine\main_window.cpp" />
+    <ClCompile Include="..\..\src\bengine\octree.cpp" />
+    <ClCompile Include="..\..\src\bengine\pcg_basic.cpp" />
+    <ClCompile Include="..\..\src\bengine\random_number_generator.cpp" />
+    <ClCompile Include="..\..\src\bengine\rexspeeder.cpp" />
+    <ClCompile Include="..\..\src\bengine\shaders.cpp" />
+    <ClCompile Include="..\..\src\bengine\simple_sprite.cpp" />
+    <ClCompile Include="..\..\src\bengine\stb_image.cpp" />
+    <ClCompile Include="..\..\src\bengine\stb_image_resize.cpp" />
+    <ClCompile Include="..\..\src\bengine\string_utils.cpp" />
+    <ClCompile Include="..\..\src\bengine\telemetry.cpp" />
+    <ClCompile Include="..\..\src\bengine\textures.cpp" />
+    <ClCompile Include="..\..\src\bengine\threadpool.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

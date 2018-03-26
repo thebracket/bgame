@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "architecture_system.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../global_assets/architecture_designations.hpp"

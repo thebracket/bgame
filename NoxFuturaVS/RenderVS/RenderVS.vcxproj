@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{AB1AC6B4-BEA8-4A44-B5CD-19764019776D}</ProjectGuid>
+    <RootNamespace>RenderVS</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ascii_engine\ascii_mode.cpp" />
+    <ClCompile Include="..\..\src\render_engine\camera.cpp" />
+    <ClCompile Include="..\..\src\render_engine\chunks\chunks.cpp" />
+    <ClCompile Include="..\..\src\render_engine\chunks\cursors.cpp" />
+    <ClCompile Include="..\..\src\render_engine\chunks\geometry_helper.cpp" />
+    <ClCompile Include="..\..\src\render_engine\chunks\water_render.cpp" />
+    <ClCompile Include="..\..\src\render_engine\design_render.cpp" />
+    <ClCompile Include="..\..\src\render_engine\fbo\base_lit_buffer.cpp" />
+    <ClCompile Include="..\..\src\render_engine\fbo\buffertest.cpp" />
+    <ClCompile Include="..\..\src\render_engine\fbo\gbuffer.cpp" />
+    <ClCompile Include="..\..\src\render_engine\fbo\hdr_buffer.cpp" />
+    <ClCompile Include="..\..\src\render_engine\fbo\point_light_buffer.cpp" />
+    <ClCompile Include="..\..\src\render_engine\pointlights.cpp" />
+    <ClCompile Include="..\..\src\render_engine\renderbuffers.cpp" />
+    <ClCompile Include="..\..\src\render_engine\render_engine.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\ascii_base_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\ascii_light_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\chunk_depth_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\chunk_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\cursor_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\lighter_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\lightstage_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\particle_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\pointlight_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\skylight_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\tonemap_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\voxel_shadow_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\shaders\worldgen_shader.cpp" />
+    <ClCompile Include="..\..\src\render_engine\ssao.cpp" />
+    <ClCompile Include="..\..\src\render_engine\ubo\first_stage_ubo.cpp" />
+    <ClCompile Include="..\..\src\render_engine\ubo\lighting_ubo.cpp" />
+    <ClCompile Include="..\..\src\render_engine\vox\renderables.cpp" />
+    <ClCompile Include="..\..\src\render_engine\vox\voxel_model.cpp" />
+    <ClCompile Include="..\..\src\render_engine\vox\voxreader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\ascii_engine\ascii_mode.hpp" />
+    <ClInclude Include="..\..\src\render_engine\camera.hpp" />
+    <ClInclude Include="..\..\src\render_engine\chunks\chunks.hpp" />
+    <ClInclude Include="..\..\src\render_engine\chunks\constants.hpp" />
+    <ClInclude Include="..\..\src\render_engine\chunks\cursors.hpp" />
+    <ClInclude Include="..\..\src\render_engine\chunks\geometry_helper.hpp" />
+    <ClInclude Include="..\..\src\render_engine\chunks\water_render.hpp" />
+    <ClInclude Include="..\..\src\render_engine\design_render.hpp" />
+    <ClInclude Include="..\..\src\render_engine\fbo\base_lit_buffer.hpp" />
+    <ClInclude Include="..\..\src\render_engine\fbo\buffertest.hpp" />
+    <ClInclude Include="..\..\src\render_engine\fbo\gbuffer.hpp" />
+    <ClInclude Include="..\..\src\render_engine\fbo\hdr_buffer.hpp" />
+    <ClInclude Include="..\..\src\render_engine\fbo\point_light_buffer.hpp" />
+    <ClInclude Include="..\..\src\render_engine\frustrum.hpp" />
+    <ClInclude Include="..\..\src\render_engine\pointlights.hpp" />
+    <ClInclude Include="..\..\src\render_engine\renderbuffers.hpp" />
+    <ClInclude Include="..\..\src\render_engine\render_engine.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\ascii_base_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\ascii_light_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\chunk_depth_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\chunk_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\cursor_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\lighter_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\lightstage_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\particle_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\pointlight_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\skylight_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\tonemap_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\voxel_shadow_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\shaders\worldgen_shader.hpp" />
+    <ClInclude Include="..\..\src\render_engine\ssao.hpp" />
+    <ClInclude Include="..\..\src\render_engine\ubo\first_stage_ubo.hpp" />
+    <ClInclude Include="..\..\src\render_engine\ubo\lighting_ubo.hpp" />
+    <ClInclude Include="..\..\src\render_engine\vox\renderables.hpp" />
+    <ClInclude Include="..\..\src\render_engine\vox\voxel_model.hpp" />
+    <ClInclude Include="..\..\src\render_engine\vox\voxreader.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

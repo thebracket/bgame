@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "main_menu.hpp"
 #include "../bengine/simple_sprite.hpp"
 #include "../global_assets/texture_storage.hpp"

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "design_buildings.hpp"
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../bengine/imgui.h"

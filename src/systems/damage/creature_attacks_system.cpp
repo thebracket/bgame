@@ -1,17 +1,14 @@
+#include "stdafx.h"
 #include "creature_attacks_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
-#include "../../components/species.hpp"
 #include "../../raws/creatures.hpp"
 #include "../../raws/defs/raw_creature_t.hpp"
-#include "../../components/game_stats.hpp"
 #include "../helpers/weapons_helper.hpp"
 #include "../gui/log_system.hpp"
-#include "../../components/logger.hpp"
 #include "../../global_assets/rng.hpp"
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
 #include "../../utils/system_log.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace creature_attacks {

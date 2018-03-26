@@ -1,20 +1,15 @@
+#include "stdafx.h"
 #include "sentient_attacks_system.hpp"
 #include "../../utils/thread_safe_message_queue.hpp"
 #include "../gui/log_system.hpp"
-#include "../../components/logger.hpp"
 #include "../../global_assets/rng.hpp"
 #include "../helpers/weapons_helper.hpp"
-#include "../../components/sentient_ai.hpp"
-#include "../../components/natural_attacks_t.hpp"
-#include "../../components/items/item.hpp"
 #include "../../raws/items.hpp"
 #include "../../raws/defs/item_def_t.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
-#include "../../components/game_stats.hpp"
 #include "damage_system.hpp"
 #include "../gui/particle_system.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace sentient_attacks {

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "design_lumberjack.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "../../bengine/IconsFontAwesome.h"

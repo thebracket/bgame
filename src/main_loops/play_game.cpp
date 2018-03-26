@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "play_game.hpp"
 #include "../bengine/imgui.h"
 #include "../bengine/imgui_impl_glfw_gl3.h"
@@ -6,12 +7,6 @@
 #include "../bengine/filesystem.hpp"
 #include "../planet/region/region.hpp"
 #include "../render_engine/render_engine.hpp"
-#include "../components/camera_options.hpp"
-#include "../components/logger.hpp"
-#include "../components/world_position.hpp"
-#include "../components/calendar.hpp"
-#include "../components/designations.hpp"
-#include "../components/mining/mining_designations.hpp"
 #include "../global_assets/game_camera.hpp"
 #include "../systems/run_systems.hpp"
 #include "../global_assets/game_calendar.hpp"
@@ -24,13 +19,10 @@
 #include "../global_assets/building_designations.hpp"
 #include "../ascii_engine/ascii_mode.hpp"
 #include <atomic>
-#include "../components/buildings/architecture_designations_t.hpp"
 #include "../global_assets/architecture_designations.hpp"
-#include "../bengine/ecs.hpp"
 #include "../global_assets/debug_flags.hpp"
 #include "../bengine/IconsFontAwesome.h"
 #include <thread>
-#include "../global_assets/game_ecs.hpp"
 
 namespace play_game {
 

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <functional>
+#include <vector>
 
 struct reaction_t; // Forward
 struct graphviz_t; // Forward

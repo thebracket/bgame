@@ -1,16 +1,8 @@
+#include "stdafx.h"
 #include "distance_map_system.hpp"
-#include "../../components/position.hpp"
 #include "../../planet/region/region.hpp"
-#include "../../components/grazer_ai.hpp"
-#include "../../components/corpse_harvestable.hpp"
-#include "../../components/buildings/construct_provides_sleep.hpp"
-#include "../../components/claimed_t.hpp"
-#include "../../components/settler_ai.hpp"
-#include "../../bengine/ecs.hpp"
 #include "../helpers/targeted_flow_map.hpp"
-#include "../../components/buildings/building.hpp"
 #include "../../global_assets/game_pause.hpp"
-#include "../../global_assets/game_ecs.hpp"
 
 namespace systems {
 	namespace distance_map {
