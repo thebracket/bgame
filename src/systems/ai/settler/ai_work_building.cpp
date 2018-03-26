@@ -259,6 +259,10 @@ namespace systems {
 					else if (provides.provides == provides_lever) {
 						entity(b.building_target.building_entity)->assign(lever_t{});
 					}
+					else if (provides.provides == provides_pressure_plate) {
+						entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_PRESSURE });
+						entity(b.building_target.building_entity)->assign(lever_t{});
+					}
 					else if (provides.provides == provides_stonefall_trap
 						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap)
 					{

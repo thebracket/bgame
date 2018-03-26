@@ -20,7 +20,6 @@
 #include "../../raws/items.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
-#include "../../components/renderable.hpp"
 #include "../../components/logger.hpp"
 #include "../gui/log_system.hpp"
 #include "../../global_assets/spatial_db.hpp"
@@ -117,13 +116,13 @@ namespace systems {
 					if (target_entity->component<construct_door_t>()) prefix = "Door";
 					if (target_entity && building_component->tag == "spike_trap") prefix = "Spikes";
 
-					const std::string target_info = prefix + std::string(" #") + std::to_string(target);
+					const auto target_info = prefix + std::string(" #") + std::to_string(target);
 					linked_to.emplace_back(std::pair<std::size_t, std::string>{target, target_info});
 					already_linked.insert(target);
 				}
 			}
 			std::vector<const char *> linked_to_items(linked_to.size());
-			for (int i = 0; i<linked_to.size(); ++i) {
+			for (auto i = 0; i<linked_to.size(); ++i) {
 				linked_to_items[i] = linked_to[i].second.c_str();
 			}
 			ImGui::PushItemWidth(-1);
@@ -171,21 +170,21 @@ namespace systems {
 
 		void entry_trigger_firing(const systems::movement::entity_moved_message &msg) {
 			//std::cout << "Received an entity move message. There are " << triggers.size() << " triggers.\n";
-			const int tile_index = mapidx(msg.destination);
-			auto finder = triggers.find(tile_index);
+			const auto tile_index = mapidx(msg.destination);
+			const auto finder = triggers.find(tile_index);
 			if (finder != triggers.end()) {
 				//std::cout << "Found a trigger\n";
 				auto trigger_entity = entity(finder->second);
 				if (trigger_entity) {
-					auto trigger_def = trigger_entity->component<entry_trigger_t>();
+					const auto trigger_def = trigger_entity->component<entry_trigger_t>();
 					if (trigger_def) {
 						if (trigger_def->active) {
 							//std::cout << "Trigger is active\n";
 							// Does the trigger apply to the entity type
 							auto target_entity = entity(msg.entity_id);
 							if (target_entity) {
-								auto grazer = target_entity->component<grazer_ai>();
-								auto sentient = target_entity->component<sentient_ai>();
+								const auto grazer = target_entity->component<grazer_ai>();
+								const auto sentient = target_entity->component<sentient_ai>();
 
 								//if (grazer) std::cout << "Target grazes\n";
 								//if (sentient) std::cout << "Target is sentient\n";
@@ -194,20 +193,20 @@ namespace systems {
 								// Cages only affect hostiles and beasts
 								if (trigger_def->type == TRIGGER_CAGE && (grazer || (sentient && sentient->hostile))) {
 									//std::cout << "Cage triggered\n";
-									auto name = target_entity->component<name_t>();
+									const auto name = target_entity->component<name_t>();
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is trapped in a cage!");
-										logging::log_message msg{ ss.chars };
-										logging::log(msg);
+										logging::log_message msg_{ ss.chars };
+										logging::log(msg_);
 									}
 
 									// TODO: Add a random chance with some dex involved
 									// Spawn a cage object
 									auto building = trigger_entity->component<building_t>();
-									std::size_t material = get_material_by_tag(building->built_with[0].first);
+									const auto material = get_material_by_tag(building->built_with[0].first);
 									const auto &[x,y,z] = idxmap(tile_index);
-									auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material, 3, 100);
+									const auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material, 3, 100);
 
 									// Add a stored component
 									target_entity->assign(item_stored_t{ new_cage->id });
@@ -226,8 +225,8 @@ namespace systems {
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is hit by a falling rock trap!");
-										logging::log_message msg{ ss.chars };
-										logging::log(msg);
+										logging::log_message msg_{ ss.chars };
+										logging::log(msg_);
 									}
 
 									// Spawn some damage!
@@ -244,8 +243,8 @@ namespace systems {
 									if (name) {
 										LOG ss;
 										ss.other_name(msg.entity_id)->text(" is hit by a blade trap!");
-										logging::log_message msg{ ss.chars };
-										logging::log(msg);
+										logging::log_message msg_{ ss.chars };
+										logging::log(msg_);
 									}
 
 									// TODO: Add a random chance with some dex involved
@@ -253,11 +252,15 @@ namespace systems {
 									damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.entity_id, rng.roll_dice(3,8), "spinning blades" });
 
 									// Extend the blades
-									auto building = target_entity->component<building_t>();
+									const auto building = target_entity->component<building_t>();
 									if (building)
 									{
 										building->vox_model = 132;
 									}
+								}
+								else if (trigger_def->type == TRIGGER_PRESSURE)
+								{
+									lever_pulled.enqueue(lever_pulled_message{ trigger_entity->id });
 								}
 							}
 						}
@@ -268,13 +271,11 @@ namespace systems {
 
 		void pulled_levers() {
 			lever_pulled.process_all([](const lever_pulled_message &msg) {
-				std::cout << "Lever pulled: " << msg.lever_id << "\n";
 				auto lever_entity = entity(msg.lever_id);
 				if (!lever_entity) return;
 				auto lever_component = lever_entity->component<lever_t>();
 				if (!lever_component) return;
 				auto lever_building = lever_entity->component<building_t>();
-				std::cout << "All good on lever\n";
 
 				lever_component->active = !lever_component->active;
 				if (lever_building) {

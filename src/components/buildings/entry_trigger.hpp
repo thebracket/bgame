@@ -1,6 +1,6 @@
 #pragma once
 
-enum trigger_type { TRIGGER_CAGE, TRIGGER_STONEFALL, TRIGGER_BLADE };
+enum trigger_type { TRIGGER_CAGE, TRIGGER_STONEFALL, TRIGGER_BLADE, TRIGGER_PRESSURE };
 
 struct entry_trigger_t {
     bool active = true;

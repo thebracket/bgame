@@ -58,3 +58,13 @@ buildings["lever"] = {
     },
     vox = voxelId("lever_off")
 };
+
+buildings["pressure_plate"] = {
+    name = "Pressure Plate",
+    description = "A simple pressure plate that triggers when something stands on it.",
+    components = { { item="mechanism", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { pressure_plate={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("pressure_plate")
+};
