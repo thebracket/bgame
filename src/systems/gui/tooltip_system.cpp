@@ -36,6 +36,7 @@
 #include "../../global_assets/building_designations.hpp"
 #include "../../global_assets/game_designations.hpp"
 #include "building_info.hpp"
+#include "log_system.hpp"
 
 using namespace tile_flags;
 
@@ -195,14 +196,24 @@ namespace systems {
 										bdoor->locked = false;
 										doors::doors_changed();
 										context_menu = false;
+										logging::log_message lmsg{ LOG{}.text("Door opened.")->chars };
+										logging::log(lmsg);
 									}
 								} else
 								{
 									if (ImGui::MenuItem("Lock Door"))
 									{
-										bdoor->locked = true;
-										doors::doors_changed();
-										context_menu = false;
+										if (region::water_level(target_idx) < 2) {
+											bdoor->locked = true;
+											doors::doors_changed();
+											context_menu = false;
+											logging::log_message lmsg{ LOG{}.text("Door locked.")->chars };
+											logging::log(lmsg);
+										} else
+										{
+											logging::log_message lmsg{ LOG{}.text("Unable to lock door: too much water.")->chars };
+											logging::log(lmsg);
+										}
 									}
 								}
 							}
