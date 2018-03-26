@@ -6,6 +6,9 @@
 #include "geometry_helper.hpp"
 #include "../../global_assets/farming_designations.hpp"
 #include "../../bengine/gl_include.hpp"
+#include "../../global_assets/game_ecs.hpp"
+#include "../../raws/buildings.hpp"
+#include "../../raws/defs/building_def_t.hpp"
 
 using namespace tile_flags;
 
@@ -130,7 +133,28 @@ namespace chunks {
 								static_voxel_models[25].push_back(std::make_tuple(region_x, region_y, region_z));
 							}
 							else if (tiletype == tile_type::CLOSED_DOOR) {
-								static_voxel_models[128].push_back(std::make_tuple(region_x, region_y, region_z));
+								auto vox_id = 128;
+								const auto bid = region::get_building_id(idx);
+								if (bid > 0)
+								{
+									const auto building_entity = bengine::entity(bid);
+									if (building_entity)
+									{
+										const auto building_comp = building_entity->component<building_t>();
+										if (building_comp)
+										{
+											const auto def = get_building_def(building_comp->tag);
+											if (def)
+											{
+												for (const auto &p : def->provides)
+												{
+													if (p.alternate_vox > 0) vox_id = p.alternate_vox;
+												}
+											}
+										}
+									}
+								}
+								static_voxel_models[vox_id].push_back(std::make_tuple(region_x, region_y, region_z));
 							}
 						}
                     }

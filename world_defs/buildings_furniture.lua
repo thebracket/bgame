@@ -55,7 +55,7 @@ buildings["door"] = {
     description = "A simple door",
     components = { { item="door", qty=1 } },
     skill = { name="Construction", difficulty=10 },
-    provides = { door={energy_cost=0}, signal={energy_cost=0}, alternate_vox=voxelId("door_closed") },
+    provides = { door={energy_cost=0, alternate_vox=voxelId("door_closed")}, signal={energy_cost=0} },
     render_rex = "door.xp",
     vox=voxelId("door_open")
 };
@@ -73,7 +73,7 @@ buildings["energy_door"] = {
 buildings["floodgate"] = {
     name = "Floodgate",
     description = "A heavy floodgate, designed to keep water out.",
-    components = { { item="door", qty=1 } },
+    components = { { item="floodgate", qty=1 } },
     skill = { name="Construction", difficulty=10 },
     provides = { door={energy_cost=10, alternate_vox=voxelId("floodgate_closed")} },
     render_rex = "door.xp",

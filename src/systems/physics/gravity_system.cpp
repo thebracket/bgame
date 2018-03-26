@@ -13,7 +13,7 @@ namespace systems {
 			each_without_both<falling_t, flying_t, position_t>([] (entity_t &e, position_t &pos)
 			{
 				const auto idx = mapidx(pos);
-				if (!region::flag(idx, tile_flags::CAN_STAND_HERE))
+				if (!region::flag(idx, tile_flags::CAN_STAND_HERE) && !region::tile_type(idx)==tile_type::CLOSED_DOOR)
 				{
 					const auto building = e.component<building_t>();
 					if (building)
