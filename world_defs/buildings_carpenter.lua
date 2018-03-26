@@ -42,6 +42,16 @@ reactions["make_wooden_door"] = {
     automatic = false
 };
 
+reactions["make_wooden_floodgate"] = {
+    name = "Make Wooden Floodgate",
+    workshop = "carpenter",
+    inputs = { { item="block", qty=1, material="wood" } },
+    outputs = { { item="floodgate", qty=1 } },
+    skill = "Carpentry",
+    difficulty = 12,
+    automatic = false
+};
+
 reactions["make_simple_bed"] = {
     name = "Make Simple Bed",
     workshop = "carpenter",

@@ -160,6 +160,7 @@ void read_buildings() noexcept
                         if (inner_type == "energy_cost") provisions.energy_cost = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (inner_type == "radius") provisions.radius = static_cast<int>(lua_tonumber(lua_state, -1));
                         if (inner_type == "color") provisions.color = read_lua_color("color");
+						if (inner_type == "alternate_vox") provisions.alternate_vox = static_cast<int>(lua_tonumber(lua_state, -1));
                         lua_pop(lua_state, 1);
                     }
 

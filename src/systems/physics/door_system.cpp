@@ -41,9 +41,6 @@ namespace systems {
 					}
 					chunks::mark_chunk_dirty_by_tileidx(idx);
 				});
-				//emit(recalculate_mining_message{});
-				//emit(renderables_changed_message{});
-				//emit(map_dirty_message{});
 				dirty = false;
 			}
 		}

@@ -144,6 +144,10 @@ voxel_models = {
     blades_retracted = { model=vfn("blades-retracted"), id=131 },
     blades_extended = { model=vfn("blades-extended"), id=132 },
     stonefall = { model=vfn("stonefall"), id=133 },
+    door_open = { model=vfn("door_open"), id=134 },
+    floodgate_open = { model=vfn("floodgate_open"), id=135 },
+    floodgate_closed = { model=vfn("floodgate_closed"), id=136 },
+    floodgate_ground = { model=vfn("floodgate_ground"), id=137 },
 }
 
 function voxelId(name)

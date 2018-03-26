@@ -12,6 +12,7 @@ struct building_provides_t {
     provides_t provides;
     int energy_cost = 0;
     int radius = 0;
+	int alternate_vox = 0;
     bengine::color_t color{1.0f, 1.0f, 1.0f};
 };
 

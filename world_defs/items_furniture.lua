@@ -40,6 +40,18 @@ items["door"] = {
     vox = voxelId("door_ground")
 };
 
+items["floodgate"] = {
+    name = "Floodate",
+    description = "A heavy floodgate, designed to keep water out.",
+    itemtype = {"component"},
+    glyph = glyphs['door'],
+    glyph_ascii = glyphs['door'],
+    foreground = colors['wood_brown'],
+    background = colors['black'],
+    stockpile = stockpiles['furniture'].id,
+    vox = voxelId("floodgate_ground")
+};
+
 -- Basic bed
 items["bed_item"] = {
     name = "Bed",

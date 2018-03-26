@@ -42,6 +42,16 @@ reactions["make_stone_door"] = {
    automatic = false
 };
 
+reactions["make_stone_floodgate"] = {
+   name = "Make Stone Floodgate",
+   workshop = "mason",
+   inputs = { { item="block", qty=1, mat_type="rock" } },
+   outputs = { { item="floodgate", qty=1 } },
+   skill = "Masonry",
+   difficulty = 12,
+   automatic = false
+};
+
 reactions["make_stone_club"] = {
     name = "Make Stone Club",
     workshop = "mason",

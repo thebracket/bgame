@@ -43,6 +43,16 @@ reactions["make_metal_door"] = {
     automatic = false
 };
 
+reactions["make_metal_floodgate"] = {
+    name = "Make Metal Floodgate",
+    workshop = "primitive_forge",
+    inputs = { { item="block", qty=1, mat_type="metal" } },
+    outputs = { { item="floodgate", qty=1 } },
+    skill = "Metalworking",
+    difficulty = 12,
+    automatic = false
+};
+
 reactions["make_trap_blade"] = {
     name = "Make Trap Blades",
     workshop = "primitive_forge",
