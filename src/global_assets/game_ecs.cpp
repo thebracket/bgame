@@ -207,7 +207,6 @@ void serialize(Archive & archive, ai_tag_work_pull_lever &l)
 	archive(l.step);
 }
 
-
 template<class Archive>
 void serialize(Archive & archive, ai_tag_work_shift_t &tag)
 {
@@ -404,7 +403,13 @@ void serialize(Archive & archive, initiative_t &i)
 template<class Archive>
 void serialize(Archive & archive, lever_t &l)
 {
-	//archive(l.active, l.targets); // serialize things by passing them to the archive
+	archive(l.active); // serialize things by passing them to the archive
+}
+
+template<class Archive>
+void serialize(Archive & archive, oscillator_t &l)
+{
+	archive(l.active, l.interval, l.ticker); // serialize things by passing them to the archive
 }
 
 template<class Archive>

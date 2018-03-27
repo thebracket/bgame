@@ -1201,5 +1201,8 @@
     <ClInclude Include="..\..\src\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\components\machinery\oscillator_t.hpp">
+      <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
