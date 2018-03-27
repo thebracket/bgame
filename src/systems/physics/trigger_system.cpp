@@ -19,6 +19,7 @@
 #include "../power/power_system.hpp"
 #include "../damage/damage_system.hpp"
 #include "../../global_assets/rng.hpp"
+#include "bengine/node_editor.hpp"
 
 using namespace bengine;
 
@@ -69,6 +70,8 @@ namespace systems {
 			});
 		}
 
+		bool opened_tmp = false;
+
 		void edit_triggers() {
 			trigger_details.process_all([](const trigger_details_requested &msg) {
 				trigger_id = msg.lever_id;
@@ -85,7 +88,9 @@ namespace systems {
 			if (lever) is_lever = true;
 			// TODO: is_pressure_plate determination
 
-			ImGui::Begin(win_trigger_mgmt.c_str());
+			ShowExampleAppCustomNodeGraph(&opened_tmp);
+
+			//ImGui::Begin(win_trigger_mgmt.c_str());
 
 			/*
 			// Input options
@@ -155,7 +160,7 @@ namespace systems {
 				game_master_mode = PLAY;
 			}
 			*/
-			ImGui::End();
+			//ImGui::End();
 		}
 
 		void entry_trigger_firing(const systems::movement::entity_moved_message &msg) {
