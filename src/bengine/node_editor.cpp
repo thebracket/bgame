@@ -1,14 +1,12 @@
 #include "node_editor.hpp"
 #include <cstdint>
-#include <cstdio>
 #include <algorithm>
 
-#define sizeof_array(t) (sizeof(t) / sizeof(t[0]))
 const float NODE_SLOT_RADIUS = 5.0f;
 const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
 
-static inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
-static inline ImVec2 operator-(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x - rhs.x, lhs.y - rhs.y); }
+static ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs) { return { lhs.x + rhs.x, lhs.y + rhs.y }; }
+static ImVec2 operator-(const ImVec2& lhs, const ImVec2& rhs) { return { lhs.x - rhs.x, lhs.y - rhs.y }; }
 
 static uint32_t s_id = 0;
 
@@ -44,78 +42,74 @@ static struct node_graph::node_type_t s_nodeTypes[] =
 	},
 };
 
-static void setupConnections(std::vector<std::unique_ptr<node_graph::connection_t>> &connections, std::vector<node_graph::connection_description_t> &connectionDescs)
+static void setup_connections(std::vector<std::unique_ptr<node_graph::connection_t>> &connections, std::vector<node_graph::connection_description_t> &connection_descs)
 {
-	for (int i = 0; i < connectionDescs.size(); ++i)
+	for (const auto &desc : connection_descs)
 	{
-		const node_graph::connection_description_t& desc = connectionDescs[i];
-
-		std::unique_ptr<node_graph::connection_t> con = std::make_unique<node_graph::connection_t>();
+		auto con = std::make_unique<node_graph::connection_t>();
 		con->desc = desc;
 
 		connections.emplace_back(std::move(con));
 	}
 }
 
-static std::unique_ptr<node_graph::node_t> createNodeFromType(ImVec2 pos, node_graph::node_type_t* nodeType)
+static std::unique_ptr<node_graph::node_t> create_node_from_type(const ImVec2 pos, node_graph::node_type_t* node_type)
 {
 	auto node = std::make_unique<node_graph::node_t>();
 	node->id = s_id++;
-	node->name = nodeType->name;
+	node->name = node_type->name;
 
-	ImVec2 titleSize = ImGui::CalcTextSize(node->name.c_str());
+	auto title_size = ImGui::CalcTextSize(node->name.c_str());
+	title_size.y *= 3;
 
-	titleSize.y *= 3;
-
-	setupConnections(node->input_connections, nodeType->input_connections);
-	setupConnections(node->output_connections, nodeType->output_connections);
+	setup_connections(node->input_connections, node_type->input_connections);
+	setup_connections(node->output_connections, node_type->output_connections);
 
 	// Calculate the size needed for the whole box
 
-	ImVec2 inputTextSize(0.0f, 0.0f);
-	ImVec2 outputText(0.0f, 0.0f);
+	ImVec2 input_text_size(0.0f, 0.0f);
 
 	for (auto &c : node->input_connections)
 	{
-		ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
-		inputTextSize.x = std::max<float>(textSize.x, inputTextSize.x);
+		const auto text_size = ImGui::CalcTextSize(c->desc.name.c_str());
+		input_text_size.x = std::max<float>(text_size.x, input_text_size.x);
 
-		c->pos = ImVec2(0.0f, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
+		c->pos = ImVec2(0.0f, title_size.y + input_text_size.y + text_size.y / 2.0f);
 
-		inputTextSize.y += textSize.y;
-		inputTextSize.y += 4.0f;		// size between text entries
+		input_text_size.y += text_size.y;
+		input_text_size.y += 4.0f;		// size between text entries
 	}
 
-	inputTextSize.x += 40.0f;
+	input_text_size.x += 40.0f;
 
 	// max text size + 40 pixels in between
 
-	float xStart = inputTextSize.x;
+	const auto x_start = input_text_size.x;
 
 	// Calculate for the outputs
 
 	for (auto &c : node->output_connections)
 	{
-		ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
-		inputTextSize.x = std::max<float>(xStart + textSize.x, inputTextSize.x);
+		const auto text_size = ImGui::CalcTextSize(c->desc.name.c_str());
+		input_text_size.x = std::max<float>(x_start + text_size.x, input_text_size.x);
 	}
 
 	node->pos = pos;
-	node->size.x = inputTextSize.x;
-	node->size.y = inputTextSize.y + titleSize.y;
+	node->size.x = input_text_size.x;
+	node->size.y = input_text_size.y + title_size.y;
 
-	inputTextSize.y = 0.0f;
+	input_text_size.y = 0.0f;
 
 	// set the positions for the output nodes when we know where the place them
 
 	for (auto &c : node->output_connections)
 	{
-		ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
+		const auto text_size = ImGui::CalcTextSize(c->desc.name.c_str());
 
-		c->pos = ImVec2(node->size.x, titleSize.y + inputTextSize.y + textSize.y / 2.0f);
+		c->pos = ImVec2(node->size.x, title_size.y + input_text_size.y + text_size.y / 2.0f);
 
-		inputTextSize.y += textSize.y;
-		inputTextSize.y += 4.0f;		// size between text entries
+		input_text_size.y += text_size.y;
+		input_text_size.y += 4.0f;		// size between text entries
 	}
 
 	// calculate the size of the node depending on nuber of connections
@@ -123,62 +117,55 @@ static std::unique_ptr<node_graph::node_t> createNodeFromType(ImVec2 pos, node_g
 	return node;
 }
 
-std::unique_ptr<node_graph::node_t> createNodeFromName(ImVec2 pos, const char* name)
+std::unique_ptr<node_graph::node_t> create_node_from_name(const ImVec2 pos, const char* name)
 {
-	for (int i = 0; i < (int)sizeof_array(s_nodeTypes); ++i)
+	for (auto &node : s_nodeTypes)
 	{
-		if (!strcmp(s_nodeTypes[i].name.c_str(), name))
-			return createNodeFromType(pos, &s_nodeTypes[i]);
+		if (!strcmp(node.name.c_str(), name))
+			return create_node_from_type(pos, &node);
 	}
 
-	return 0;
+	return nullptr;
 }
 
-enum DragState
+enum drag_state_t { DRAG_STATE_DEFAULT, DRAG_STATE_HOVER, DRAG_STATE_BEGIN_DRAG, DRAG_STATE_DRAGGING, DRAG_STATE_CONNECT };
+
+struct drag_node_t
 {
-	DragState_Default,
-	DragState_Hover,
-	DragState_BeginDrag,
-	DragState_Draging,
-	DragState_Connect,
+	ImVec2 pos{ 0.0,0.0 };
+	node_graph::connection_t* con = nullptr;
 };
 
-struct DragNode
-{
-	ImVec2 pos;
-	node_graph::connection_t* con;
-};
-
-static DragNode s_dragNode;
-static DragState s_dragState = DragState_Default;
+static drag_node_t s_drag_node;
+static drag_state_t s_drag_state = DRAG_STATE_DEFAULT;
 
 static std::vector<std::unique_ptr<node_graph::node_t>> s_nodes;
 
-void drawHermite(ImDrawList* drawList, ImVec2 p1, ImVec2 p2, int STEPS)
+void drawHermite(ImDrawList* draw_list, const ImVec2 p1, const ImVec2 p2, const int n_steps)
 {
-	ImVec2 t1 = ImVec2(+80.0f, 0.0f);
-	ImVec2 t2 = ImVec2(+80.0f, 0.0f);
+	const auto t1 = ImVec2(+80.0f, 0.0f);
+	const auto t2 = ImVec2(+80.0f, 0.0f);
 
-	for (int step = 0; step <= STEPS; step++)
+	for (auto step = 0; step <= n_steps; step++)
 	{
-		float t = (float)step / (float)STEPS;
-		float h1 = +2 * t*t*t - 3 * t*t + 1.0f;
-		float h2 = -2 * t*t*t + 3 * t*t;
-		float h3 = t * t*t - 2 * t*t + t;
-		float h4 = t * t*t - t * t;
-		drawList->PathLineTo(ImVec2(h1*p1.x + h2 * p2.x + h3 * t1.x + h4 * t2.x, h1*p1.y + h2 * p2.y + h3 * t1.y + h4 * t2.y));
+		const auto t = static_cast<float>(step) / static_cast<float>(n_steps);
+		const auto h1 = +2 * t*t*t - 3 * t*t + 1.0f;
+		const auto h2 = -2 * t*t*t + 3 * t*t;
+		const auto h3 = t * t*t - 2 * t*t + t;
+		const auto h4 = t * t*t - t * t;
+		draw_list->PathLineTo(ImVec2(h1*p1.x + h2 * p2.x + h3 * t1.x + h4 * t2.x, h1*p1.y + h2 * p2.y + h3 * t1.y + h4 * t2.y));
 	}
 
-	drawList->PathStroke(ImColor(200, 200, 100), false, 3.0f);
+	draw_list->PathStroke(ImColor(200, 200, 100), false, 3.0f);
 }
 
-static bool isConnectorHovered(node_graph::connection_t* c, ImVec2 offset)
+static bool is_connector_hovered(node_graph::connection_t* c, const ImVec2 offset)
 {
-	ImVec2 mousePos = ImGui::GetIO().MousePos;
-	ImVec2 conPos = offset + c->pos;
+	const auto mouse_pos = ImGui::GetIO().MousePos;
+	const auto con_pos = offset + c->pos;
 
-	float xd = mousePos.x - conPos.x;
-	float yd = mousePos.y - conPos.y;
+	const auto xd = mouse_pos.x - con_pos.x;
+	const auto yd = mouse_pos.y - con_pos.y;
 
 	return ((xd * xd) + (yd *yd)) < (NODE_SLOT_RADIUS * NODE_SLOT_RADIUS);
 }
@@ -187,11 +174,11 @@ static node_graph::connection_t* getHoverCon(ImVec2 offset, ImVec2* pos)
 {
 	for (auto &node : s_nodes)
 	{
-		const ImVec2 node_pos = node->pos + offset;
+		const auto node_pos = node->pos + offset;
 
 		for (auto &con : node->input_connections)
 		{
-			if (isConnectorHovered(con.get(), node_pos))
+			if (is_connector_hovered(con.get(), node_pos))
 			{
 				*pos = node_pos + con->pos;
 				return con.get();
@@ -200,7 +187,7 @@ static node_graph::connection_t* getHoverCon(ImVec2 offset, ImVec2* pos)
 
 		for (auto &con : node->output_connections)
 		{
-			if (isConnectorHovered(con.get(), node_pos))
+			if (is_connector_hovered(con.get(), node_pos))
 			{
 				*pos = node_pos + con->pos;
 				return con.get();
@@ -208,128 +195,127 @@ static node_graph::connection_t* getHoverCon(ImVec2 offset, ImVec2* pos)
 		}
 	}
 
-	s_dragNode.con = 0;
-	return 0;
+	s_drag_node.con = nullptr;
+	return nullptr;
 }
 
-void updateDraging(ImVec2 offset)
+void update_dragging(const ImVec2 offset)
 {
-	switch (s_dragState)
+	switch (s_drag_state)
 	{
-	case DragState_Default:
+	case DRAG_STATE_DEFAULT:
 	{
 		ImVec2 pos;
-		node_graph::connection_t* con = getHoverCon(offset, &pos);
+		const auto con = getHoverCon(offset, &pos);
 
 		if (con)
 		{
-			s_dragNode.con = con;
-			s_dragNode.pos = pos;
-			s_dragState = DragState_Hover;
+			s_drag_node.con = con;
+			s_drag_node.pos = pos;
+			s_drag_state = DRAG_STATE_HOVER;
 			return;
 		}
 
 		break;
 	}
 
-	case DragState_Hover:
+	case DRAG_STATE_HOVER:
 	{
 		ImVec2 pos;
-		node_graph::connection_t* con = getHoverCon(offset, &pos);
+		const auto con = getHoverCon(offset, &pos);
 
 		// Make sure we are still hovering the same node
 
-		if (con != s_dragNode.con)
+		if (con != s_drag_node.con)
 		{
-			s_dragNode.con = 0;
-			s_dragState = DragState_Default;
+			s_drag_node.con = nullptr;
+			s_drag_state = DRAG_STATE_DEFAULT;
 			return;
 		}
 
-		if (ImGui::IsMouseClicked(0) && s_dragNode.con)
-			s_dragState = DragState_Draging;
+		if (ImGui::IsMouseClicked(0) && s_drag_node.con)
+			s_drag_state = DRAG_STATE_DRAGGING;
 
 		break;
 	}
 
-	case DragState_BeginDrag:
+	case DRAG_STATE_BEGIN_DRAG:
 	{
 		break;
 	}
 
-	case DragState_Draging:
+	case DRAG_STATE_DRAGGING:
 	{
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
 		drawList->ChannelsSetCurrent(0); // Background
 
-		drawHermite(drawList, s_dragNode.pos, ImGui::GetIO().MousePos, 12);
+		drawHermite(drawList, s_drag_node.pos, ImGui::GetIO().MousePos, 12);
 
 		if (!ImGui::IsMouseDown(0))
 		{
 			ImVec2 pos;
-			node_graph::connection_t* con = getHoverCon(offset, &pos);
+			const auto con = getHoverCon(offset, &pos);
 
 			// Make sure we are still hovering the same node
 
-			if (con == s_dragNode.con)
+			if (con == s_drag_node.con)
 			{
-				s_dragNode.con = 0;
-				s_dragState = DragState_Default;
+				s_drag_node.con = nullptr;
+				s_drag_state = DRAG_STATE_DEFAULT;
 				return;
 			}
 
 			// Lets connect the nodes.
 			// TODO: Make sure we connect stuff in the correct way!
 
-			con->input = s_dragNode.con;
-			s_dragNode.con = 0;
-			s_dragState = DragState_Default;
+			con->input = s_drag_node.con;
+			s_drag_node.con = nullptr;
+			s_drag_state = DRAG_STATE_DEFAULT;
 		}
 
 		break;
 	}
 
-	case DragState_Connect:
+	case DRAG_STATE_CONNECT:
 	{
 		break;
 	}
 	}
 }
 
-static void displayNode(ImDrawList* drawList, ImVec2 offset, node_graph::node_t* node, int& node_selected)
+static void display_node(ImDrawList* draw_list, ImVec2 offset, node_graph::node_t* node, int& node_selected)
 {
-	int node_hovered_in_scene = -1;
-	bool open_context_menu = false;
+	auto node_hovered_in_scene = -1;
 
 	ImGui::PushID(node->id);
-	ImVec2 node_rect_min = offset + node->pos;
+	const auto node_rect_min = offset + node->pos;
 
 	// Display node contents first
-	drawList->ChannelsSetCurrent(1); // Foreground
-	bool old_any_active = ImGui::IsAnyItemActive();
+	draw_list->ChannelsSetCurrent(1); // Foreground
+	const auto old_any_active = ImGui::IsAnyItemActive();
 
 	// Draw title in center
 
-	ImVec2 textSize = ImGui::CalcTextSize(node->name.c_str());
+	auto text_size = ImGui::CalcTextSize(node->name.c_str());
 
-	ImVec2 pos = node_rect_min + NODE_WINDOW_PADDING;
-	pos.x = node_rect_min.x + (node->size.x / 2) - textSize.x / 2;
+	auto pos = node_rect_min + NODE_WINDOW_PADDING;
+	pos.x = node_rect_min.x + (node->size.x / 2) - text_size.x / 2;
 
 	ImGui::SetCursorScreenPos(pos);
 	//ImGui::BeginGroup(); // Lock horizontal position
-	ImGui::Text("%s", node->name);
+	ImGui::Text("%s", node->name.c_str());
 	//ImGui::SliderFloat("##value", &node->Value, 0.0f, 1.0f, "Alpha %.2f");
 	//float dummy_color[3] = { node->Pos.x / ImGui::GetWindowWidth(), node->Pos.y / ImGui::GetWindowHeight(), fmodf((float)node->ID * 0.5f, 1.0f) };
 	//ImGui::ColorEdit3("##color", &dummy_color[0]);
 
 	// Save the size of what we have emitted and weither any of the widgets are being used
-	bool node_widgets_active = (!old_any_active && ImGui::IsAnyItemActive());
+	const auto node_widgets_active = (!old_any_active && ImGui::IsAnyItemActive());
 	//node->size = ImGui::GetItemRectSize() + NODE_WINDOW_PADDING + NODE_WINDOW_PADDING;
-	ImVec2 node_rect_max = node_rect_min + node->size;
+	const auto node_rect_max = node_rect_min + node->size;
 
 	// Display node box
-	drawList->ChannelsSetCurrent(0); // Background
+	draw_list->ChannelsSetCurrent(0); // Background
 
 	ImGui::SetCursorScreenPos(node_rect_min);
 	ImGui::InvisibleButton("node", node->size);
@@ -337,46 +323,36 @@ static void displayNode(ImDrawList* drawList, ImVec2 offset, node_graph::node_t*
 	if (ImGui::IsItemHovered())
 	{
 		node_hovered_in_scene = node->id;
-		open_context_menu |= ImGui::IsMouseClicked(1);
 	}
 
-	bool node_moving_active = false;
+	auto node_moving_active = false;
 
-	if (ImGui::IsItemActive() && !s_dragNode.con)
+	if (ImGui::IsItemActive() && !s_drag_node.con)
 		node_moving_active = true;
 
-	ImU32 node_bg_color = node_hovered_in_scene == node->id ? ImColor(75, 75, 75) : ImColor(60, 60, 60);
-	drawList->AddRectFilled(node_rect_min, node_rect_max, node_bg_color, 4.0f);
+	const ImU32 node_bg_color = node_hovered_in_scene == node->id ? ImColor(75, 75, 75) : ImColor(60, 60, 60);
+	draw_list->AddRectFilled(node_rect_min, node_rect_max, node_bg_color, 4.0f);
 
-	ImVec2 titleArea = node_rect_max;
-	titleArea.y = node_rect_min.y + 30.0f;
+	auto title_area = node_rect_max;
+	title_area.y = node_rect_min.y + 30.0f;
 
 	// Draw text bg area
-	drawList->AddRectFilled(node_rect_min + ImVec2(1, 1), titleArea, ImColor(100, 0, 0), 4.0f);
-	drawList->AddRect(node_rect_min, node_rect_max, ImColor(100, 100, 100), 4.0f);
-
-	ImVec2 off;
-
-	offset.y += 40.0f;
-
-	offset = offset + node_rect_min;
-
-	off.x = node_rect_min.x;
-	off.y = node_rect_min.y;
+	draw_list->AddRectFilled(node_rect_min + ImVec2(1, 1), title_area, ImColor(100, 0, 0), 4.0f);
+	draw_list->AddRect(node_rect_min, node_rect_max, ImColor(100, 100, 100), 4.0f);
 
 	for (auto &con : node->input_connections)
 	{
 		ImGui::SetCursorScreenPos(offset + ImVec2(10.0f, 0));
-		ImGui::Text("%s", con->desc.name);
+		ImGui::Text("%s", con->desc.name.c_str());
 
-		ImColor conColor = ImColor(150, 150, 150);
+		auto con_color = ImColor(150, 150, 150);
 
-		if (isConnectorHovered(con.get(), node_rect_min))
-			conColor = ImColor(200, 200, 200);
+		if (is_connector_hovered(con.get(), node_rect_min))
+			con_color = ImColor(200, 200, 200);
 
-		drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
+		draw_list->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, con_color);
 
-		offset.y += textSize.y + 2.0f;
+		offset.y += text_size.y + 2.0f;
 	}
 
 	offset = node_rect_min;
@@ -384,19 +360,19 @@ static void displayNode(ImDrawList* drawList, ImVec2 offset, node_graph::node_t*
 
 	for (auto &con : node->output_connections)
 	{
-		textSize = ImGui::CalcTextSize(con->desc.name.c_str());
+		text_size = ImGui::CalcTextSize(con->desc.name.c_str());
 
-		ImGui::SetCursorScreenPos(offset + ImVec2(con->pos.x - (textSize.x + 10.0f), 0));
-		ImGui::Text("%s", con->desc.name);
+		ImGui::SetCursorScreenPos(offset + ImVec2(con->pos.x - (text_size.x + 10.0f), 0));
+		ImGui::Text("%s", con->desc.name.c_str());
 
-		ImColor conColor = ImColor(150, 150, 150);
+		auto con_color = ImColor(150, 150, 150);
 
-		if (isConnectorHovered(con.get(), node_rect_min))
-			conColor = ImColor(200, 200, 200);
+		if (is_connector_hovered(con.get(), node_rect_min))
+			con_color = ImColor(200, 200, 200);
 
-		drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
+		draw_list->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, con_color);
 
-		offset.y += textSize.y + 2.0f;
+		offset.y += text_size.y + 2.0f;
 	}
 
 
@@ -414,27 +390,27 @@ static void displayNode(ImDrawList* drawList, ImVec2 offset, node_graph::node_t*
 	ImGui::PopID();
 }
 
-node_graph::node_t* findNodeByCon(node_graph::connection_t * findCon)
+node_graph::node_t* find_node_by_con(node_graph::connection_t * find_con)
 {
 	for (auto &node : s_nodes)
 	{
 		for (auto &con : node->input_connections)
 		{
-			if (con.get() == findCon)
+			if (con.get() == find_con)
 				return node.get();
 		}
 
 		for (auto &con : node->output_connections)
 		{
-			if (con.get() == findCon)
+			if (con.get() == find_con)
 				return node.get();
 		}
 	}
 
-	return 0;
+	return nullptr;
 }
 
-void renderLines(ImDrawList* drawList, ImVec2 offset)
+void render_lines(ImDrawList* draw_list, ImVec2 offset)
 {
 	for (auto &node : s_nodes)
 	{
@@ -443,13 +419,13 @@ void renderLines(ImDrawList* drawList, ImVec2 offset)
 			if (!con->input)
 				continue;
 
-			node_graph::node_t* targetNode = findNodeByCon(con->input);
+			const auto target_node = find_node_by_con(con->input);
 
-			if (!targetNode)
+			if (!target_node)
 				continue;
 
-			drawHermite(drawList,
-				offset + targetNode->pos + con->input->pos,
+			drawHermite(draw_list,
+				offset + target_node->pos + con->input->pos,
 				offset + node->pos + con->pos,
 				12);
 		}
@@ -528,10 +504,10 @@ void ShowExampleAppCustomNodeGraph(bool* opened)
 	//displayNode(draw_list, scrolling, s_emitter, node_selected);
 
 	for (auto &node : s_nodes)
-		displayNode(draw_list, scrolling, node.get(), node_selected);
+		display_node(draw_list, scrolling, node.get(), node_selected);
 
-	updateDraging(scrolling);
-	renderLines(draw_list, scrolling);
+	update_dragging(scrolling);
+	render_lines(draw_list, scrolling);
 
 	draw_list->ChannelsMerge();
 
@@ -591,11 +567,11 @@ void ShowExampleAppCustomNodeGraph(bool* opened)
 		*/
 		//else
 
-		for (int i = 0; i < (int)sizeof_array(s_nodeTypes); ++i)
+		for (auto &node : s_nodeTypes)
 		{
-			if (ImGui::MenuItem(s_nodeTypes[i].name.c_str()))
+			if (ImGui::MenuItem(node.name.c_str()))
 			{
-				s_nodes.emplace_back(createNodeFromType(ImGui::GetIO().MousePos, &s_nodeTypes[i]) );
+				s_nodes.emplace_back(create_node_from_type(ImGui::GetIO().MousePos, &node) );
 			}
 		}
 
