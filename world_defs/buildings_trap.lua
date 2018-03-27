@@ -68,3 +68,23 @@ buildings["pressure_plate"] = {
     render_rex = "pressureplate.xp",
     vox = voxelId("pressure_plate")
 };
+
+buildings["float_sensor"] = {
+    name = "Float sensor",
+    description = "A simple water level gauge, triggering if the water rises above a certain level.",
+    components = { { item="mechanism", qty=1 }, { item="block", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { float_sensor={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("float_gauge")
+};
+
+buildings["proximity_sensor"] = {
+    name = "Proximity sensor",
+    description = "An electronic proximity sensor that triggers if movement occurs nearby.",
+    components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { float_sensor={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("proximity_sensor")
+};

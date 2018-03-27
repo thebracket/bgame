@@ -148,6 +148,8 @@ voxel_models = {
     floodgate_open = { model=vfn("floodgate_open"), id=135 },
     floodgate_closed = { model=vfn("floodgate_closed"), id=136 },
     floodgate_ground = { model=vfn("floodgate_ground"), id=137 },
+    float_gauge = { model=vfn("float_gauge"), id=138 },
+    proximity_sensor = { model=vfn("proximity_sensor"), id=139 },
 }
 
 function voxelId(name)

@@ -409,19 +409,19 @@ void serialize(Archive & archive, lever_t &l)
 template<class Archive>
 void serialize(Archive & archive, float_gauge_t &l)
 {
-	//archive(l.active, l.targets); // serialize things by passing them to the archive
+	archive(l.active, l.water_level); // serialize things by passing them to the archive
 }
 
 template<class Archive>
 void serialize(Archive & archive, pressure_plate_t &l)
 {
-	//archive(l.active, l.targets); // serialize things by passing them to the archive
+	archive(l.active, l.include_friendlies); // serialize things by passing them to the archive
 }
 
 template<class Archive>
 void serialize(Archive & archive, proximity_sensor_t &l)
 {
-	//archive(l.active, l.targets); // serialize things by passing them to the archive
+	archive(l.active, l.range); // serialize things by passing them to the archive
 }
 
 template<class Archive>
