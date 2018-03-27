@@ -44,16 +44,16 @@ static struct node_graph::node_type_t s_nodeTypes[] =
 	},
 };
 
-static void setupConnections(std::vector<node_graph::connection_t*>& connections, std::vector<node_graph::connection_description_t> &connectionDescs)
+static void setupConnections(std::vector<std::unique_ptr<node_graph::connection_t>> &connections, std::vector<node_graph::connection_description_t> &connectionDescs)
 {
 	for (int i = 0; i < connectionDescs.size(); ++i)
 	{
 		const node_graph::connection_description_t& desc = connectionDescs[i];
 
-		node_graph::connection_t* con = new node_graph::connection_t;
+		std::unique_ptr<node_graph::connection_t> con = std::make_unique<node_graph::connection_t>();
 		con->desc = desc;
 
-		connections.push_back(con);
+		connections.emplace_back(std::move(con));
 	}
 }
 
@@ -75,7 +75,7 @@ static std::unique_ptr<node_graph::node_t> createNodeFromType(ImVec2 pos, node_g
 	ImVec2 inputTextSize(0.0f, 0.0f);
 	ImVec2 outputText(0.0f, 0.0f);
 
-	for (node_graph::connection_t* c : node->input_connections)
+	for (auto &c : node->input_connections)
 	{
 		ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
 		inputTextSize.x = std::max<float>(textSize.x, inputTextSize.x);
@@ -94,7 +94,7 @@ static std::unique_ptr<node_graph::node_t> createNodeFromType(ImVec2 pos, node_g
 
 	// Calculate for the outputs
 
-	for (node_graph::connection_t* c : node->output_connections)
+	for (auto &c : node->output_connections)
 	{
 		ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
 		inputTextSize.x = std::max<float>(xStart + textSize.x, inputTextSize.x);
@@ -108,7 +108,7 @@ static std::unique_ptr<node_graph::node_t> createNodeFromType(ImVec2 pos, node_g
 
 	// set the positions for the output nodes when we know where the place them
 
-	for (node_graph::connection_t* c : node->output_connections)
+	for (auto &c : node->output_connections)
 	{
 		ImVec2 textSize = ImGui::CalcTextSize(c->desc.name.c_str());
 
@@ -189,21 +189,21 @@ static node_graph::connection_t* getHoverCon(ImVec2 offset, ImVec2* pos)
 	{
 		const ImVec2 node_pos = node->pos + offset;
 
-		for (node_graph::connection_t* con : node->input_connections)
+		for (auto &con : node->input_connections)
 		{
-			if (isConnectorHovered(con, node_pos))
+			if (isConnectorHovered(con.get(), node_pos))
 			{
 				*pos = node_pos + con->pos;
-				return con;
+				return con.get();
 			}
 		}
 
-		for (node_graph::connection_t* con : node->output_connections)
+		for (auto &con : node->output_connections)
 		{
-			if (isConnectorHovered(con, node_pos))
+			if (isConnectorHovered(con.get(), node_pos))
 			{
 				*pos = node_pos + con->pos;
-				return con;
+				return con.get();
 			}
 		}
 	}
@@ -364,14 +364,14 @@ static void displayNode(ImDrawList* drawList, ImVec2 offset, node_graph::node_t*
 	off.x = node_rect_min.x;
 	off.y = node_rect_min.y;
 
-	for (node_graph::connection_t* con : node->input_connections)
+	for (auto &con : node->input_connections)
 	{
 		ImGui::SetCursorScreenPos(offset + ImVec2(10.0f, 0));
 		ImGui::Text("%s", con->desc.name);
 
 		ImColor conColor = ImColor(150, 150, 150);
 
-		if (isConnectorHovered(con, node_rect_min))
+		if (isConnectorHovered(con.get(), node_rect_min))
 			conColor = ImColor(200, 200, 200);
 
 		drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
@@ -382,7 +382,7 @@ static void displayNode(ImDrawList* drawList, ImVec2 offset, node_graph::node_t*
 	offset = node_rect_min;
 	offset.y += 40.0f;
 
-	for (node_graph::connection_t* con : node->output_connections)
+	for (auto &con : node->output_connections)
 	{
 		textSize = ImGui::CalcTextSize(con->desc.name.c_str());
 
@@ -391,7 +391,7 @@ static void displayNode(ImDrawList* drawList, ImVec2 offset, node_graph::node_t*
 
 		ImColor conColor = ImColor(150, 150, 150);
 
-		if (isConnectorHovered(con, node_rect_min))
+		if (isConnectorHovered(con.get(), node_rect_min))
 			conColor = ImColor(200, 200, 200);
 
 		drawList->AddCircleFilled(node_rect_min + con->pos, NODE_SLOT_RADIUS, conColor);
@@ -414,19 +414,19 @@ static void displayNode(ImDrawList* drawList, ImVec2 offset, node_graph::node_t*
 	ImGui::PopID();
 }
 
-node_graph::node_t* findNodeByCon(node_graph::connection_t* findCon)
+node_graph::node_t* findNodeByCon(node_graph::connection_t * findCon)
 {
 	for (auto &node : s_nodes)
 	{
-		for (node_graph::connection_t* con : node->input_connections)
+		for (auto &con : node->input_connections)
 		{
-			if (con == findCon)
+			if (con.get() == findCon)
 				return node.get();
 		}
 
-		for (node_graph::connection_t* con : node->output_connections)
+		for (auto &con : node->output_connections)
 		{
-			if (con == findCon)
+			if (con.get() == findCon)
 				return node.get();
 		}
 	}
@@ -438,7 +438,7 @@ void renderLines(ImDrawList* drawList, ImVec2 offset)
 {
 	for (auto &node : s_nodes)
 	{
-		for (node_graph::connection_t* con : node->input_connections)
+		for (auto &con : node->input_connections)
 		{
 			if (!con->input)
 				continue;

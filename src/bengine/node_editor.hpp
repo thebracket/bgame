@@ -50,8 +50,8 @@ namespace node_graph
 		ImVec2 size;
 		int id;
 		std::string name;
-		std::vector<connection_t*> input_connections;
-		std::vector<connection_t*> output_connections;
+		std::vector<std::unique_ptr<connection_t>> input_connections;
+		std::vector<std::unique_ptr<connection_t>> output_connections;
 	};
 }
 
