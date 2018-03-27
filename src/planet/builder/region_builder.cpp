@@ -132,7 +132,6 @@ void build_region(planet_t &planet, std::pair<int,int> &target_region, bengine::
     // Save the region
     set_worldgen_status("Saving region to disk");
 	region::save_current_region();
-	const std::string save_filename = get_save_path() + std::string("/savegame.dat");
-	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
+	std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename(), std::ios::out | std::ios::binary);
 	bengine::ecs_save(lbfile);
 }

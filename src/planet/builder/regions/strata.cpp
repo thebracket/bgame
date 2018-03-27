@@ -193,14 +193,16 @@ void lay_strata(std::vector<uint8_t> &heightmap, std::pair<biome_t, biome_type_t
 
                     // Surface coverage
                     std::string veg_type;
-                    auto die_roll = rng.roll_dice(1, max_veg_probability);
-                    for (const auto &veg : biome.second.plants) {
-                        die_roll -= veg.second;
-                        if (die_roll < 1) {
-                            veg_type = veg.first;
-                            break;
-                        }
-                    }
+					if (max_veg_probability > 0) {
+						auto die_roll = rng.roll_dice(1, max_veg_probability);
+						for (const auto &veg : biome.second.plants) {
+							die_roll -= veg.second;
+							if (die_roll < 1) {
+								veg_type = veg.first;
+								break;
+							}
+						}
+					}
                     if (veg_type.empty()) veg_type = "none";
 
                     if (veg_type != "none") {

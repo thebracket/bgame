@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cereal/types/unordered_set.hpp>
 #include <cereal/types/array.hpp>
+#include <cereal/archives/portable_binary.hpp>
 
 template<class Archive>
 void serialize(Archive & archive, mining_designations_t &m)
@@ -433,7 +434,7 @@ void serialize(Archive & archive, sends_signal_t &l)
 template<class Archive>
 void serialize(Archive & archive, signal_processor_t &l)
 {
-	//archive(l.active, l.targets); // serialize things by passing them to the archive
+	archive(l.active, l.processor); // serialize things by passing them to the archive
 }
 
 template<class Archive>
@@ -747,14 +748,14 @@ namespace bengine {
 
 	void ecs_save(std::unique_ptr<std::ofstream> &lbfile) noexcept
 	{
-		cereal::BinaryOutputArchive oarchive(*lbfile);
+		cereal::PortableBinaryOutputArchive oarchive(*lbfile);
 		oarchive(impl::ecs);
 	}
 
 	void ecs_load(std::unique_ptr<std::ifstream> &lbfile) noexcept
 	{
 		// TODO: Clear everything!
-		cereal::BinaryInputArchive iarchive(*lbfile);
+		cereal::PortableBinaryInputArchive iarchive(*lbfile);
 		iarchive(impl::ecs);
 		for (auto &e : impl::ecs.entities)
 		{

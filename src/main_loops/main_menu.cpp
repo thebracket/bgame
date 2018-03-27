@@ -45,7 +45,7 @@ namespace main_menu {
     }
 
 	void check_world_exists() noexcept {
-		if (exists(get_save_path() + std::string("/savegame.dat"))) {
+		if (exists(save_filename())) {
 			world_exists = true;
 		}
 	}

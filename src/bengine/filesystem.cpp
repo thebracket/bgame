@@ -9,6 +9,11 @@ bool exists(const std::string &filename) noexcept {
 	return boost::filesystem::exists(filename);
 }
 
+std::string save_filename()
+{
+	return get_save_path() + std::string("/savegame") + std::to_string(SAVE_VERSION) + std::string(".dat");
+}
+
 #ifndef _MSC_VER
 #include <pwd.h>
 #include <sys/stat.h>

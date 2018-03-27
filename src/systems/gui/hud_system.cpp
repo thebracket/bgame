@@ -142,8 +142,7 @@ namespace systems {
 				}
 				if (ImGui::MenuItem(menu_main_quit.c_str())) {
 					region::save_current_region();
-					const std::string save_filename = get_save_path() + std::string("/savegame.dat");
-					std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename, std::ios::out | std::ios::binary);
+					std::unique_ptr<std::ofstream> lbfile = std::make_unique<std::ofstream>(save_filename(), std::ios::out | std::ios::binary);
 					bengine::ecs_save(lbfile);
 					bengine::main_func = main_menu::tick;
 				}

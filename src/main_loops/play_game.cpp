@@ -40,8 +40,7 @@ namespace play_game {
         // Load the ECS
 		glog(log_target::GAME, log_severity::INFO, "Loading game state");
         {
-            const std::string save_filename = get_save_path() + std::string("/savegame.dat");
-            std::unique_ptr<std::ifstream> lbfile = std::make_unique<std::ifstream>(save_filename, std::ios::in | std::ios::binary);
+            std::unique_ptr<std::ifstream> lbfile = std::make_unique<std::ifstream>(save_filename(), std::ios::in | std::ios::binary);
             ecs_load(lbfile);
         }
 
