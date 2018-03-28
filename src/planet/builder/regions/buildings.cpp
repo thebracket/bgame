@@ -26,7 +26,8 @@ void add_building(std::string tag, const int x, const int y, const int z, const 
     auto new_building = bengine::create_entity()
         ->assign(position_t{bx, by, z})
         ->assign(building_t{ tag, building->width, building->height, building->glyphs,
-                             building->glyphs_ascii, true, civ_owner, 10, 10, building->vox_model });
+                             building->glyphs_ascii, true, civ_owner, 10, 10, building->vox_model })
+		->assign(name_t{building->name, ""});
     //std::cout << tag << " : " << building->vox_model << "\n";
 
     for (const building_provides_t &provides : building->provides) {

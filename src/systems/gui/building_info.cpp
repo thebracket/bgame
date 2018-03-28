@@ -13,11 +13,14 @@
 namespace systems {
 	namespace building_info {
 		int selected_building;
+		int last_building = -1;
 
 		static const std::string win_building_info = std::string(ICON_FA_BUILDING_O) + " Building Info";
 		static const std::string tab_info = std::string(ICON_FA_INFO_CIRCLE) + " Information";
 		static const std::string tab_work = std::string(ICON_FA_BRIEFCASE) + " Possible Work";
 		static const std::string tab_available = std::string(ICON_FA_INDUSTRY) + " Available Work";
+
+		char building_name_buffer[254];
 
 		static void render_base_info()
 		{
@@ -27,13 +30,16 @@ namespace systems {
 			if (!bi) return;
 			const auto building_def = get_building_def(bi->tag);
 			if (!building_def) return;
+			const auto building_name = be->component<name_t>();
+			if (!building_name) return;
 
 			if (building_def)
 			{
 				ImGui::SameLine();
 				ImGui::BeginChild("info_panel", ImVec2(300, 300));
-
-				ImGui::TextColored(ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f }, "%s", building_def->name.c_str());
+				ImGui::TextColored(ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f }, "%s", building_name->first_name);
+				ImGui::Text("Rename Building: "); ImGui::SameLine();
+				ImGui::InputText("## Building Name", building_name_buffer, 254);
 				ImGui::TextWrapped("%s", building_def->description.c_str());
 				ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "%s", ICON_FA_INFO_CIRCLE);
 				ImGui::SameLine();
@@ -139,6 +145,14 @@ namespace systems {
 
 		void run(const double &duration_ms)
 		{
+			if (last_building != selected_building)
+			{
+				last_building = selected_building;
+				auto be = bengine::entity(selected_building);
+				auto bn = be->component<name_t>();
+				strncpy(building_name_buffer, bn->first_name.c_str(), 253);
+			}
+
 			bengine::begin_info_window(win_building_info, &show_window);
 			bengine::render_btab_bar(bi_tabs);
 			ImGui::End();
@@ -146,6 +160,9 @@ namespace systems {
 			if (!show_window) {
 				game_master_mode = PLAY;
 				show_window = true;
+				auto be = bengine::entity(selected_building);
+				auto bn = be->component<name_t>();
+				bn->first_name = std::string(building_name_buffer);
 			}
 		}
 	}

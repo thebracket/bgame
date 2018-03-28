@@ -96,13 +96,13 @@ namespace systems {
 				std::set<int> included_items;
 
 				// Levers
-				bengine::each<lever_t>([&included_items, &x, &y] (entity_t &e, lever_t &l)
+				bengine::each<lever_t, name_t>([&included_items, &x, &y] (entity_t &e, lever_t &l, name_t &n)
 				{
 					const auto finder = included_items.find(e.id);
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						lever->name = "Lever #" + std::to_string(e.id);
+						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -110,13 +110,13 @@ namespace systems {
 				});
 
 				// Pressure Plates
-				bengine::each<pressure_plate_t>([&included_items, &x, &y](entity_t &e, pressure_plate_t &l)
+				bengine::each<pressure_plate_t, name_t>([&included_items, &x, &y](entity_t &e, pressure_plate_t &l, name_t &n)
 				{
 					const auto finder = included_items.find(e.id);
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						lever->name = "Pressure Plate #" + std::to_string(e.id);
+						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -124,13 +124,13 @@ namespace systems {
 				});
 
 				// Float gauges
-				bengine::each<float_gauge_t>([&included_items, &x, &y](entity_t &e, float_gauge_t &l)
+				bengine::each<float_gauge_t, name_t>([&included_items, &x, &y](entity_t &e, float_gauge_t &l, name_t &n)
 				{
 					const auto finder = included_items.find(e.id);
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						lever->name = "Float #" + std::to_string(e.id);
+						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -138,13 +138,13 @@ namespace systems {
 				});
 
 				// Oscillator
-				bengine::each<oscillator_t>([&included_items, &x, &y](entity_t &e, oscillator_t &l)
+				bengine::each<oscillator_t, name_t>([&included_items, &x, &y](entity_t &e, oscillator_t &l, name_t &n)
 				{
 					const auto finder = included_items.find(e.id);
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						lever->name = "Oscillator #" + std::to_string(e.id);
+						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -152,7 +152,7 @@ namespace systems {
 				});
 
 				// Signal Processor
-				bengine::each<signal_processor_t>([&included_items, &x, &y](entity_t &e, signal_processor_t &l)
+				bengine::each<signal_processor_t, name_t>([&included_items, &x, &y](entity_t &e, signal_processor_t &l, name_t &n)
 				{
 					const auto finder = included_items.find(e.id);
 					if (finder == included_items.end())
@@ -163,39 +163,33 @@ namespace systems {
 						case AND :
 						{
 							lever = create_node_from_name(ImVec2(x, y), "AND");
-							lever->name = "AND #" + std::to_string(e.id);
 						} break;
 						case OR:
 						{
 							lever = create_node_from_name(ImVec2(x, y), "OR");
-							lever->name = "OR #" + std::to_string(e.id);
 						} break;
 						case NOT:
 						{
 							lever = create_node_from_name(ImVec2(x, y), "NOT");
-							lever->name = "NOT #" + std::to_string(e.id);
 						} break;
 						case NAND:
 						{
 							lever = create_node_from_name(ImVec2(x, y), "NAND");
-							lever->name = "NAND #" + std::to_string(e.id);
 						} break;
 						case NOR:
 						{
 							lever = create_node_from_name(ImVec2(x, y), "NOR");
-							lever->name = "NOR #" + std::to_string(e.id);
 						} break;
 						case EOR:
 						{
 							lever = create_node_from_name(ImVec2(x, y), "EOR");
-							lever->name = "EOR #" + std::to_string(e.id);
 						} break;
 						case ENOR:
 						{
 							lever = create_node_from_name(ImVec2(x, y), "ENOR");
-							lever->name = "ENOR #" + std::to_string(e.id);
 						} break;
 						}
+						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -203,19 +197,16 @@ namespace systems {
 				});
 
 				// Outputs
-				bengine::each<receives_signal_t, building_t>([&included_items, &x, &y](entity_t &e, receives_signal_t &l, building_t &b)
+				bengine::each<receives_signal_t, name_t>([&included_items, &x, &y](entity_t &e, receives_signal_t &l, name_t &n)
 				{
 					const auto finder = included_items.find(e.id);
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Output");
-						const auto bdef = get_building_def(b.tag);
-						if (bdef) {
-							lever->name = bdef->name + " #" + std::to_string(e.id);
-							all_nodes.emplace_back(std::move(lever));
-							x += 100;
-							included_items.insert(e.id);
-						}
+						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
+						all_nodes.emplace_back(std::move(lever));
+						x += 100;
+						included_items.insert(e.id);
 					}
 				});
 			}

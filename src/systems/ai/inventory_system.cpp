@@ -241,8 +241,8 @@ namespace systems {
 
 				auto building_template = create_entity()
 					->assign(position_t{ msg.x, msg.y, msg.z })
-					->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs,
-						designate.glyphs_ascii, false, 0, 10, 10, building_def->vox_model });
+					->assign(building_t{ designate.tag, designate.width, designate.height, designate.glyphs, designate.glyphs_ascii, false, 0, 10, 10, building_def->vox_model })
+					->assign(name_t{ designate.name, "" });
 				designate.building_entity = building_template->id;
 				for (int y = msg.y; y<msg.y + designate.height; ++y) {
 					for (int x = msg.x; x < msg.x + designate.width; ++x) {

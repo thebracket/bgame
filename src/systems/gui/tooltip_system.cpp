@@ -78,7 +78,8 @@ namespace systems {
 			}
 
 			each<name_t, position_t>([&x, &y, &z](entity_t &entity, name_t &name, position_t &pos) {
-				if (pos.x == x && pos.y == y && pos.z == z) {
+				const auto is_building = entity.component<building_t>();
+				if (!is_building && pos.x == x && pos.y == y && pos.z == z) {
 					const auto entity_menu = std::string(ICON_FA_USER) + std::string(" ") + name.first_name + std::string(" ") + name.last_name;
 					if (ImGui::BeginMenu(entity_menu.c_str()))
 					{
@@ -354,7 +355,8 @@ namespace systems {
 
 				// Named entities in the location
 				each<name_t, position_t>([&lines, &world_x, &world_y, &world_z](entity_t &entity, name_t &name, position_t &pos) {
-					if (pos.x == world_x && pos.y == world_y && pos.z == world_z) {
+					auto is_building = entity.component<building_t>();
+					if (!is_building && pos.x == world_x && pos.y == world_y && pos.z == world_z) {
 						if (debug::show_flags)
 						{
 							lines.emplace_back(color_line(std::string(ICON_FA_USER) + std::string(" ") + name.first_name + std::string(" ") + name.last_name + std::string(" #") + std::to_string(entity.id), color_magenta));
@@ -405,16 +407,16 @@ namespace systems {
 						const auto building = building_entity->component<building_t>();
 						std::string building_name = "Unknown Building";
 						if (building) {
-							const auto finder = get_building_def(building->tag);
+							const auto finder = building_entity->component<name_t>();
 							if (finder) {
 								if (building->complete) {
-									building_name = finder->name + std::string(" (") + std::to_string(building->hit_points)
+									building_name = finder->first_name + std::string(" (") + std::to_string(building->hit_points)
 										+ std::string("/") + std::to_string(building->max_hit_points) + std::string(")");
 
 									if (building_entity->component<claimed_t>()) building_name += " (c)";
 								}
 								else {
-									building_name = std::string("(") + finder->name + std::string(") - Incomplete");
+									building_name = std::string("(") + finder->first_name + std::string(") - Incomplete");
 								}
 								if (debug::show_flags && building_entity->component<receives_signal_t>()) building_name += " (rs)";
 							}
