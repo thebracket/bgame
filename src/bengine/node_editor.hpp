@@ -13,7 +13,7 @@ namespace node_graph
 	struct connection_description_t
 	{
 		std::string name;
-		connection_type_t type;
+		connection_type_t type = CONNECTION_TYPE_COLOR;
 	};
 
 	struct node_type_t
@@ -34,12 +34,6 @@ namespace node_graph
 			input = nullptr;
 		}
 
-		union {
-			float v3[3];
-			float v;
-			int i;
-		};
-
 		connection_t * input;
 		std::vector<connection_t*> output;
 	};
@@ -55,4 +49,5 @@ namespace node_graph
 	};
 }
 
-void ShowExampleAppCustomNodeGraph(bool* opened);
+void ShowExampleAppCustomNodeGraph(bool* opened, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes);
+std::unique_ptr<node_graph::node_t> create_node_from_name(const ImVec2 pos, const char* name);

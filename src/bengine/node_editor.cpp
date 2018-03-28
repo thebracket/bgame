@@ -1,6 +1,7 @@
 #include "node_editor.hpp"
 #include <cstdint>
 #include <algorithm>
+#include "main_window.hpp"
 
 const float NODE_SLOT_RADIUS = 5.0f;
 const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
@@ -10,19 +11,103 @@ static ImVec2 operator-(const ImVec2& lhs, const ImVec2& rhs) { return { lhs.x -
 
 static uint32_t s_id = 0;
 
-static struct node_graph::node_type_t s_nodeTypes[] =
+static struct node_graph::node_type_t s_node_types[] =
 {
+	// Machinery Input Nodes
+	{
+		"Input",
+		// Levers have no inputs
+		{
+		},
+		// Output
+		{
+			{ "On/Off", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+	},
+	// Machinery Processor Nodes
+	{
+		"AND",
+		// Levers have no inputs
+		{
+			{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
+			{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		// Output
+		{
+			{ "On/Off", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+	},
+	{
+		"OR",
+		{
+			{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
+			{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		{
+			{ "On/Off", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+	},
+	{
+		"NOT",
+		{
+			{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		{
+			{ "On/Off", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+	},
+	{
+		"NAND",
+		{
+			{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
+			{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		{
+			{ "On/Off", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+	},
+	{
+		"NOR",
+		{
+			{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
+			{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		{
+			{ "On/Off", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+	},
+	{
+		"ENOR",
+		{
+			{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
+			{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		{
+			{ "On/Off", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+	},
+	// Machinery Output Nodes
+	{
+		"Output",
+		// Levers have no inputs
+		{
+			{ "On/Off", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		{
+		},
+	},
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Math
 
 	{
 		"Multiply",
 		// Input connections
-{
-		{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
-		{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
-	},
-// Output
+		{
+			{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
+			{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		// Output
 		{
 			{ "Out", node_graph::CONNECTION_TYPE_FLOAT },
 		},
@@ -31,11 +116,11 @@ static struct node_graph::node_type_t s_nodeTypes[] =
 	{
 		"Add",
 		// Input connections
-{
-	{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
-{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
-},
-// Output
+		{
+			{ "Input1", node_graph::CONNECTION_TYPE_FLOAT },
+			{ "Input2", node_graph::CONNECTION_TYPE_FLOAT },
+		},
+		// Output
 		{
 			{ "Out", node_graph::CONNECTION_TYPE_FLOAT },
 		},
@@ -53,7 +138,7 @@ static void setup_connections(std::vector<std::unique_ptr<node_graph::connection
 	}
 }
 
-static std::unique_ptr<node_graph::node_t> create_node_from_type(const ImVec2 pos, node_graph::node_type_t* node_type)
+std::unique_ptr<node_graph::node_t> create_node_from_type(const ImVec2 pos, node_graph::node_type_t* node_type)
 {
 	auto node = std::make_unique<node_graph::node_t>();
 	node->id = s_id++;
@@ -92,6 +177,8 @@ static std::unique_ptr<node_graph::node_t> create_node_from_type(const ImVec2 po
 	{
 		const auto text_size = ImGui::CalcTextSize(c->desc.name.c_str());
 		input_text_size.x = std::max<float>(x_start + text_size.x, input_text_size.x);
+		input_text_size.y += text_size.y;
+		input_text_size.y += 4.0f;		// size between text entries
 	}
 
 	node->pos = pos;
@@ -119,7 +206,7 @@ static std::unique_ptr<node_graph::node_t> create_node_from_type(const ImVec2 po
 
 std::unique_ptr<node_graph::node_t> create_node_from_name(const ImVec2 pos, const char* name)
 {
-	for (auto &node : s_nodeTypes)
+	for (auto &node : s_node_types)
 	{
 		if (!strcmp(node.name.c_str(), name))
 			return create_node_from_type(pos, &node);
@@ -139,7 +226,7 @@ struct drag_node_t
 static drag_node_t s_drag_node;
 static drag_state_t s_drag_state = DRAG_STATE_DEFAULT;
 
-static std::vector<std::unique_ptr<node_graph::node_t>> s_nodes;
+//static std::vector<std::unique_ptr<node_graph::node_t>> all_nodes;
 
 void drawHermite(ImDrawList* draw_list, const ImVec2 p1, const ImVec2 p2, const int n_steps)
 {
@@ -170,9 +257,9 @@ static bool is_connector_hovered(node_graph::connection_t* c, const ImVec2 offse
 	return ((xd * xd) + (yd *yd)) < (NODE_SLOT_RADIUS * NODE_SLOT_RADIUS);
 }
 
-static node_graph::connection_t* getHoverCon(ImVec2 offset, ImVec2* pos)
+static node_graph::connection_t* getHoverCon(ImVec2 offset, ImVec2* pos, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes)
 {
-	for (auto &node : s_nodes)
+	for (auto &node : all_nodes)
 	{
 		const auto node_pos = node->pos + offset;
 
@@ -199,14 +286,14 @@ static node_graph::connection_t* getHoverCon(ImVec2 offset, ImVec2* pos)
 	return nullptr;
 }
 
-void update_dragging(const ImVec2 offset)
+void update_dragging(const ImVec2 offset, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes)
 {
 	switch (s_drag_state)
 	{
 	case DRAG_STATE_DEFAULT:
 	{
 		ImVec2 pos;
-		const auto con = getHoverCon(offset, &pos);
+		const auto con = getHoverCon(offset, &pos, all_nodes);
 
 		if (con)
 		{
@@ -222,7 +309,7 @@ void update_dragging(const ImVec2 offset)
 	case DRAG_STATE_HOVER:
 	{
 		ImVec2 pos;
-		const auto con = getHoverCon(offset, &pos);
+		const auto con = getHoverCon(offset, &pos, all_nodes);
 
 		// Make sure we are still hovering the same node
 
@@ -255,7 +342,7 @@ void update_dragging(const ImVec2 offset)
 		if (!ImGui::IsMouseDown(0))
 		{
 			ImVec2 pos;
-			const auto con = getHoverCon(offset, &pos);
+			const auto con = getHoverCon(offset, &pos, all_nodes);
 
 			// Make sure we are still hovering the same node
 
@@ -390,9 +477,9 @@ static void display_node(ImDrawList* draw_list, ImVec2 offset, node_graph::node_
 	ImGui::PopID();
 }
 
-node_graph::node_t* find_node_by_con(node_graph::connection_t * find_con)
+node_graph::node_t* find_node_by_con(node_graph::connection_t * find_con, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes)
 {
-	for (auto &node : s_nodes)
+	for (auto &node : all_nodes)
 	{
 		for (auto &con : node->input_connections)
 		{
@@ -410,16 +497,16 @@ node_graph::node_t* find_node_by_con(node_graph::connection_t * find_con)
 	return nullptr;
 }
 
-void render_lines(ImDrawList* draw_list, ImVec2 offset)
+void render_lines(ImDrawList* draw_list, ImVec2 offset, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes)
 {
-	for (auto &node : s_nodes)
+	for (auto &node : all_nodes)
 	{
 		for (auto &con : node->input_connections)
 		{
 			if (!con->input)
 				continue;
 
-			const auto target_node = find_node_by_con(con->input);
+			const auto target_node = find_node_by_con(con->input, all_nodes);
 
 			if (!target_node)
 				continue;
@@ -432,10 +519,13 @@ void render_lines(ImDrawList* draw_list, ImVec2 offset)
 	}
 }
 
-void ShowExampleAppCustomNodeGraph(bool* opened)
+void ShowExampleAppCustomNodeGraph(bool* opened, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes)
 {
-	ImGui::SetNextWindowSize(ImVec2(700, 600), ImGuiSetCond_FirstUseEver);
-	if (!ImGui::Begin("Example: Custom Node Graph", opened))
+	int screen_w, screen_h;
+	glfwGetWindowSize(bengine::main_window, &screen_w, &screen_h);
+
+	ImGui::SetNextWindowSize(ImVec2(screen_w - 100.0f, screen_h - 100.0f), ImGuiSetCond_FirstUseEver);
+	if (!ImGui::Begin("Circuitry", opened))
 	{
 		ImGui::End();
 		return;
@@ -503,11 +593,12 @@ void ShowExampleAppCustomNodeGraph(bool* opened)
 	//displayNode(draw_list, scrolling, s_emittable, node_selected);
 	//displayNode(draw_list, scrolling, s_emitter, node_selected);
 
-	for (auto &node : s_nodes)
+	for (auto &node : all_nodes) {
 		display_node(draw_list, scrolling, node.get(), node_selected);
+	}
 
-	update_dragging(scrolling);
-	render_lines(draw_list, scrolling);
+	update_dragging(scrolling, all_nodes);
+	render_lines(draw_list, scrolling, all_nodes);
 
 	draw_list->ChannelsMerge();
 
@@ -567,11 +658,11 @@ void ShowExampleAppCustomNodeGraph(bool* opened)
 		*/
 		//else
 
-		for (auto &node : s_nodeTypes)
+		for (auto &node : s_node_types)
 		{
 			if (ImGui::MenuItem(node.name.c_str()))
 			{
-				s_nodes.emplace_back(create_node_from_type(ImGui::GetIO().MousePos, &node) );
+				all_nodes.emplace_back(create_node_from_type(ImGui::GetIO().MousePos, &node) );
 			}
 		}
 

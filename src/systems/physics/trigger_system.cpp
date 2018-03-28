@@ -20,6 +20,8 @@
 #include "../damage/damage_system.hpp"
 #include "../../global_assets/rng.hpp"
 #include "bengine/node_editor.hpp"
+#include "raws/buildings.hpp"
+#include "raws/defs/building_def_t.hpp"
 
 using namespace bengine;
 
@@ -32,7 +34,7 @@ namespace systems {
 
 		bool dirty = true;
 		std::unordered_map<int, std::size_t> triggers;
-		std::size_t trigger_id = 0;
+		int trigger_id = 0;
 		int selected_existing_link = 0;
 		int new_link = 0;
 		const std::string win_trigger_mgmt = std::string(ICON_FA_COG) + " Trigger Management";
@@ -71,6 +73,8 @@ namespace systems {
 		}
 
 		bool opened_tmp = false;
+		int node_graph_id = -1;
+		static std::vector<std::unique_ptr<node_graph::node_t>> all_nodes;
 
 		void edit_triggers() {
 			trigger_details.process_all([](const trigger_details_requested &msg) {
@@ -80,15 +84,143 @@ namespace systems {
 			});
 
 			if (game_master_mode != TRIGGER_MANAGEMENT) return;
-			auto trigger_entity = entity(trigger_id);
-			if (!trigger_entity) return;
-			auto lever = trigger_entity->component<lever_t>();
+			if (node_graph_id != trigger_id)
+			{
+				node_graph_id = trigger_id;
+				all_nodes.clear();
+				// TODO: Build the node graph for what already exists
+				// TODO: Build the graph of available nodes
 
-			bool is_lever = false;
-			if (lever) is_lever = true;
-			// TODO: is_pressure_plate determination
+				auto x = 100;
+				auto y = 100;
+				std::set<int> included_items;
 
-			ShowExampleAppCustomNodeGraph(&opened_tmp);
+				// Levers
+				bengine::each<lever_t>([&included_items, &x, &y] (entity_t &e, lever_t &l)
+				{
+					const auto finder = included_items.find(e.id);
+					if (finder == included_items.end())
+					{
+						auto lever = create_node_from_name(ImVec2(x, y), "Input");
+						lever->name = "Lever #" + std::to_string(e.id);
+						all_nodes.emplace_back(std::move(lever));
+						x += 100;
+						included_items.insert(e.id);
+					}
+				});
+
+				// Pressure Plates
+				bengine::each<pressure_plate_t>([&included_items, &x, &y](entity_t &e, pressure_plate_t &l)
+				{
+					const auto finder = included_items.find(e.id);
+					if (finder == included_items.end())
+					{
+						auto lever = create_node_from_name(ImVec2(x, y), "Input");
+						lever->name = "Pressure Plate #" + std::to_string(e.id);
+						all_nodes.emplace_back(std::move(lever));
+						x += 100;
+						included_items.insert(e.id);
+					}
+				});
+
+				// Float gauges
+				bengine::each<float_gauge_t>([&included_items, &x, &y](entity_t &e, float_gauge_t &l)
+				{
+					const auto finder = included_items.find(e.id);
+					if (finder == included_items.end())
+					{
+						auto lever = create_node_from_name(ImVec2(x, y), "Input");
+						lever->name = "Float #" + std::to_string(e.id);
+						all_nodes.emplace_back(std::move(lever));
+						x += 100;
+						included_items.insert(e.id);
+					}
+				});
+
+				// Oscillator
+				bengine::each<oscillator_t>([&included_items, &x, &y](entity_t &e, oscillator_t &l)
+				{
+					const auto finder = included_items.find(e.id);
+					if (finder == included_items.end())
+					{
+						auto lever = create_node_from_name(ImVec2(x, y), "Input");
+						lever->name = "Oscillator #" + std::to_string(e.id);
+						all_nodes.emplace_back(std::move(lever));
+						x += 100;
+						included_items.insert(e.id);
+					}
+				});
+
+				// Signal Processor
+				bengine::each<signal_processor_t>([&included_items, &x, &y](entity_t &e, signal_processor_t &l)
+				{
+					const auto finder = included_items.find(e.id);
+					if (finder == included_items.end())
+					{
+						std::unique_ptr<node_graph::node_t> lever;
+						switch (l.processor)
+						{
+						case AND :
+						{
+							lever = create_node_from_name(ImVec2(x, y), "AND");
+							lever->name = "AND #" + std::to_string(e.id);
+						} break;
+						case OR:
+						{
+							lever = create_node_from_name(ImVec2(x, y), "OR");
+							lever->name = "OR #" + std::to_string(e.id);
+						} break;
+						case NOT:
+						{
+							lever = create_node_from_name(ImVec2(x, y), "NOT");
+							lever->name = "NOT #" + std::to_string(e.id);
+						} break;
+						case NAND:
+						{
+							lever = create_node_from_name(ImVec2(x, y), "NAND");
+							lever->name = "NAND #" + std::to_string(e.id);
+						} break;
+						case NOR:
+						{
+							lever = create_node_from_name(ImVec2(x, y), "NOR");
+							lever->name = "NOR #" + std::to_string(e.id);
+						} break;
+						case EOR:
+						{
+							lever = create_node_from_name(ImVec2(x, y), "EOR");
+							lever->name = "EOR #" + std::to_string(e.id);
+						} break;
+						case ENOR:
+						{
+							lever = create_node_from_name(ImVec2(x, y), "ENOR");
+							lever->name = "ENOR #" + std::to_string(e.id);
+						} break;
+						}
+						all_nodes.emplace_back(std::move(lever));
+						x += 100;
+						included_items.insert(e.id);
+					}
+				});
+
+				// Outputs
+				bengine::each<receives_signal_t, building_t>([&included_items, &x, &y](entity_t &e, receives_signal_t &l, building_t &b)
+				{
+					const auto finder = included_items.find(e.id);
+					if (finder == included_items.end())
+					{
+						auto lever = create_node_from_name(ImVec2(x, y), "Output");
+						const auto bdef = get_building_def(b.tag);
+						if (bdef) {
+							lever->name = bdef->name + " #" + std::to_string(e.id);
+							all_nodes.emplace_back(std::move(lever));
+							x += 100;
+							included_items.insert(e.id);
+						}
+					}
+				});
+			}
+
+			ShowExampleAppCustomNodeGraph(&opened_tmp, all_nodes);
 
 			//ImGui::Begin(win_trigger_mgmt.c_str());
 
