@@ -430,6 +430,7 @@
     <ClInclude Include="..\..\src\components\machinery\lever.hpp" />
     <ClInclude Include="..\..\src\components\lightsource.hpp" />
     <ClInclude Include="..\..\src\components\logger.hpp" />
+    <ClInclude Include="..\..\src\components\machinery\node_graph_position.hpp" />
     <ClInclude Include="..\..\src\components\machinery\oscillator_t.hpp" />
     <ClInclude Include="..\..\src\components\machinery\pressure_plate_t.hpp" />
     <ClInclude Include="..\..\src\components\machinery\proximity_sensor_t.hpp" />

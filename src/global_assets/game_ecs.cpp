@@ -401,6 +401,12 @@ void serialize(Archive & archive, initiative_t &i)
 }
 
 template<class Archive>
+void serialize(Archive & archive, node_graph_position_t &l)
+{
+	archive(l.x, l.y); // serialize things by passing them to the archive
+}
+
+template<class Archive>
 void serialize(Archive & archive, lever_t &l)
 {
 	archive(l.active); // serialize things by passing them to the archive

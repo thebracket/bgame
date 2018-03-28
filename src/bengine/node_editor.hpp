@@ -43,6 +43,8 @@ namespace node_graph
 		ImVec2 pos;
 		ImVec2 size;
 		int id;
+		int entity_id;
+		int world_x, world_y, world_z;
 		std::string name;
 		std::vector<std::unique_ptr<connection_t>> input_connections;
 		std::vector<std::unique_ptr<connection_t>> output_connections;
@@ -51,3 +53,5 @@ namespace node_graph
 
 void ShowExampleAppCustomNodeGraph(bool* opened, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes);
 std::unique_ptr<node_graph::node_t> create_node_from_name(const ImVec2 pos, const char* name);
+node_graph::node_t* find_node_by_con(node_graph::connection_t * find_con, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes);
+node_graph::node_t * find_node_by_entity_id(const int &id, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes);

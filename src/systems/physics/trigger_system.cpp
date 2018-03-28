@@ -72,9 +72,30 @@ namespace systems {
 			});
 		}
 
-		bool opened_tmp = false;
+		bool show_window = true;
 		int node_graph_id = -1;
 		static std::vector<std::unique_ptr<node_graph::node_t>> all_nodes;
+
+		void decorate_node(entity_t &e, const name_t &n, node_graph::node_t * node)
+		{
+			node->name = n.first_name + std::string(" #") + std::to_string(e.id);
+			node->entity_id = e.id;
+			const auto gp = e.component<node_graph_position_t>();
+			if (gp)
+			{
+				node->pos = ImVec2{ static_cast<float>(gp->x), static_cast<float>(gp->y) };
+			} else
+			{
+				e.assign(node_graph_position_t{ static_cast<int>(node->pos.x), static_cast<int>(node->pos.y) });
+			}
+			const auto pos = e.component<position_t>();
+			if (pos)
+			{
+				node->world_x = pos->x;
+				node->world_y = pos->y;
+				node->world_z = pos->z;
+			}
+		}
 
 		void edit_triggers() {
 			trigger_details.process_all([](const trigger_details_requested &msg) {
@@ -102,7 +123,7 @@ namespace systems {
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
+						decorate_node(e, n, lever.get());
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -116,7 +137,7 @@ namespace systems {
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
+						decorate_node(e, n, lever.get());
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -130,7 +151,7 @@ namespace systems {
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
+						decorate_node(e, n, lever.get());
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -144,7 +165,7 @@ namespace systems {
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
+						decorate_node(e, n, lever.get());
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -189,7 +210,7 @@ namespace systems {
 							lever = create_node_from_name(ImVec2(x, y), "ENOR");
 						} break;
 						}
-						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
+						decorate_node(e, n, lever.get());
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
@@ -203,87 +224,86 @@ namespace systems {
 					if (finder == included_items.end())
 					{
 						auto lever = create_node_from_name(ImVec2(x, y), "Output");
-						lever->name = n.first_name + std::string(" #") + std::to_string(e.id);
+						decorate_node(e, n, lever.get());
 						all_nodes.emplace_back(std::move(lever));
 						x += 100;
 						included_items.insert(e.id);
 					}
 				});
-			}
 
-			ShowExampleAppCustomNodeGraph(&opened_tmp, all_nodes);
+				// Rebuild connection nodes
+				for (auto &node : all_nodes)
+				{
+					const auto e = entity(node->entity_id);
+					if (e) {
+						const auto r = e->component<receives_signal_t>();
+						if (r) {
+							for (const auto &rs : r->receives_from)
+							{
+								const auto remote_node_id = std::get<0>(rs);
+								const auto rx = std::get<1>(rs);
+								const auto ry = std::get<2>(rs);
+								const auto sx = std::get<3>(rs);
+								const auto sy = std::get<4>(rs);
+								const auto remote_node = find_node_by_entity_id(remote_node_id, all_nodes);
 
-			//ImGui::Begin(win_trigger_mgmt.c_str());
+								auto conn = std::make_unique<node_graph::connection_t>();
+								conn->pos = ImVec2(rx, ry);
 
-			/*
-			// Input options
-			if (is_lever) {
-				ImGui::Text("Levers have no input options; their input is triggered when a settler pulls the lever.");
-			}
+								auto conn2 = std::make_unique<node_graph::connection_t>();
+								conn2->output.emplace_back(conn.get());
+								conn2->pos = ImVec2(sx, sy);
+								conn->input = conn2.get();
 
-			// Connection options - current destinations
-			std::unordered_set<std::size_t> already_linked;
-			std::vector<std::pair<std::size_t, std::string>> linked_to;
-			for (const auto &target : lever->targets) {
-				auto target_entity = entity(target);
-				if (target_entity) {
-					std::string prefix = "";
-					const auto building_component = target_entity->component<building_t>();
-					if (target_entity->component<bridge_t>()) prefix = "Bridge";
-					if (target_entity->component<construct_door_t>()) prefix = "Door";
-					if (target_entity && building_component->tag == "spike_trap") prefix = "Spikes";
-
-					const auto target_info = prefix + std::string(" #") + std::to_string(target);
-					linked_to.emplace_back(std::pair<std::size_t, std::string>{target, target_info});
-					already_linked.insert(target);
-				}
-			}
-			std::vector<const char *> linked_to_items(linked_to.size());
-			for (auto i = 0; i<linked_to.size(); ++i) {
-				linked_to_items[i] = linked_to[i].second.c_str();
-			}
-			ImGui::PushItemWidth(-1);
-			ImGui::ListBox("## Existing Links", &selected_existing_link, &linked_to_items[0], linked_to.size(), 10);
-			if (ImGui::Button(btn_remove_link.c_str())) {
-				if (is_lever) {
-					const std::size_t target_to_remove = linked_to[selected_existing_link].first;
-					lever->targets.erase(std::remove_if(lever->targets.begin(), lever->targets.end(),
-						[&target_to_remove](auto &n) { return target_to_remove == n; }),
-						lever->targets.end());
+								node->input_connections.emplace_back( std::move(conn) );
+								remote_node->output_connections.emplace_back(std::move(conn2));
+							}
+						}
+					}
 				}
 			}
 
-			// Possible connections
-			std::vector<std::pair<std::size_t, std::string>> can_link_to;
-			each<receives_signal_t>([&can_link_to, &already_linked](entity_t &e, receives_signal_t &s) {
-				std::string stem = "";
-				bool mine = true;
-				auto building_component = e.component<building_t>();
-				if (building_component && building_component->civ_owner != 0) mine = false;
-				if (!mine) return;
-				if (already_linked.find(e.id) != already_linked.end()) return;
-				if (e.component<bridge_t>()) stem = "Bridge";
-				if (e.component<construct_door_t>()) stem = "Door";
-				if (building_component && building_component->tag == "spike_trap") stem = "Spikes";
-
-				const std::string target_info = stem + std::string(" #") + std::to_string(e.id);
-				can_link_to.emplace_back(std::make_pair(e.id, target_info));
-			});
-			std::vector<const char*> can_link(can_link_to.size());
-			for (int i = 0; i<can_link_to.size(); ++i) {
-				can_link[i] = can_link_to[i].second.c_str();
-			}
-			ImGui::PushItemWidth(-1);
-			ImGui::ListBox("## New Links", &new_link, &can_link[0], can_link_to.size(), 10);
-			// TODO: Find a way to move the camera to show what you are picking when selecting
-			if (ImGui::Button(btn_add_link.c_str())) {
-				if (is_lever) lever->targets.emplace_back(can_link_to[new_link].first);
-			}
-			if (ImGui::Button(btn_close.c_str())) {
+			ShowExampleAppCustomNodeGraph(&show_window, all_nodes);
+			if (!show_window) {
 				game_master_mode = PLAY;
+				show_window = true;
+				node_graph_id = -1;
+
+				for (const auto &node : all_nodes)
+				{
+					const auto ne = entity(node->entity_id);
+					const auto send = ne->component<sends_signal_t>();
+					const auto recv = ne->component<receives_signal_t>();
+
+					if (send) send->targets.clear();
+					if (recv) recv->receives_from.clear();
+				}
+
+				// Update system to reflect node changes
+				for (const auto &node : all_nodes)
+				{
+					std::cout << "Reading node: " << node->name << "\n";
+					const auto node_entity = entity(node->entity_id);
+					const auto np = node_entity->component<node_graph_position_t>();
+					np->x = static_cast<int>(node->pos.x);
+					np->y = static_cast<int>(node->pos.y);
+
+					for (const auto &conn : node->input_connections)
+					{
+						const auto input_node = find_node_by_con(conn.get(), all_nodes);
+						const auto output_node = find_node_by_con(conn->input, all_nodes);
+
+						const auto input_e = entity(input_node->entity_id);
+						const auto output_e = entity(output_node->entity_id);
+						auto recipient = input_e->component<receives_signal_t>();
+						auto sender = output_e->component<sends_signal_t>();
+						recipient->receives_from.emplace_back(std::make_tuple(output_node->entity_id, conn->pos.x, conn->pos.y, conn->input->pos.x, conn->input->pos.y));
+						sender->targets.emplace_back(input_node->entity_id);
+						//std::cout << "Input Connection to " << find_node_by_con(conn.get(), all_nodes)->name << "\n";
+						//std::cout << "Connection to " << find_node_by_con(conn->input, all_nodes)->name << "\n";
+					}
+				}
 			}
-			*/
-			//ImGui::End();
 		}
 
 		void entry_trigger_firing(const systems::movement::entity_moved_message &msg) {

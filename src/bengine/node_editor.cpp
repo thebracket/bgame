@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <algorithm>
 #include "main_window.hpp"
+#include "../global_assets/game_camera.hpp"
+#include "../render_engine/camera.hpp"
 
 const float NODE_SLOT_RADIUS = 5.0f;
 const ImVec2 NODE_WINDOW_PADDING(8.0f, 8.0f);
@@ -410,6 +412,11 @@ static void display_node(ImDrawList* draw_list, ImVec2 offset, node_graph::node_
 	if (ImGui::IsItemHovered())
 	{
 		node_hovered_in_scene = node->id;
+
+		camera_position->region_x = node->world_x;
+		camera_position->region_y = node->world_y;
+		camera_position->region_z = node->world_z;
+		render::camera_moved = true;
 	}
 
 	auto node_moving_active = false;
@@ -581,7 +588,7 @@ void ShowExampleAppCustomNodeGraph(bool* opened, std::vector<std::unique_ptr<nod
 	//ImGui::Text("Hold middle mouse button to scroll (%.2f,%.2f)", scrolling.x, scrolling.y);
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-	ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImVec4(0.15f, 0.15f, 0.15f, 0.8f));
+	ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImVec4(0.15f, 0.15f, 0.15f, 0.5f));
 	ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove);
 	ImGui::PushItemWidth(120.0f);
 
@@ -602,74 +609,6 @@ void ShowExampleAppCustomNodeGraph(bool* opened, std::vector<std::unique_ptr<nod
 
 	draw_list->ChannelsMerge();
 
-	// Open context menu
-	if (!ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1))
-	{
-		node_selected = node_hovered_in_list = node_hovered_in_scene = -1;
-		open_context_menu = true;
-	}
-	if (open_context_menu)
-	{
-		ImGui::OpenPopup("context_menu");
-		if (node_hovered_in_list != -1)
-			node_selected = node_hovered_in_list;
-		if (node_hovered_in_scene != -1)
-			node_selected = node_hovered_in_scene;
-	}
-
-	// Draw context menu
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
-	if (ImGui::BeginPopup("context_menu"))
-	{
-		if (ImGui::MenuItem("Load graph..."))
-		{
-			/*
-			char path[1024];
-			if (Dialog_open(path))
-			{
-			printf("file to load %s\n", path);
-			}
-			*/
-		}
-
-		if (ImGui::MenuItem("Save graph..."))
-		{
-			/*
-			char path[1024];
-			if (Dialog_save(path))
-			{
-			saveNodes(path);
-			}
-			*/
-		}
-
-
-		/*
-		Node* node = node_selected != -1 ? &nodes[node_selected] : NULL;
-		ImVec2 scene_pos = ImGui::GetMousePosOnOpeningCurrentPopup() - offset;
-		if (node)
-		{
-		ImGui::Text("Node '%s'", node->Name);
-		ImGui::Separator();
-		if (ImGui::MenuItem("Rename..", NULL, false, false)) {}
-		if (ImGui::MenuItem("Delete", NULL, false, false)) {}
-		if (ImGui::MenuItem("Copy", NULL, false, false)) {}
-		}
-		*/
-		//else
-
-		for (auto &node : s_node_types)
-		{
-			if (ImGui::MenuItem(node.name.c_str()))
-			{
-				all_nodes.emplace_back(create_node_from_type(ImGui::GetIO().MousePos, &node) );
-			}
-		}
-
-		ImGui::EndPopup();
-	}
-	ImGui::PopStyleVar();
-
 	// Scrolling
 	if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::IsMouseDragging(2, 0.0f))
 		scrolling = scrolling - ImGui::GetIO().MouseDelta;
@@ -681,4 +620,13 @@ void ShowExampleAppCustomNodeGraph(bool* opened, std::vector<std::unique_ptr<nod
 	ImGui::EndGroup();
 
 	ImGui::End();
+}
+
+node_graph::node_t * find_node_by_entity_id(const int &id, std::vector<std::unique_ptr<node_graph::node_t>> &all_nodes)
+{
+	for (const auto &node : all_nodes)
+	{
+		if (node->entity_id == id) return node.get();
+	}
+	return nullptr;
 }
