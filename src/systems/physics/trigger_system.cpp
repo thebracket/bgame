@@ -42,6 +42,7 @@ namespace systems {
 		const std::string btn_add_link = std::string(ICON_FA_PLUS) + " Add Link";
 		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";	
 		static bool dependencies_changed = true;
+		static std::set<int> nodes_changed;
 
 		thread_safe_message_queue<triggers_changed_message> triggers_changed;
 		thread_safe_message_queue<request_lever_pull_message> lever_pull_requests;
@@ -416,7 +417,7 @@ namespace systems {
 						case TRIGGER_CAGE: cage_trap_fire(msg, trigger_entity, tile_index); break;
 						case TRIGGER_STONEFALL: {} stonefall_trap_fire(msg, trigger_entity, tile_index); break;
 						case TRIGGER_BLADE: {} blade_trap_fire(msg, trigger_entity, tile_index); break;
-						case TRIGGER_PRESSURE: { trigger_def->active = !trigger_def->active; } break;
+						case TRIGGER_PRESSURE: { trigger_def->active = !trigger_def->active; nodes_changed.insert(trigger_entity->id); } break;
 						}
 						trigger_def->active = true;
 					}
@@ -431,8 +432,11 @@ namespace systems {
 				auto lever_component = lever_entity->component<lever_t>();
 				if (!lever_component) return;
 				auto lever_building = lever_entity->component<building_t>();
+				auto sender = lever_entity->component<sends_signal_t>();
+				nodes_changed.insert(msg.lever_id);
 
-				lever_component->active = !lever_component->active;
+				sender->active = !sender->active;
+				lever_component->active = sender->active;
 				if (lever_building) {
 					if (lever_component->active) {
 						lever_building->vox_model = 124;
@@ -442,91 +446,6 @@ namespace systems {
 					}
 				}
 			});
-
-			/*
-			lever_pulled.process_all([](const lever_pulled_message &msg) {
-				auto lever_entity = entity(msg.lever_id);
-				if (!lever_entity) return;
-				auto lever_component = lever_entity->component<lever_t>();
-				if (!lever_component) return;
-				auto lever_building = lever_entity->component<building_t>();
-
-				lever_component->active = !lever_component->active;
-				if (lever_building) {
-					if (lever_component->active) {
-						lever_building->vox_model = 124;
-					}
-					else {
-						lever_building->vox_model = 125;
-					}
-				}
-
-				for (const auto &id : lever_component->targets) {
-					auto target_entity = entity(id);
-					if (!target_entity) break;
-					systems::power::consume_power("Lever", 10);
-					auto target_door = target_entity->component<construct_door_t>();
-					auto target_bridge = target_entity->component<bridge_t>();
-					auto target_building = target_entity->component<building_t>();
-
-					if (target_door) {
-						target_door->locked = !target_door->locked;
-						doors::doors_changed();
-					}
-					if (target_bridge) {
-						target_bridge->retracted = !target_bridge->retracted;
-						if (target_bridge->retracted) {
-							// Retract the bridge
-							for (int i = 0; i<REGION_TILES_COUNT; ++i) {
-								if (bridge_id(i) == id) {
-									make_open_space(i);
-									chunks::mark_chunk_dirty_by_tileidx(i);
-								}
-							}
-						}
-						else {
-							// Extend the bridge!
-							for (int i = 0; i<REGION_TILES_COUNT; ++i) {
-								if (bridge_id(i) == id) {
-									make_floor(i);
-									chunks::mark_chunk_dirty_by_tileidx(i);
-								}
-							}
-						}
-						tile_recalc_all();
-					}
-					if (target_building && target_building->tag == "spike_trap") {
-						auto receiver = target_entity->component<receives_signal_t>();
-						auto target_pos = target_entity->component<position_t>();
-
-						if (receiver) std::cout << "Has receiver\n";
-						if (target_pos) std::cout << "Has position\n";
-
-						if (receiver && target_pos) {
-							receiver->active = !receiver->active;
-							if (receiver->active) {
-								target_building->vox_model = 130;
-								// Attack everything in the tile
-								const auto &[x,y,z] = idxmap(mapidx(*target_pos));
-								auto visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
-								for (const auto &v : visible_here) {
-									auto victim_entity = entity(v);
-									if (victim_entity) {
-										auto health = victim_entity->component<health_t>();
-										if (health) {
-											systems::damage_system::inflict_damage(systems::damage_system::inflict_damage_message{ v, rng.roll_dice(2,8), "Floor Spikes" });
-										}
-									}
-								}
-							}
-							else {
-								target_building->vox_model = 129;
-							}
-						}
-					}
-				}
-			}
-			);*/
 		}
 
 		static void oscillators()
@@ -538,26 +457,166 @@ namespace systems {
 				{
 					o.ticker = o.interval;
 					o.active = !o.active;
+					nodes_changed.insert(e.id);
 				}
 			});
 		}
+
+		static std::map<int, std::vector<int>> affects;
 
 		static void calc_dependency()
 		{
 			dependencies_changed = false;
-			// Build a dependency map
-			each<receives_signal_t>([](entity_t &e, receives_signal_t &r)
+			affects.clear();
+			each<receives_signal_t>([] (entity_t &e, receives_signal_t &s)
 			{
-				// e.id depends upon input from r.receives_from
-				for (const auto &n : r.receives_from) {
-					const auto depends_upon = std::get<0>(n);
-					std::cout << "Entity " << e.id << " Depends Upon Data From #" << depends_upon << "\n";
+				for (const auto &r : s.receives_from)
+				{
+					affects[std::get<0>(r)].emplace_back(e.id);
 				}
 			});
 		}
 
+		static void and_gate(entity_t * circuit_entity, signal_processor_t * cp)
+		{
+			auto all_set = true;
+			const auto receiver = circuit_entity->component<receives_signal_t>();
+			for (const auto &n : receiver->receives_from)
+			{
+				const auto r = entity(std::get<0>(n));
+				const auto s = r->component<sends_signal_t>();
+				if (!s->active) all_set = false;
+			}
+			cp->active = all_set;
+		}
+
+		static void or_gate(entity_t * circuit_entity, signal_processor_t * cp)
+		{
+			auto any_set = true;
+			const auto receiver = circuit_entity->component<receives_signal_t>();
+			for (const auto &n : receiver->receives_from)
+			{
+				const auto r = entity(std::get<0>(n));
+				const auto s = r->component<sends_signal_t>();
+				if (s->active) any_set = true;
+			}
+			cp->active = any_set;
+		}
+
+		static void evaluate_signal_processor(entity_t * circuit_entity, signal_processor_t * cp)
+		{
+			// TODO: Processing
+
+			switch (cp->processor)
+			{
+			case AND: and_gate(circuit_entity, cp); break;
+			case OR:  or_gate(circuit_entity, cp);  break;
+			case NOT:  break;
+			case NAND: break;
+			case NOR:  break;
+			case EOR:  break;
+			case ENOR: break;
+			}
+			nodes_changed.insert(circuit_entity->id);
+		}
+
+		static void evaluate_circuit_node(const int &id, const int &sender)
+		{
+			auto circuit_entity = entity(id);
+			if (!circuit_entity) return;
+			const auto cp = circuit_entity->component<signal_processor_t>();
+			if (cp)
+			{
+				// Evaluate signal propagation
+				evaluate_signal_processor(circuit_entity, cp);
+			}
+			const auto door = circuit_entity->component<construct_door_t>();
+			if (door)
+			{
+				// Evaluate door
+				const auto sender_e = entity(sender);
+				const auto sender_s = sender_e->component<sends_signal_t>();
+				door->locked = sender_s->active;
+				doors::doors_changed();
+			}
+			const auto bridge = circuit_entity->component<bridge_t>();
+			if (bridge)
+			{
+				// Evaluate bridge
+				const auto sender_e = entity(sender);
+				const auto sender_s = sender_e->component<sends_signal_t>();
+				bridge->retracted = sender_s->active;
+				if (bridge->retracted) {
+					// Retract the bridge
+					for (int i = 0; i<REGION_TILES_COUNT; ++i) {
+						if (bridge_id(i) == id) {
+							make_open_space(i);
+							chunks::mark_chunk_dirty_by_tileidx(i);
+						}
+					}
+				}
+				else {
+					// Extend the bridge!
+					for (int i = 0; i<REGION_TILES_COUNT; ++i) {
+						if (bridge_id(i) == id) {
+							make_floor(i);
+							chunks::mark_chunk_dirty_by_tileidx(i);
+						}
+					}
+				}
+				tile_recalc_all();
+			}
+			const auto building = circuit_entity->component<building_t>();
+			if (building && building->tag == "spike_trap")
+			{
+				// Evaluate building; currently spike traps
+				const auto sender_e = entity(sender);
+				const auto sender_s = sender_e->component<sends_signal_t>();
+
+				const auto target_pos = circuit_entity->component<position_t>();
+				const auto receiver = circuit_entity->component<receives_signal_t>();
+
+				if (target_pos && receiver) {
+					receiver->active = !receiver->active;
+					if (receiver->active) {
+						building->vox_model = 130;
+						// Attack everything in the tile
+						const auto &[x, y, z] = idxmap(mapidx(*target_pos));
+						auto visible_here = entity_octree.find_by_loc(octree_location_t{ x, y, z, 0 });
+						for (const auto &v : visible_here) {
+							auto victim_entity = entity(v);
+							if (victim_entity) {
+								const auto health = victim_entity->component<health_t>();
+								if (health) {
+									systems::damage_system::inflict_damage(systems::damage_system::inflict_damage_message{ v, rng.roll_dice(2,8), "Floor Spikes" });
+								}
+							}
+						}
+					}
+					else {
+						building->vox_model = 129;
+					}
+				}
+			}
+		}
+
 		static void run_circuits()
 		{
+			while (!nodes_changed.empty())
+			{
+				const auto id = *nodes_changed.begin();
+				std::cout << id << "\n";
+				nodes_changed.erase(id);
+
+				const auto effect_finder = affects.find(id);
+				if (effect_finder != affects.end())
+				{
+					for (const auto affected : effect_finder->second)
+					{
+						evaluate_circuit_node(affected, id);
+					}
+				}
+			}
 		}
 
 		void run(const double &duration_ms) {
