@@ -40,7 +40,8 @@ namespace systems {
 		const std::string win_trigger_mgmt = std::string(ICON_FA_COG) + " Trigger Management";
 		const std::string btn_remove_link = std::string(ICON_FA_MINUS) + " Remove Link";
 		const std::string btn_add_link = std::string(ICON_FA_PLUS) + " Add Link";
-		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";		
+		const std::string btn_close = std::string(ICON_FA_TIMES) + " Close";	
+		static bool dependencies_changed = true;
 
 		thread_safe_message_queue<triggers_changed_message> triggers_changed;
 		thread_safe_message_queue<request_lever_pull_message> lever_pull_requests;
@@ -48,7 +49,7 @@ namespace systems {
 		thread_safe_message_queue<trigger_details_requested> trigger_details;
 		thread_safe_message_queue<lever_pulled_message> lever_pulled;
 
-		void manage_triggers() {
+		static void manage_triggers() {
 			triggers_changed.process_all([](triggers_changed_message &msg) {
 				//std::cout << "Received trigger notification\n";
 				dirty = true;
@@ -65,18 +66,18 @@ namespace systems {
 			}
 		}
 
-		void pull_levers() {
+		static void pull_levers() {
 			lever_pull_requests.process_all([](request_lever_pull_message &msg) {
 				designations->levers_to_pull.emplace_back(msg.lever_id);
 				lever_pull_changes.enqueue(leverpull_changed_message{});
 			});
 		}
 
-		bool show_window = true;
-		int node_graph_id = -1;
+		static bool show_window = true;
+		static int node_graph_id = -1;
 		static std::vector<std::unique_ptr<node_graph::node_t>> all_nodes;
 
-		void decorate_node(entity_t &e, const name_t &n, node_graph::node_t * node)
+		static void decorate_node(entity_t &e, const name_t &n, node_graph::node_t * node)
 		{
 			node->name = n.first_name + std::string(" #") + std::to_string(e.id);
 			node->entity_id = e.id;
@@ -261,6 +262,8 @@ namespace systems {
 						}
 					}
 				}
+
+				dependencies_changed = true;
 			}
 
 			ShowExampleAppCustomNodeGraph(&show_window, all_nodes);
@@ -306,109 +309,140 @@ namespace systems {
 			}
 		}
 
+		static void cage_trap_fire(const systems::movement::entity_moved_message &msg, entity_t  * trigger_entity, const int &tile_index)
+		{
+			auto target_entity = entity(msg.entity_id);
+			if (target_entity) {
+				const auto grazer = target_entity->component<grazer_ai>();
+				const auto sentient = target_entity->component<sentient_ai>();
+
+				if (grazer || (sentient && sentient->hostile))
+				{
+					const auto name = target_entity->component<name_t>();
+					if (name) {
+						LOG ss;
+						ss.other_name(msg.entity_id)->text(" is trapped in a cage!");
+						logging::log_message msg_{ ss.chars };
+						logging::log(msg_);
+					}
+
+					// TODO: Add a random chance with some dex involved
+					// Spawn a cage object
+					auto building = trigger_entity->component<building_t>();
+					const auto material = get_material_by_tag(building->built_with[0].first);
+					const auto &[x, y, z] = idxmap(tile_index);
+					const auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material, 3, 100);
+
+					// Add a stored component
+					target_entity->assign(item_stored_t{ new_cage->id });
+
+					// Remove the position component
+					delete_component<position_t>(msg.entity_id);
+
+					// Remove the trap
+					delete_entity(trigger_entity->id);
+					triggers_changed.enqueue(triggers_changed_message{});
+				}
+			}
+		}
+
+		static void stonefall_trap_fire(const systems::movement::entity_moved_message &msg, entity_t  * trigger_entity, const int &tile_index)
+		{
+			auto target_entity = entity(msg.entity_id);
+			if (target_entity) {
+				const auto grazer = target_entity->component<grazer_ai>();
+				const auto sentient = target_entity->component<sentient_ai>();
+				if (grazer || (sentient && sentient->hostile))
+				{
+					const auto name = target_entity->component<name_t>();
+					if (name) {
+						LOG ss;
+						ss.other_name(msg.entity_id)->text(" is hit by a falling rock trap!");
+						logging::log_message msg_{ ss.chars };
+						logging::log(msg_);
+					}
+
+					// Spawn some damage!
+					damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.entity_id, rng.roll_dice(3, 6), "falling rocks" });
+
+					// Remove the trap
+					delete_entity(trigger_entity->id);
+					triggers_changed.enqueue(triggers_changed_message{});
+				}
+			}
+		}
+
+		static void blade_trap_fire(const systems::movement::entity_moved_message &msg, entity_t  * trigger_entity, const int &tile_index)
+		{
+			auto target_entity = entity(msg.entity_id);
+			if (target_entity) {
+				const auto grazer = target_entity->component<grazer_ai>();
+				const auto sentient = target_entity->component<sentient_ai>();
+				if (grazer || (sentient && sentient->hostile))
+				{
+					const auto name = target_entity->component<name_t>();
+					if (name) {
+						LOG ss;
+						ss.other_name(msg.entity_id)->text(" is hit by a blade trap!");
+						logging::log_message msg_{ ss.chars };
+						logging::log(msg_);
+					}
+
+					// TODO: Add a random chance with some dex involved
+					// Spawn some damage!
+					damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.entity_id, rng.roll_dice(3,8), "spinning blades" });
+
+					// Extend the blades
+					const auto building = target_entity->component<building_t>();
+					if (building)
+					{
+						building->vox_model = 132;
+					}
+				}
+			}
+		}
+
 		void entry_trigger_firing(const systems::movement::entity_moved_message &msg) {
-			/*
-			//std::cout << "Received an entity move message. There are " << triggers.size() << " triggers.\n";
 			const auto tile_index = mapidx(msg.destination);
 			const auto finder = triggers.find(tile_index);
 			if (finder != triggers.end()) {
-				//std::cout << "Found a trigger\n";
-				auto trigger_entity = entity(finder->second);
+				const auto trigger_entity = entity(finder->second);
 				if (trigger_entity) {
 					const auto trigger_def = trigger_entity->component<entry_trigger_t>();
-					if (trigger_def) {
-						if (trigger_def->active) {
-							//std::cout << "Trigger is active\n";
-							// Does the trigger apply to the entity type
-							auto target_entity = entity(msg.entity_id);
-							if (target_entity) {
-								const auto grazer = target_entity->component<grazer_ai>();
-								const auto sentient = target_entity->component<sentient_ai>();
-
-								//if (grazer) std::cout << "Target grazes\n";
-								//if (sentient) std::cout << "Target is sentient\n";
-								//if (settler) std::cout << "Target a settler - probably ignored\n";
-
-								// Cages only affect hostiles and beasts
-								if (trigger_def->type == TRIGGER_CAGE && (grazer || (sentient && sentient->hostile))) {
-									//std::cout << "Cage triggered\n";
-									const auto name = target_entity->component<name_t>();
-									if (name) {
-										LOG ss;
-										ss.other_name(msg.entity_id)->text(" is trapped in a cage!");
-										logging::log_message msg_{ ss.chars };
-										logging::log(msg_);
-									}
-
-									// TODO: Add a random chance with some dex involved
-									// Spawn a cage object
-									auto building = trigger_entity->component<building_t>();
-									const auto material = get_material_by_tag(building->built_with[0].first);
-									const auto &[x,y,z] = idxmap(tile_index);
-									const auto new_cage = spawn_item_on_ground_ret(x, y, z, "cage", material, 3, 100);
-
-									// Add a stored component
-									target_entity->assign(item_stored_t{ new_cage->id });
-
-									// Remove the position component
-									delete_component<position_t>(msg.entity_id);
-
-									// Remove the trap
-									delete_entity(finder->second);
-									triggers_changed.enqueue(triggers_changed_message{});
-								}
-								else if (trigger_def->type == TRIGGER_STONEFALL && (grazer || (sentient && sentient->hostile))) {
-									//std::cout << "Stonefall triggered\n";
-									// Stonefalls only affect hostiles
-									const auto name = target_entity->component<name_t>();
-									if (name) {
-										LOG ss;
-										ss.other_name(msg.entity_id)->text(" is hit by a falling rock trap!");
-										logging::log_message msg_{ ss.chars };
-										logging::log(msg_);
-									}
-
-									// Spawn some damage!
-									damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.entity_id, rng.roll_dice(3, 6), "falling rocks" });
-
-									// Remove the trap
-									delete_entity(finder->second);
-									triggers_changed.enqueue(triggers_changed_message{});
-								}
-								else if (trigger_def->type == TRIGGER_BLADE && (grazer || (sentient && sentient->hostile))) {
-									//std::cout << "Blade trap triggered\n";
-									// Blades only affect hostiles, and don't auto-destruct
-									const auto name = target_entity->component<name_t>();
-									if (name) {
-										LOG ss;
-										ss.other_name(msg.entity_id)->text(" is hit by a blade trap!");
-										logging::log_message msg_{ ss.chars };
-										logging::log(msg_);
-									}
-
-									// TODO: Add a random chance with some dex involved
-									// Spawn some damage!
-									damage_system::inflict_damage(damage_system::inflict_damage_message{ msg.entity_id, rng.roll_dice(3,8), "spinning blades" });
-
-									// Extend the blades
-									const auto building = target_entity->component<building_t>();
-									if (building)
-									{
-										building->vox_model = 132;
-									}
-								}
-								else if (trigger_def->type == TRIGGER_PRESSURE)
-								{
-									lever_pulled.enqueue(lever_pulled_message{ trigger_entity->id });
-								}
-							}
+					if (trigger_def)
+					{
+						switch (trigger_def->type)
+						{
+						case TRIGGER_CAGE: cage_trap_fire(msg, trigger_entity, tile_index); break;
+						case TRIGGER_STONEFALL: {} stonefall_trap_fire(msg, trigger_entity, tile_index); break;
+						case TRIGGER_BLADE: {} blade_trap_fire(msg, trigger_entity, tile_index); break;
+						case TRIGGER_PRESSURE: { trigger_def->active = !trigger_def->active; } break;
 						}
+						trigger_def->active = true;
 					}
 				}
-			}*/
+			}
 		}
 
-		void pulled_levers() {
+		static void pulled_levers() {
+			lever_pulled.process_all([](const lever_pulled_message &msg) {
+				auto lever_entity = entity(msg.lever_id);
+				if (!lever_entity) return;
+				auto lever_component = lever_entity->component<lever_t>();
+				if (!lever_component) return;
+				auto lever_building = lever_entity->component<building_t>();
+
+				lever_component->active = !lever_component->active;
+				if (lever_building) {
+					if (lever_component->active) {
+						lever_building->vox_model = 124;
+					}
+					else {
+						lever_building->vox_model = 125;
+					}
+				}
+			});
+
 			/*
 			lever_pulled.process_all([](const lever_pulled_message &msg) {
 				auto lever_entity = entity(msg.lever_id);
@@ -495,10 +529,50 @@ namespace systems {
 			);*/
 		}
 
+		static void oscillators()
+		{
+			each<oscillator_t>([] (entity_t &e, oscillator_t &o)
+			{
+				o.ticker--;
+				if (o.ticker == 0)
+				{
+					o.ticker = o.interval;
+					o.active = !o.active;
+				}
+			});
+		}
+
+		static void calc_dependency()
+		{
+			dependencies_changed = false;
+			// Build a dependency map
+			each<receives_signal_t>([](entity_t &e, receives_signal_t &r)
+			{
+				// e.id depends upon input from r.receives_from
+				for (const auto &n : r.receives_from) {
+					const auto depends_upon = std::get<0>(n);
+					std::cout << "Entity " << e.id << " Depends Upon Data From #" << depends_upon << "\n";
+				}
+			});
+		}
+
+		static void run_circuits()
+		{
+		}
+
 		void run(const double &duration_ms) {
+			// Reset all pressure plates
+			each<pressure_plate_t, sends_signal_t>([] (entity_t &e, pressure_plate_t &p, sends_signal_t &s)
+			{
+				s.active = false;
+			});
+
 			manage_triggers();
 			pull_levers();
 			pulled_levers();
+			oscillators();
+			if (dependencies_changed) calc_dependency();
+			run_circuits();
 		}
 	}
 }
