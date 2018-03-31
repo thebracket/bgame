@@ -297,6 +297,7 @@
     <ClCompile Include="..\..\src\systems\damage\settler_ranged_attack_system.cpp" />
     <ClCompile Include="..\..\src\systems\damage\turret_ranged_attack_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\building_info.cpp" />
+    <ClCompile Include="..\..\src\systems\gui\circuit_graph.cpp" />
     <ClCompile Include="..\..\src\systems\gui\civ_ui_system.cpp" />
     <ClCompile Include="..\..\src\systems\gui\design_architecture.cpp" />
     <ClCompile Include="..\..\src\systems\gui\design_buildings.cpp" />
@@ -533,6 +534,7 @@
     <ClInclude Include="..\..\src\systems\damage\turret_ranged_attack_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\architecture_template.hpp" />
     <ClInclude Include="..\..\src\systems\gui\building_info.hpp" />
+    <ClInclude Include="..\..\src\systems\gui\circuit_graph.hpp" />
     <ClInclude Include="..\..\src\systems\gui\civ_ui_system.hpp" />
     <ClInclude Include="..\..\src\systems\gui\design_architecture.hpp" />
     <ClInclude Include="..\..\src\systems\gui\design_buildings.hpp" />

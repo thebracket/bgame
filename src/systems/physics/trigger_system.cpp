@@ -22,6 +22,7 @@
 #include "bengine/node_editor.hpp"
 #include "raws/buildings.hpp"
 #include "raws/defs/building_def_t.hpp"
+#include "systems/gui/circuit_graph.hpp"
 
 using namespace bengine;
 
@@ -107,6 +108,22 @@ namespace systems {
 			});
 
 			if (game_master_mode != TRIGGER_MANAGEMENT) return;
+
+			if (node_graph_id != trigger_id)
+			{
+				node_graph_id = trigger_id;
+				circuit_graph::build_nodes_list();
+			}
+
+			circuit_graph::display_circuit_graph(&show_window);
+			if (!show_window) {
+				circuit_graph::restore_state();
+				game_master_mode = PLAY;
+				show_window = true;
+				node_graph_id = -1;
+			}
+
+			/*
 			if (node_graph_id != trigger_id)
 			{
 				node_graph_id = trigger_id;
@@ -265,10 +282,10 @@ namespace systems {
 				}
 
 				dependencies_changed = true;
-			}
+			}*/
 
-			ShowExampleAppCustomNodeGraph(&show_window, all_nodes);
-			if (!show_window) {
+			//ShowExampleAppCustomNodeGraph(&show_window, all_nodes);
+			/*if (!show_window) {
 				game_master_mode = PLAY;
 				show_window = true;
 				node_graph_id = -1;
@@ -307,7 +324,7 @@ namespace systems {
 						//std::cout << "Connection to " << find_node_by_con(conn->input, all_nodes)->name << "\n";
 					}
 				}
-			}
+			}*/
 		}
 
 		static void cage_trap_fire(const systems::movement::entity_moved_message &msg, entity_t  * trigger_entity, const int &tile_index)

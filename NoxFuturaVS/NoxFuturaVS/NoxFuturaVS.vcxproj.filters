@@ -494,6 +494,9 @@
     <ClCompile Include="..\..\src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\gui\circuit_graph.cpp">
+      <Filter>Source Files\systems\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\components\calendar.hpp">
@@ -1206,6 +1209,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\machinery\node_graph_position.hpp">
       <Filter>Header Files\components\machinery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\gui\circuit_graph.hpp">
+      <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
