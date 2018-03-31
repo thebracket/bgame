@@ -112,6 +112,9 @@
     <ClInclude Include="..\..\src\bengine\node_editor.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\bengine\ecs_helper.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\bengine\bitset.hpp">

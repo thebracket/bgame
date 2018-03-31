@@ -2,11 +2,11 @@
 
 #include <vector>
 #include <tuple>
-#include <algorithm>
 #include <map>
 #include <bitset>
 #include <array>
 #include <type_traits>
+#include <memory>
 #include "../components/all_components.hpp"
 #include <cereal/archives/binary.hpp>
 #include <cereal/cereal.hpp>
@@ -15,60 +15,31 @@
 #include <cereal/types/bitset.hpp>
 #include <cereal/types/utility.hpp>
 #include <cereal/types/tuple.hpp>
+#include <cereal/types/memory.hpp>
+#include "ecs_helper.hpp"
 
 namespace bengine
 {
 
 	class entity_t;
 
-	static size_t type_counter = 0;
-
-	template<typename T, typename... Ts>
-	constexpr bool contains()
-	{
-		return std::disjunction_v<std::is_same<T, Ts>...>;
-	}
-
 	template<class ... Components>
 	class ecs_t
 	{
 	public:
-		template<typename ...Ts, size_t... I>
-		void setup_index(std::tuple<std::pair<size_t, std::map<int, Ts>>...> &tuple, std::index_sequence<I...>) noexcept
-		{
-			(void)(std::initializer_list<int> {
-				(std::get<I>(tuple).first = I, 0)...
-			});
-		}
-
-		template<typename ...Ts, size_t... I>
-		void delete_components_for_entity(std::tuple<std::pair<size_t, std::map<int, Ts>>...> &tuple, std::index_sequence<I...>, const int &entity_id) noexcept
-		{
-			(void)(std::initializer_list<int> {
-				(std::get<I>(tuple).second.erase(entity_id), 0)...
-			});
-		}
 
 		ecs_t() noexcept
 		{
 			setup_index(storage, std::index_sequence_for<Components...>{});
-		}
-
-
-		entity_t * create_entity() noexcept
-		{
-			const auto new_id = entity_counter++;
-			entities.insert(std::make_pair(new_id, entity_t{ new_id, false, this }));
-			return &entities[new_id];
-		}
+		}		
 
 		entity_t * entity(const int &id) noexcept
 		{
 			entity_t * result = nullptr;
-			auto finder = entities.find(id);
+			const auto finder = entities.find(id);
 			if (finder == entities.end()) return result;
-			if (finder->second.is_deleted) return result;
-			result = &(finder->second);
+			//if (finder->second->is_deleted) return result;
+			result = finder->second.get();
 			return result;
 		}
 
@@ -77,13 +48,14 @@ namespace bengine
 			const auto finder = entities.find(entity_id);
 			if (finder != entities.end())
 			{
-				finder->second.is_deleted = true;
+				//finder->second.is_deleted = true;
 				const auto bfinder = component_mask.find(entity_id);
 				if (bfinder != component_mask.end())
 				{
 					bfinder->second.reset();
 				}
 				delete_components_for_entity(storage, std::index_sequence_for<Components...>{}, entity_id);
+				entities.erase(entity_id);
 			}
 		}
 
@@ -149,9 +121,9 @@ namespace bengine
 		}
 
 		template <class ... ComponentsToIterate>
-		bool entity_has_all_of(const entity_t &entity, const std::array<size_t, sizeof...(ComponentsToIterate)> &family_ids)
+		bool entity_has_all_of(const int &entity_id, const std::array<size_t, sizeof...(ComponentsToIterate)> &family_ids)
 		{
-			const auto bitset_finder = component_mask.find(entity.id);
+			const auto bitset_finder = component_mask.find(entity_id);
 			if (bitset_finder != component_mask.end()) {
 
 				for (const auto &bs : family_ids)
@@ -167,9 +139,9 @@ namespace bengine
 		}
 
 		template <class ComponentToIgnore>
-		bool entity_does_not_have(const entity_t &entity)
+		bool entity_does_not_have(const int &entity_id)
 		{
-			const auto bitset_finder = component_mask.find(entity.id);
+			const auto bitset_finder = component_mask.find(entity_id);
 			if (bitset_finder != component_mask.end()) {
 
 				const auto family_id = get_component_family_id<ComponentToIgnore>();
@@ -188,15 +160,12 @@ namespace bengine
 			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
 			for (auto &entity : entities)
 			{
-				const auto entity_id = entity.second.id;
-				if (!entity.second.is_deleted)
+				const auto entity_id = entity.first;
+				if (entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
 				{
-					if (entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
-					{
-						result.emplace_back(
-							std::make_tuple(&entity.second, entity_component<ComponentsToIterate>(entity_id)...)
-						);
-					}
+					result.emplace_back(
+						std::make_tuple(&entity.second, entity_component<ComponentsToIterate>(entity_id)...)
+					);
 				}
 			}
 			return result;
@@ -209,15 +178,12 @@ namespace bengine
 			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
 			for (auto &entity : entities)
 			{
-				const auto entity_id = entity.second.id;
-				if (!entity.second.is_deleted)
+				const auto entity_id = entity.first;
+				if (entity_has_all_of<ComponentsToIterate...>(entity.first, to_test) && predicate(*entity.second, *entity_component<ComponentsToIterate>(entity_id)...))
 				{
-					if (entity_has_all_of<ComponentsToIterate...>(entity.second, to_test) && predicate(entity.second, *entity_component<ComponentsToIterate>(entity_id)...))
-					{
-						result.emplace_back(
-							std::make_tuple(&entity.second, entity_component<ComponentsToIterate>(entity_id)...)
-						);
-					}
+					result.emplace_back(
+						std::make_tuple(entity.second.get(), entity_component<ComponentsToIterate>(entity_id)...)
+					);
 				}
 			}
 			return result;
@@ -230,16 +196,13 @@ namespace bengine
 			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
 			for (auto &entity : entities)
 			{
-				const auto entity_id = entity.second.id;
-				if (!entity.second.is_deleted)
+				const auto entity_id = entity.first;
+				if (entity_does_not_have<ComponentToIgnore>(entity.first) && entity_has_all_of<ComponentsToIterate...>(*entity.second, to_test))
 				{
-					if (entity_does_not_have<ComponentToIgnore>(entity.second) && entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
-					{
-						// It matches!
-						result.emplace_back(
-							std::make_tuple(&entity.second, entity_component<ComponentsToIterate>(entity_id)...)
-						);
-					}
+					// It matches!
+					result.emplace_back(
+						std::make_tuple(entity.second.get(), entity_component<ComponentsToIterate>(entity_id)...)
+					);
 				}
 			}
 			return result;
@@ -251,13 +214,10 @@ namespace bengine
 			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
 			for (auto &entity : entities)
 			{
-				const auto entity_id = entity.second.id;
-				if (!entity.second.is_deleted)
+				const auto entity_id = entity.first;
+				if (entity_has_all_of<ComponentsToIterate...>(entity.first, to_test))
 				{
-					if (entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
-					{
-						callback(entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
-					}
+					callback(*entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
 				}
 			}
 		}
@@ -268,13 +228,10 @@ namespace bengine
 			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
 			for (auto &entity : entities)
 			{
-				const auto entity_id = entity.second.id;
-				if (!entity.second.is_deleted)
+				const auto entity_id = entity.first;
+				if (entity_has_all_of<ComponentsToIterate...>(entity.first, to_test) && predicate(*entity.second, *entity_component<ComponentsToIterate>(entity_id)...))
 				{
-					if (entity_has_all_of<ComponentsToIterate...>(entity.second, to_test) && predicate(entity.second, *entity_component<ComponentsToIterate>(entity_id)...))
-					{
-						callback(entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
-					}
+					callback(*entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
 				}
 			}
 		}
@@ -285,14 +242,11 @@ namespace bengine
 			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
 			for (auto &entity : entities)
 			{
-				const auto entity_id = entity.second.id;
-				if (!entity.second.is_deleted)
+				const auto entity_id = entity.first;
+				if (entity_does_not_have<ComponentToIgnore>(entity.first) && entity_has_all_of<ComponentsToIterate...>(entity.first, to_test))
 				{
-					if (entity_does_not_have<ComponentToIgnore>(entity.second) && entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
-					{
-						// It matches!
-						callback(entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
-					}
+					// It matches!
+					callback(*entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
 				}
 			}
 		}
@@ -303,14 +257,11 @@ namespace bengine
 			std::array<size_t, sizeof...(ComponentsToIterate)> to_test{ get_component_family_id<ComponentsToIterate>()... };
 			for (auto &entity : entities)
 			{
-				const auto entity_id = entity.second.id;
-				if (!entity.second.is_deleted)
+				const auto entity_id = entity.first;
+				if (entity_does_not_have<ComponentToIgnore>(entity_id) && entity_does_not_have<ComponentToIgnore2>(entity_id) && entity_has_all_of<ComponentsToIterate...>(entity_id, to_test))
 				{
-					if (entity_does_not_have<ComponentToIgnore>(entity.second) && entity_does_not_have<ComponentToIgnore2>(entity.second) && entity_has_all_of<ComponentsToIterate...>(entity.second, to_test))
-					{
-						// It matches!
-						callback(entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
-					}
+					// It matches!
+					callback(*entity.second, *entity_component<ComponentsToIterate>(entity_id)...);
 				}
 			}
 		}
@@ -322,7 +273,7 @@ namespace bengine
 		}
 
 		int entity_counter = 0;
-		std::map<int, entity_t> entities;
+		std::map<int, std::unique_ptr<entity_t>> entities;
 		std::tuple<std::pair<size_t, std::map<int, Components>>...> storage;
 		std::map<int, std::bitset<sizeof...(Components)>> component_mask;
 	};
@@ -362,5 +313,15 @@ namespace bengine
 			archive(id, is_deleted); // serialize things by passing them to the archive
 		}
 	};
+
+	inline entity_t * create_entity(impl::my_ecs_t * ecs) noexcept
+	{
+		const auto new_id = ecs->entity_counter++;
+		ecs->entities.insert(std::make_pair(new_id, std::make_unique<entity_t>()));
+		ecs->entities[new_id]->id = new_id;
+		ecs->entities[new_id]->is_deleted = false;
+		ecs->entities[new_id]->ecs = ecs;
+		return ecs->entities[new_id].get();
+	}
 
 }

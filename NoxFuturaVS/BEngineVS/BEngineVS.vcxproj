@@ -124,6 +124,7 @@
     <ClInclude Include="..\..\src\bengine\color_t.hpp" />
     <ClInclude Include="..\..\src\bengine\ctpl.h" />
     <ClInclude Include="..\..\src\bengine\ecs.hpp" />
+    <ClInclude Include="..\..\src\bengine\ecs_helper.hpp" />
     <ClInclude Include="..\..\src\bengine\FastNoise.h" />
     <ClInclude Include="..\..\src\bengine\filesystem.hpp" />
     <ClInclude Include="..\..\src\bengine\geometry.hpp" />

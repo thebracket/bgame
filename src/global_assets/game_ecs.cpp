@@ -770,7 +770,7 @@ namespace bengine {
 		iarchive(impl::ecs);
 		for (auto &e : impl::ecs.entities)
 		{
-			e.second.ecs = &bengine::impl::ecs;
+			e.second->ecs = &bengine::impl::ecs;
 		}
 	}
 }

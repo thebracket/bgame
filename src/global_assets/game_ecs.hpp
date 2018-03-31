@@ -16,7 +16,7 @@ namespace bengine {
 
 	inline bengine::entity_t * create_entity() noexcept
 	{
-		return impl::ecs.create_entity();
+		return create_entity(&impl::ecs);
 	}
 
 	inline void delete_entity(const int &id) noexcept
