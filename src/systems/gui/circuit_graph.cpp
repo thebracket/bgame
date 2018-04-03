@@ -12,6 +12,10 @@ namespace systems
 		using namespace bengine;
 
 		enum class node_type_t { UNKNOWN, LEVER, PRESSURE_PLATE, OSCILLATOR, FLOAT_GAUGE, BRIDGE, DOOR, SPIKES };
+		static bool node_dragging = false;
+		static ImVec2 node_drag_start;
+		static int node_drag_id;
+		static int node_destination_id = 0;
 
 		struct node_t
 		{
@@ -25,6 +29,8 @@ namespace systems
 
 			ImVec2 input_pos;
 			ImVec2 output_pos;
+
+			std::vector<int> outbound_connections;
 		};
 
 		static std::string get_node_type(const node_t &n)
@@ -50,6 +56,16 @@ namespace systems
 		static void insert_node(entity_t &e, name_t &n, position_t &p)
 		{
 			node_t node{ e.id, n.first_name + std::string(" #") + std::to_string(e.id) };
+
+			const auto outputs = e.component<sends_signal_t>();
+			if (outputs)
+			{
+				for (const auto &o : outputs->targets)
+				{
+					node.outbound_connections.emplace_back(o);
+				}
+			}
+
 			const auto pos = e.component<node_graph_position_t>();
 			if (pos)
 			{
@@ -94,6 +110,7 @@ namespace systems
 		{
 			std::set<int> nodes_included;
 			nodes.clear();
+			node_dragging = false;
 			next_x = 0;
 
 			each<sends_signal_t, name_t, position_t>([&nodes_included](entity_t &e, sends_signal_t &s, name_t &n, position_t &p)
@@ -132,6 +149,24 @@ namespace systems
 			}
 		}
 
+		static void draw_hermite(ImDrawList* draw_list, const ImVec2 p1, const ImVec2 p2, const int n_steps, const ImColor color = { 200, 200, 100 })
+		{
+			const auto t1 = ImVec2(+80.0f, 0.0f);
+			const auto t2 = ImVec2(+80.0f, 0.0f);
+
+			for (auto step = 0; step <= n_steps; step++)
+			{
+				const auto t = static_cast<float>(step) / static_cast<float>(n_steps);
+				const auto h1 = +2 * t*t*t - 3 * t*t + 1.0f;
+				const auto h2 = -2 * t*t*t + 3 * t*t;
+				const auto h3 = t * t*t - 2 * t*t + t;
+				const auto h4 = t * t*t - t * t;
+				draw_list->PathLineTo(ImVec2(h1*p1.x + h2 * p2.x + h3 * t1.x + h4 * t2.x, h1*p1.y + h2 * p2.y + h3 * t1.y + h4 * t2.y));
+			}
+
+			draw_list->PathStroke(color, false, 3.0f);
+		}
+
 		static void render_nodes()
 		{
 			ImGui::SameLine();
@@ -156,8 +191,6 @@ namespace systems
 
 				draw_list->ChannelsSetCurrent(0); // Background
 
-				ImGui::SetCursorScreenPos(node_pos);
-				ImGui::InvisibleButton("node", node_size);
 				const auto hovered = ImGui::IsItemHovered();
 				if (hovered)
 				{
@@ -171,6 +204,7 @@ namespace systems
 				draw_list->AddRect(node_pos, node_br, ImColor(100, 100, 100), 4.0f);
 
 				// Inputs & outputs
+				auto output_active = false;
 				n.input_pos = node_pos;
 				n.input_pos.y += 80;
 				n.input_pos.x += 8;
@@ -179,23 +213,104 @@ namespace systems
 				n.output_pos.x += 92;
 				if (n.has_input)
 				{
-					draw_list->AddCircleFilled(n.input_pos, 8.0f, ImColor(255, 255, 0));
+					ImVec2 nop = n.input_pos;
+					nop.x -= 8.0f;
+					nop.y -= 8.0f;
+					if (ImGui::GetIO().MousePos.x > nop.x && ImGui::GetIO().MousePos.x < nop.x+16.0f && ImGui::GetIO().MousePos.y > nop.y && ImGui::GetIO().MousePos.y < nop.y+16.0f)
+					{
+						draw_list->AddCircleFilled(n.input_pos, 8.0f, ImColor(255, 255, 0));
+						node_destination_id = n.id;
+					} else
+					{
+						draw_list->AddCircleFilled(n.input_pos, 8.0f, ImColor(192, 192, 0));
+						node_destination_id = 0;
+					}
 				}
 				if (n.has_output)
 				{
-					draw_list->AddCircleFilled(n.output_pos, 8.0f, ImColor(255, 0, 255));
+					ImVec2 nop = n.output_pos;
+					nop.x -= 8.0f;
+					nop.y -= 8.0f;
+					ImGui::SetCursorScreenPos(nop);
+					ImGui::InvisibleButton("nodeout", ImVec2{16.0f, 16.0f});
+					if (ImGui::IsItemHovered())
+					{
+						output_active = true;
+						draw_list->AddCircleFilled(n.output_pos, 8.0f, ImColor(255, 0, 255));
+
+						if (ImGui::GetIO().MouseDown[0])
+						{
+							if (!node_dragging) {
+								node_dragging = true;
+								node_drag_start = n.output_pos;
+								node_drag_id = n.id;
+							}							
+						} else
+						{
+							node_dragging = false;
+						}
+					}
+					else {
+						draw_list->AddCircleFilled(n.output_pos, 8.0f, ImColor(192, 0, 192));
+					}
 				}
 				
 				// Dragging
-				if (ImGui::IsItemActive() && ImGui::IsMouseDragging(0))
+
+				if (node_dragging)
 				{
-					const auto delta = ImGui::GetIO().MouseDelta;
-					n.x += delta.x;
-					n.y += delta.y;
+					draw_hermite(draw_list, node_drag_start, ImGui::GetIO().MousePos, 12);
+
+					if (!ImGui::GetIO().MouseDown[0])
+					{
+						// We're no longer dragging
+						node_dragging = false;
+						if (node_destination_id > 0)
+						{
+							for (auto &node : nodes)
+							{
+								if (node.id == node_drag_id)
+								{
+									auto dupe = false;
+									for (const auto nid : node.outbound_connections)
+									{
+										if (nid == node_destination_id) dupe = true;
+									}
+									if (!dupe) node.outbound_connections.emplace_back(node_destination_id);
+								}
+							}
+						}
+					}
+				}
+				else {
+					ImGui::SetCursorScreenPos(node_pos);
+					ImGui::InvisibleButton("node", node_size);
+					if (!output_active && ImGui::IsItemActive() && ImGui::IsMouseDragging(0))
+					{
+						const auto delta = ImGui::GetIO().MouseDelta;
+						n.x += delta.x;
+						n.y += delta.y;
+					}
 				}
 
 				// Cleanup
 				ImGui::PopID();
+			}
+
+			// Render connections
+			for (const auto &n : nodes)
+			{
+				for (const auto &start : n.outbound_connections)
+				{
+					const auto start_pos = n.output_pos;
+					ImVec2 end_pos;
+					for (const auto &end : nodes)
+					{
+						if (end.id == start) end_pos = end.input_pos;
+					}
+
+					draw_hermite(draw_list, start_pos, end_pos, 12, ImColor(255, 255, 255));
+				}
 			}
 
 			draw_list->ChannelsMerge();
@@ -207,6 +322,33 @@ namespace systems
 			bengine::begin_info_window("Circuit Management", show_window);
 			render_nodes();
 			ImGui::End();
+		}
+
+		void sync_node_list_to_ecs()
+		{
+			// Clear all existing connections
+			for (const auto &n : nodes)
+			{
+				const auto e = entity(n.id);
+				const auto sender = e->component<sends_signal_t>();
+				const auto receiver = e->component<receives_signal_t>();
+				if (sender) sender->targets.clear();
+				if (receiver) receiver->receives_from.clear();
+			}
+
+			// Add all links back from the node graph
+			for (const auto &n : nodes)
+			{
+				for (const auto outbound_id : n.outbound_connections)
+				{
+					const auto sender = entity(n.id);
+					const auto receiver = entity(outbound_id);
+					const auto s = sender->component<sends_signal_t>();
+					const auto r = receiver->component<receives_signal_t>();
+					s->targets.emplace_back(outbound_id);
+					r->receives_from.emplace_back(std::make_tuple(n.id, 0, 0, 0, 0));
+				}
+			}
 		}
 	}
 }

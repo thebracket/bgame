@@ -5,9 +5,7 @@
 #include "../../global_assets/game_designations.hpp"
 #include "../../global_assets/game_pause.hpp"
 #include "../../global_assets/game_mode.hpp"
-#include "../../bengine/imgui.h"
 #include "../../raws/raws.hpp"
-#include "../../raws/items.hpp"
 #include "../../raws/materials.hpp"
 #include "../../raws/defs/material_def_t.hpp"
 #include "../gui/log_system.hpp"
@@ -16,12 +14,8 @@
 #include "../../bengine/IconsFontAwesome.h"
 #include "../../render_engine/chunks/chunks.hpp"
 #include "door_system.hpp"
-#include "../power/power_system.hpp"
 #include "../damage/damage_system.hpp"
 #include "../../global_assets/rng.hpp"
-#include "bengine/node_editor.hpp"
-#include "raws/buildings.hpp"
-#include "raws/defs/building_def_t.hpp"
 #include "systems/gui/circuit_graph.hpp"
 
 using namespace bengine;
@@ -77,28 +71,6 @@ namespace systems {
 
 		static bool show_window = true;
 		static int node_graph_id = -1;
-		static std::vector<std::unique_ptr<node_graph::node_t>> all_nodes;
-
-		static void decorate_node(entity_t &e, const name_t &n, node_graph::node_t * node)
-		{
-			node->name = n.first_name + std::string(" #") + std::to_string(e.id);
-			node->entity_id = e.id;
-			const auto gp = e.component<node_graph_position_t>();
-			if (gp)
-			{
-				node->pos = ImVec2{ static_cast<float>(gp->x), static_cast<float>(gp->y) };
-			} else
-			{
-				e.assign(node_graph_position_t{ static_cast<int>(node->pos.x), static_cast<int>(node->pos.y) });
-			}
-			const auto pos = e.component<position_t>();
-			if (pos)
-			{
-				node->world_x = pos->x;
-				node->world_y = pos->y;
-				node->world_z = pos->z;
-			}
-		}
 
 		void edit_triggers() {
 			trigger_details.process_all([](const trigger_details_requested &msg) {
@@ -121,210 +93,9 @@ namespace systems {
 				game_master_mode = PLAY;
 				show_window = true;
 				node_graph_id = -1;
-			}
-
-			/*
-			if (node_graph_id != trigger_id)
-			{
-				node_graph_id = trigger_id;
-				all_nodes.clear();
-				// TODO: Build the node graph for what already exists
-				// TODO: Build the graph of available nodes
-
-				auto x = 100;
-				auto y = 100;
-				std::set<int> included_items;
-
-				// Levers
-				bengine::each<lever_t, name_t>([&included_items, &x, &y] (entity_t &e, lever_t &l, name_t &n)
-				{
-					const auto finder = included_items.find(e.id);
-					if (finder == included_items.end())
-					{
-						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						decorate_node(e, n, lever.get());
-						all_nodes.emplace_back(std::move(lever));
-						x += 100;
-						included_items.insert(e.id);
-					}
-				});
-
-				// Pressure Plates
-				bengine::each<pressure_plate_t, name_t>([&included_items, &x, &y](entity_t &e, pressure_plate_t &l, name_t &n)
-				{
-					const auto finder = included_items.find(e.id);
-					if (finder == included_items.end())
-					{
-						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						decorate_node(e, n, lever.get());
-						all_nodes.emplace_back(std::move(lever));
-						x += 100;
-						included_items.insert(e.id);
-					}
-				});
-
-				// Float gauges
-				bengine::each<float_gauge_t, name_t>([&included_items, &x, &y](entity_t &e, float_gauge_t &l, name_t &n)
-				{
-					const auto finder = included_items.find(e.id);
-					if (finder == included_items.end())
-					{
-						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						decorate_node(e, n, lever.get());
-						all_nodes.emplace_back(std::move(lever));
-						x += 100;
-						included_items.insert(e.id);
-					}
-				});
-
-				// Oscillator
-				bengine::each<oscillator_t, name_t>([&included_items, &x, &y](entity_t &e, oscillator_t &l, name_t &n)
-				{
-					const auto finder = included_items.find(e.id);
-					if (finder == included_items.end())
-					{
-						auto lever = create_node_from_name(ImVec2(x, y), "Input");
-						decorate_node(e, n, lever.get());
-						all_nodes.emplace_back(std::move(lever));
-						x += 100;
-						included_items.insert(e.id);
-					}
-				});
-
-				// Signal Processor
-				bengine::each<signal_processor_t, name_t>([&included_items, &x, &y](entity_t &e, signal_processor_t &l, name_t &n)
-				{
-					const auto finder = included_items.find(e.id);
-					if (finder == included_items.end())
-					{
-						std::unique_ptr<node_graph::node_t> lever;
-						switch (l.processor)
-						{
-						case AND :
-						{
-							lever = create_node_from_name(ImVec2(x, y), "AND");
-						} break;
-						case OR:
-						{
-							lever = create_node_from_name(ImVec2(x, y), "OR");
-						} break;
-						case NOT:
-						{
-							lever = create_node_from_name(ImVec2(x, y), "NOT");
-						} break;
-						case NAND:
-						{
-							lever = create_node_from_name(ImVec2(x, y), "NAND");
-						} break;
-						case NOR:
-						{
-							lever = create_node_from_name(ImVec2(x, y), "NOR");
-						} break;
-						case EOR:
-						{
-							lever = create_node_from_name(ImVec2(x, y), "EOR");
-						} break;
-						case ENOR:
-						{
-							lever = create_node_from_name(ImVec2(x, y), "ENOR");
-						} break;
-						}
-						decorate_node(e, n, lever.get());
-						all_nodes.emplace_back(std::move(lever));
-						x += 100;
-						included_items.insert(e.id);
-					}
-				});
-
-				// Outputs
-				bengine::each<receives_signal_t, name_t>([&included_items, &x, &y](entity_t &e, receives_signal_t &l, name_t &n)
-				{
-					const auto finder = included_items.find(e.id);
-					if (finder == included_items.end())
-					{
-						auto lever = create_node_from_name(ImVec2(x, y), "Output");
-						decorate_node(e, n, lever.get());
-						all_nodes.emplace_back(std::move(lever));
-						x += 100;
-						included_items.insert(e.id);
-					}
-				});
-
-				// Rebuild connection nodes
-				for (auto &node : all_nodes)
-				{
-					const auto e = entity(node->entity_id);
-					if (e) {
-						const auto r = e->component<receives_signal_t>();
-						if (r) {
-							for (const auto &rs : r->receives_from)
-							{
-								const auto remote_node_id = std::get<0>(rs);
-								const auto rx = std::get<1>(rs);
-								const auto ry = std::get<2>(rs);
-								const auto sx = std::get<3>(rs);
-								const auto sy = std::get<4>(rs);
-								const auto remote_node = find_node_by_entity_id(remote_node_id, all_nodes);
-
-								auto conn = std::make_unique<node_graph::connection_t>();
-								conn->pos = ImVec2(rx, ry);
-
-								auto conn2 = std::make_unique<node_graph::connection_t>();
-								conn2->output.emplace_back(conn.get());
-								conn2->pos = ImVec2(sx, sy);
-								conn->input = conn2.get();
-
-								node->input_connections.emplace_back( std::move(conn) );
-								remote_node->output_connections.emplace_back(std::move(conn2));
-							}
-						}
-					}
-				}
-
+				circuit_graph::sync_node_list_to_ecs();
 				dependencies_changed = true;
-			}*/
-
-			//ShowExampleAppCustomNodeGraph(&show_window, all_nodes);
-			/*if (!show_window) {
-				game_master_mode = PLAY;
-				show_window = true;
-				node_graph_id = -1;
-
-				for (const auto &node : all_nodes)
-				{
-					const auto ne = entity(node->entity_id);
-					const auto send = ne->component<sends_signal_t>();
-					const auto recv = ne->component<receives_signal_t>();
-
-					if (send) send->targets.clear();
-					if (recv) recv->receives_from.clear();
-				}
-
-				// Update system to reflect node changes
-				for (const auto &node : all_nodes)
-				{
-					std::cout << "Reading node: " << node->name << "\n";
-					const auto node_entity = entity(node->entity_id);
-					const auto np = node_entity->component<node_graph_position_t>();
-					np->x = static_cast<int>(node->pos.x);
-					np->y = static_cast<int>(node->pos.y);
-
-					for (const auto &conn : node->input_connections)
-					{
-						const auto input_node = find_node_by_con(conn.get(), all_nodes);
-						const auto output_node = find_node_by_con(conn->input, all_nodes);
-
-						const auto input_e = entity(input_node->entity_id);
-						const auto output_e = entity(output_node->entity_id);
-						auto recipient = input_e->component<receives_signal_t>();
-						auto sender = output_e->component<sends_signal_t>();
-						recipient->receives_from.emplace_back(std::make_tuple(output_node->entity_id, conn->pos.x, conn->pos.y, conn->input->pos.x, conn->input->pos.y));
-						sender->targets.emplace_back(input_node->entity_id);
-						//std::cout << "Input Connection to " << find_node_by_con(conn.get(), all_nodes)->name << "\n";
-						//std::cout << "Connection to " << find_node_by_con(conn->input, all_nodes)->name << "\n";
-					}
-				}
-			}*/
+			}
 		}
 
 		static void cage_trap_fire(const systems::movement::entity_moved_message &msg, entity_t  * trigger_entity, const int &tile_index)
@@ -565,7 +336,7 @@ namespace systems {
 				bridge->retracted = sender_s->active;
 				if (bridge->retracted) {
 					// Retract the bridge
-					for (int i = 0; i<REGION_TILES_COUNT; ++i) {
+					for (auto i = 0; i<REGION_TILES_COUNT; ++i) {
 						if (bridge_id(i) == id) {
 							make_open_space(i);
 							chunks::mark_chunk_dirty_by_tileidx(i);

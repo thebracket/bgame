@@ -59,6 +59,11 @@ namespace systems {
 							work.cancel_work_tag(e);
 							return;
 						}
+
+						designations->levers_to_pull.erase(
+							std::remove_if(designations->levers_to_pull.begin(), designations->levers_to_pull.end(), [&lever_id](auto l) { return l == lever_id; }),
+							designations->levers_to_pull.end()
+						);
 					}
 
 					// Path towards the harvest
