@@ -159,7 +159,7 @@ namespace systems {
 								context_menu = false;
 							}
 
-							const auto blever = building_entity->component<lever_t>();
+							const auto blever = building_entity->component<sends_signal_t>();
 							if (blever)
 							{
 								if (ImGui::MenuItem("Pull Lever"))

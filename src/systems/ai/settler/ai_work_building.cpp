@@ -252,6 +252,18 @@ namespace systems {
 						entity(b.building_target.building_entity)->assign(lever_t{});
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
 					}
+					else if (provides.provides == provides_oscillator) {
+						entity(b.building_target.building_entity)->assign(oscillator_t{});
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+					}
+					else if (provides.provides == provides_and_gate) {
+						entity(b.building_target.building_entity)->assign(signal_processor_t{ AND });
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+					}
+					else if (provides.provides == provides_or_gate) {
+						entity(b.building_target.building_entity)->assign(signal_processor_t{ OR });
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+					}
 					else if (provides.provides == provides_pressure_plate) {
 						entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_PRESSURE });
 						entity(b.building_target.building_entity)->assign(lever_t{});

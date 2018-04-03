@@ -6,7 +6,8 @@
 enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk, provides_door,
     provides_wall, provides_floor, provides_stairs_up, provides_stairs_down, provides_stairs_updown,
     provides_ramp, provides_light, provides_cage_trap, provides_stonefall_trap, provides_blades_trap,
-    provides_spikes, provides_lever, provides_signal_recipient, provides_storage, provides_pressure_plate };
+    provides_spikes, provides_lever, provides_signal_recipient, provides_storage, provides_pressure_plate,
+	provides_oscillator, provides_and_gate, provides_or_gate };
 
 struct building_provides_t {
     provides_t provides;

@@ -247,6 +247,10 @@ namespace systems
 							}							
 						} else
 						{
+							if (ImGui::GetIO().MouseDown[1] || is_key_down(GLFW_KEY_DELETE))
+							{
+								n.outbound_connections.clear();
+							}
 							node_dragging = false;
 						}
 					}

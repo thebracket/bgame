@@ -88,3 +88,34 @@ buildings["proximity_sensor"] = {
     render_rex = "pressureplate.xp",
     vox = voxelId("proximity_sensor")
 };
+
+buildings["oscillator"] = {
+    name = "Pulse Oscillator",
+    description = "An electronic device that changes state on a steady pulse.",
+    components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { oscillator={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("oscillator")
+};
+
+buildings["gate_and"] = {
+    name = "Gate: AND",
+    description = "An electronic device receives 2 or more signals, and is active if they are all true",
+    components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { gate_and={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("gate_and")
+};
+
+buildings["gate_or"] = {
+    name = "Gate: OR",
+    description = "An electronic device receives 2 or more signals, and is active if any are true",
+    components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { gate_and={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("gate_or")
+};
+

@@ -150,6 +150,9 @@ voxel_models = {
     floodgate_ground = { model=vfn("floodgate_ground"), id=137 },
     float_gauge = { model=vfn("float_gauge"), id=138 },
     proximity_sensor = { model=vfn("proximity_sensor"), id=139 },
+    oscillator = { model=vfn("oscillator"), id=140 },
+    gate_and = { model=vfn("gate_and"), id=141 },
+    gate_or = { model=vfn("gate_or"), id=142 },
 }
 
 function voxelId(name)
