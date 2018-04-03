@@ -11,6 +11,7 @@ constexpr int special_reaction_tanning = 1;
 
 struct reaction_t {
     std::string tag = "";
+	std::size_t hashtag = 0;
     std::string name = "";
     std::string workshop = "";
     std::vector<reaction_input_t> inputs;

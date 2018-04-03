@@ -10,24 +10,24 @@
 #include <boost/container/flat_map.hpp>
 #include "../utils/system_log.hpp"
 
-boost::container::flat_map<std::string, reaction_t> reaction_defs;
-boost::container::flat_map<std::string, std::vector<std::string>> reaction_building_defs;
+boost::container::flat_map<std::size_t, reaction_t> reaction_defs;
+boost::container::flat_map<std::size_t, std::vector<std::string>> reaction_building_defs;
 
 reaction_t * get_reaction_def(const std::string &tag) noexcept {
-    auto finder = reaction_defs.find(tag);
+	auto finder = reaction_defs.find(std::hash<std::string>{}(tag));
     if (finder == reaction_defs.end()) return nullptr;
     return &finder->second;
 }
 
 std::vector<std::string> get_reactions_for_building(const std::string &tag) noexcept {
-    const auto result = reaction_building_defs.find(tag);
+    const auto result = reaction_building_defs.find(std::hash<std::string>{}(tag));
     if (result == reaction_building_defs.end()) return std::vector<std::string>();
     return result->second;
 }
 
 void each_reaction(const std::function<void(std::string, reaction_t *)> &func) noexcept {
 	for (auto &it : reaction_defs) {
-        func(it.first, &it.second);
+        func(it.second.tag, &it.second);
     }
 }
 
@@ -43,6 +43,7 @@ void read_reactions() noexcept
 
         std::string key = lua_tostring(lua_state, -2);
         c.tag = key;
+		c.hashtag = std::hash<std::string>{}(c.tag);
 
         lua_pushstring(lua_state, key.c_str());
         lua_gettable(lua_state, -2);
@@ -139,8 +140,8 @@ void read_reactions() noexcept
 
             lua_pop(lua_state, 1);
         }
-        reaction_defs[key] = c;
-        reaction_building_defs[c.workshop].push_back(key);
+        reaction_defs[c.hashtag] = c;
+		reaction_building_defs[std::hash<std::string>{}(c.workshop)].push_back(key);
 
         lua_pop(lua_state, 1);
     }
@@ -149,7 +150,6 @@ void read_reactions() noexcept
 void sanity_check_reactions() noexcept
 {
 	for (auto &it : reaction_defs) {
-        if (it.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty reaction name");
         if (it.second.tag.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty reaction tag");
         if (it.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty reaction name, tag: {0}", it.first);
         if (it.second.workshop.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty workshop name, tag: {0}", it.first);

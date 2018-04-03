@@ -10,10 +10,10 @@
 
 //using namespace rltk;
 
-boost::container::flat_map<std::string, building_def_t> building_defs;
+boost::container::flat_map<std::size_t, building_def_t> building_defs;
 
 building_def_t * get_building_def(const std::string &tag) noexcept {
-    auto finder = building_defs.find(tag);
+	auto finder = building_defs.find(std::hash<std::string>{}(tag));
     if (finder == building_defs.end()) return nullptr;
     return &finder->second;
 }
@@ -27,7 +27,6 @@ void each_building_def(const std::function<void(building_def_t *)> &func) noexce
 void sanity_check_buildings() noexcept
 {
 	for (auto &it : building_defs) {
-        if (it.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty building tag");
         if (it.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Building {0} has no name.\n", it.first);
         for (const auto &comp : it.second.components) {
             if (comp.tag.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty component for building: {0}", it.first);
@@ -51,6 +50,7 @@ void read_buildings() noexcept
 
         std::string key = lua_tostring(lua_state, -2);
         c.tag = key;
+		c.hashtag = std::hash<std::string>{}(c.tag);
 
         lua_pushstring(lua_state, key.c_str());
         lua_gettable(lua_state, -2);
@@ -249,7 +249,7 @@ void read_buildings() noexcept
 
             lua_pop(lua_state, 1);
         }
-        building_defs[key] = c;
+        building_defs[c.hashtag] = c;
         //std::cout << "Read schematics for building: " << key << " (VOX " << building_defs[key].vox_model << ")\n";
         lua_pop(lua_state, 1);
     }
