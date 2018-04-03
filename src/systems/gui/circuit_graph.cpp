@@ -11,7 +11,7 @@ namespace systems
 	{
 		using namespace bengine;
 
-		enum class node_type_t { UNKNOWN, LEVER, PRESSURE_PLATE, OSCILLATOR, FLOAT_GAUGE, BRIDGE, DOOR, SPIKES };
+		enum class node_type_t { UNKNOWN, LEVER, PRESSURE_PLATE, OSCILLATOR, FLOAT_GAUGE, BRIDGE, DOOR, SPIKES, AND_GATE, OR_GATE };
 		static bool node_dragging = false;
 		static ImVec2 node_drag_start;
 		static int node_drag_id;
@@ -90,6 +90,12 @@ namespace systems
 			if (e.component<construct_door_t>()) node.type = node_type_t::DOOR;
 			const auto b = e.component<building_t>();
 			if (b && b->tag == "spike_trap") node.type = node_type_t::SPIKES;
+			const auto sp = e.component<signal_processor_t>();
+			if (sp)
+			{
+				if (sp->processor == AND) node.type = node_type_t::AND_GATE;
+				if (sp->processor == OR) node.type = node_type_t::OR_GATE;
+			}
 
 			switch (node.type)
 			{
@@ -100,7 +106,9 @@ namespace systems
 			case node_type_t::BRIDGE: { node.has_input = true; node.has_output = false; } break;
 			case node_type_t::DOOR: { node.has_input = true; node.has_output = false; } break;
 			case node_type_t::SPIKES: { node.has_input = true; node.has_output = false; } break;
-			default: {}
+			case node_type_t::AND_GATE: { node.has_input = true; node.has_output = true; } break;
+			case node_type_t::OR_GATE: { node.has_input = true; node.has_output = true; } break;
+				default: {}
 			}
 
 			nodes.emplace_back(node);
@@ -219,11 +227,10 @@ namespace systems
 					if (ImGui::GetIO().MousePos.x > nop.x && ImGui::GetIO().MousePos.x < nop.x+16.0f && ImGui::GetIO().MousePos.y > nop.y && ImGui::GetIO().MousePos.y < nop.y+16.0f)
 					{
 						draw_list->AddCircleFilled(n.input_pos, 8.0f, ImColor(255, 255, 0));
-						node_destination_id = n.id;
+						if (node_dragging) node_destination_id = n.id;
 					} else
 					{
 						draw_list->AddCircleFilled(n.input_pos, 8.0f, ImColor(192, 192, 0));
-						node_destination_id = 0;
 					}
 				}
 				if (n.has_output)
@@ -275,12 +282,7 @@ namespace systems
 							{
 								if (node.id == node_drag_id)
 								{
-									auto dupe = false;
-									for (const auto nid : node.outbound_connections)
-									{
-										if (nid == node_destination_id) dupe = true;
-									}
-									if (!dupe) node.outbound_connections.emplace_back(node_destination_id);
+									node.outbound_connections.emplace_back(node_destination_id);
 								}
 							}
 						}
