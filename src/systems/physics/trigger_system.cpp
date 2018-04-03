@@ -245,6 +245,8 @@ namespace systems {
 				{
 					o.ticker = o.interval;
 					o.active = !o.active;
+					auto sender = e.component<sends_signal_t>();
+					sender->active = o.active;
 					nodes_changed.insert(e.id);
 				}
 			});
@@ -276,6 +278,10 @@ namespace systems {
 				if (!s->active) all_set = false;
 			}
 			cp->active = all_set;
+			const auto sender = circuit_entity->component<sends_signal_t>();
+			sender->active = cp->active;
+			std::cout << "AND gate state: " << sender->active << "\n";
+			nodes_changed.insert(circuit_entity->id);
 		}
 
 		static void or_gate(entity_t * circuit_entity, signal_processor_t * cp)
@@ -289,6 +295,9 @@ namespace systems {
 				if (s->active) any_set = true;
 			}
 			cp->active = any_set;
+			const auto sender = circuit_entity->component<sends_signal_t>();
+			sender->active = cp->active;
+			nodes_changed.insert(circuit_entity->id);
 		}
 
 		static void evaluate_signal_processor(entity_t * circuit_entity, signal_processor_t * cp)
@@ -365,8 +374,7 @@ namespace systems {
 				const auto receiver = circuit_entity->component<receives_signal_t>();
 
 				if (target_pos && receiver) {
-					receiver->active = !receiver->active;
-					if (receiver->active) {
+					if (sender_s->active) {
 						building->vox_model = 130;
 						// Attack everything in the tile
 						const auto &[x, y, z] = idxmap(mapidx(*target_pos));
