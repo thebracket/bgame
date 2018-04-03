@@ -122,7 +122,6 @@
     <ClInclude Include="..\..\src\bengine\btabs.hpp" />
     <ClInclude Include="..\..\src\bengine\cereal_include.hpp" />
     <ClInclude Include="..\..\src\bengine\color_t.hpp" />
-    <ClInclude Include="..\..\src\bengine\ctpl.h" />
     <ClInclude Include="..\..\src\bengine\ecs.hpp" />
     <ClInclude Include="..\..\src\bengine\ecs_helper.hpp" />
     <ClInclude Include="..\..\src\bengine\FastNoise.h" />
@@ -152,7 +151,6 @@
     <ClInclude Include="..\..\src\bengine\string_utils.hpp" />
     <ClInclude Include="..\..\src\bengine\telemetry.hpp" />
     <ClInclude Include="..\..\src\bengine\textures.hpp" />
-    <ClInclude Include="..\..\src\bengine\threadpool.h" />
     <ClInclude Include="..\..\src\bengine\threadsafequeue.hpp" />
     <None Include="..\..\src\bengine\bitset.hpp" />
   </ItemGroup>
@@ -178,7 +176,6 @@
     <ClCompile Include="..\..\src\bengine\string_utils.cpp" />
     <ClCompile Include="..\..\src\bengine\telemetry.cpp" />
     <ClCompile Include="..\..\src\bengine\textures.cpp" />
-    <ClCompile Include="..\..\src\bengine\threadpool.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

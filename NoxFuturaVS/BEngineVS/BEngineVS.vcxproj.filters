@@ -70,12 +70,6 @@
     <ClInclude Include="..\..\src\bengine\rexspeeder.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\bengine\ctpl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bengine\threadpool.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\bengine\threadsafequeue.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -165,9 +159,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bengine\rexspeeder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bengine\threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bengine\main_window.cpp">
