@@ -86,7 +86,7 @@ namespace systems {
 				case 4: add_adjacent_all(starting_points, x, y, z, idx); break; // UP/DOWN
 				case 5: add_adjacent_or_above(starting_points, x, y, z, idx); break; // RAMP
 				case 6: add_adjacent_same_level(starting_points, x, y, z, idx); break;  // BRIDGE
-				default: throw std::runtime_error("Unkown architecture type: " + std::to_string(type));
+				default: throw std::runtime_error("Unknown architecture type: " + std::to_string(type));
 				}
 			}
 
