@@ -114,8 +114,17 @@ buildings["gate_or"] = {
     description = "An electronic device receives 2 or more signals, and is active if any are true",
     components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    provides = { gate_and={energy_cost=0} },
+    provides = { gate_or={energy_cost=0} },
     render_rex = "pressureplate.xp",
     vox = voxelId("gate_or")
 };
 
+buildings["gate_not"] = {
+    name = "Gate: NOT",
+    description = "An electronic device receives a signal and inverts it.",
+    components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { gate_not={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("gate_not")
+};

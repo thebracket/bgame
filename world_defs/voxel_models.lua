@@ -153,6 +153,7 @@ voxel_models = {
     oscillator = { model=vfn("oscillator"), id=140 },
     gate_and = { model=vfn("gate_and"), id=141 },
     gate_or = { model=vfn("gate_or"), id=142 },
+    gate_not = { model=vfn("gate_not"), id=143 },
 }
 
 function voxelId(name)

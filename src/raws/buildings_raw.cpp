@@ -156,6 +156,7 @@ void read_buildings() noexcept
 					if (type == "oscillator") provisions.provides = provides_oscillator;
 					if (type == "gate_and") provisions.provides = provides_and_gate;
 					if (type == "gate_or") provisions.provides = provides_or_gate;
+					if (type == "gate_not") provisions.provides = provides_not_gate;
 
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);
