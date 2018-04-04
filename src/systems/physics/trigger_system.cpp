@@ -326,7 +326,7 @@ namespace systems {
 			{
 			case AND: and_gate(circuit_entity, cp); break;
 			case OR:  or_gate(circuit_entity, cp);  break;
-			case NOT: not_gate(circuit_entity, cp); break;
+			case NOTGATE: not_gate(circuit_entity, cp); break;
 			case NAND: break;
 			case NOR:  break;
 			case EOR:  break;

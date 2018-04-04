@@ -257,17 +257,17 @@ namespace systems {
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
 					}
 					else if (provides.provides == provides_and_gate) {
-						entity(b.building_target.building_entity)->assign(signal_processor_t{ AND });
+						entity(b.building_target.building_entity)->assign(signal_processor_t{ false, AND });
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
 						entity(b.building_target.building_entity)->assign(receives_signal_t{});
 					}
 					else if (provides.provides == provides_or_gate) {
-						entity(b.building_target.building_entity)->assign(signal_processor_t{ OR });
+						entity(b.building_target.building_entity)->assign(signal_processor_t{ false, OR });
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
 						entity(b.building_target.building_entity)->assign(receives_signal_t{});
 					}
 					else if (provides.provides == provides_not_gate) {
-						entity(b.building_target.building_entity)->assign(signal_processor_t{ NOT });
+						entity(b.building_target.building_entity)->assign(signal_processor_t{ false, NOTGATE });
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
 						entity(b.building_target.building_entity)->assign(receives_signal_t{});
 					}
