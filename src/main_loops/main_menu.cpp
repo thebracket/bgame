@@ -154,10 +154,10 @@ namespace main_menu {
 			const auto gen_indent = calc_indent(window_width, gen_size);
 			const auto opts_indent = calc_indent(window_width, opts_size);
 			const auto quit_indent = calc_indent(window_width, quit_size);
-			const auto kylah_indent = calc_indent(window_width, kylah_size.x);
+			const auto kylah_indent = calc_indent(window_width + 12.0f, kylah_size.x);
 
 			ImGui::SetNextWindowPosCenter();
-            ImGui::Begin("MainMenu", nullptr, ImVec2{window_width, 400}, 0.0f,
+            ImGui::Begin("MainMenu", nullptr, ImVec2{window_width + 25.0f, 400}, 0.0f,
                          ImGuiWindowFlags_AlwaysAutoResize + ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoTitleBar);
 			ImGui::SetCursorPosX(tagline_indent);
             ImGui::TextColored(red, "%s", tagline.c_str());
