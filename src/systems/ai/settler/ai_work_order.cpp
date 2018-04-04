@@ -23,19 +23,16 @@ namespace systems {
 				// Check for available queued reactions
 				if (!building_designations->build_orders.empty()) {
 					board.insert(std::make_pair(10, jt));
-					//std::cout << "Offering queued build order\n";
 					return;
 				}
 
 				// Check for available automatic reactions
 				auto ai = e.component<settler_ai_t>();
 				if (ai == nullptr) {
-					//std::cout << "Warning: bailing on null AI\n";
 					return;
 				}
 				if (is_auto_reaction_task_available(e.id, *ai)) {
 					board.insert(std::make_pair(20, jt));
-					//std::cout << "Offering automatic build order\n";
 					return;
 				}
 			}
@@ -50,26 +47,23 @@ namespace systems {
 			}
 
 			ai_work_template<ai_tag_work_order> work;
-			work.do_ai("Fulfilling Work Orders", [&work](entity_t &e, ai_tag_work_order &w, ai_tag_my_turn_t &t, position_t &pos) {
+			work.do_ai("Fulfilling Work Orders", [&work](entity_t &e, ai_tag_work_order &w, ai_tag_my_turn_t &t, position_t &pos) -> void {
 				auto reaction_info = get_reaction_def(w.reaction_target.reaction_tag);
 				if (reaction_info) {
-					const std::string status = reaction_info->name;
+					std::string status = reaction_info->name;
 					work.set_status(e, std::move(status));
 				}
 				else {
 					work.set_status(e, "Fulfilling Work Orders");
 				}
 				if (w.step == ai_tag_work_order::work_steps::FIND_JOB) {
-					//std::cout << "Finding work\n";
 					std::unique_ptr<reaction_task_t> autojob;
 
 					if (!building_designations->build_orders.empty()) {
 						autojob = find_queued_reaction_task(e.id, w);
-						//if (autojob) std::cout << "Queued reaction added\n";
 					}
 					if (!autojob) {
 						autojob = find_automatic_reaction_task(e.id, w);
-						//if (autojob) std::cout << "Automatic reaction added\n";
 						// TODO: Remove from work queue
 						bool found = false;
 						for (auto &j : building_designations->build_orders)
@@ -94,11 +88,9 @@ namespace systems {
 					}
 
 					if (!autojob) {
-						//std::cout << "Bailing out - no available reaction\n";
 						work.cancel_work_tag(e);
 					}
 					else {
-						//std::cout << "Setting up workflow\n";
 						w.reaction_target = *autojob;
 						w.step = ai_tag_work_order::work_steps::SELECT_INPUT;
 					}
@@ -106,7 +98,6 @@ namespace systems {
 
 				}
 				else if (w.step == ai_tag_work_order::work_steps::SELECT_INPUT) {
-					//std::cout << "Input selection\n";
 					// If there are no inputs, go to the workshop
 					auto reactor_pos = entity(w.reaction_target.building_id)->component<position_t>();
 					if (w.reaction_target.components.empty() && !(pos == *reactor_pos)) {
@@ -122,9 +113,8 @@ namespace systems {
 							w.current_tool = component.first;
 							auto item_loc = get_item_location(w.current_tool);
 							if (!item_loc) {
-								//std::cout << "Bailing - invalid item\n";
 								work.cancel_work_tag(e);
-								delete_component<claimed_t>(w.reaction_target.building_id); // Unclaim the workshop
+								delete_component<claimed_t>(w.reaction_target.building_id); // Un-claim the workshop
 								for (const auto &item : w.reaction_target.components)
 								{
 									delete_component<claimed_t>(item.first);
@@ -137,9 +127,8 @@ namespace systems {
 								w.step = ai_tag_work_order::work_steps::GO_TO_INPUT;
 							}
 							else {
-								//std::cout << "Bailing - no path to item\n";
 								work.cancel_work_tag(e);
-								delete_component<claimed_t>(w.reaction_target.building_id); // Unclaim the workshop
+								delete_component<claimed_t>(w.reaction_target.building_id); // Un-claim the workshop
 								for (const auto &item : w.reaction_target.components)
 								{
 									delete_component<claimed_t>(item.first);
@@ -155,7 +144,6 @@ namespace systems {
 					return;
 				}
 				else if (w.step == ai_tag_work_order::work_steps::GO_TO_INPUT) {
-					//std::cout << "Go to input\n";
 					work.follow_path(w, pos, e, [&w, &e, &work]() {
 						// Cancel
 						unclaim_by_id(w.current_tool);
@@ -169,12 +157,10 @@ namespace systems {
 						// Arrived
 						w.current_path.reset();
 						w.step = ai_tag_work_order::work_steps::COLLECT_INPUT;
-						//std::cout << "Cancelling - input pathing failed\n";
 					});
 					return;
 				}
 				else if (w.step == ai_tag_work_order::work_steps::COLLECT_INPUT) {
-					//std::cout << "Collect input\n";
 					// Find the component, remove any position or stored components, add a carried_by component
 					inventory_system::pickup_item(w.current_tool, e.id );
 
@@ -196,7 +182,6 @@ namespace systems {
 					return;
 				}
 				else if (w.step == ai_tag_work_order::work_steps::GO_TO_WORKSHOP) {
-					//std::cout << "Go to workshop\n";
 					work.follow_path(w, pos, e, [&w, &e, &pos, &work]() {
 						// Cancel
 						unclaim_by_id(w.current_tool);
@@ -207,7 +192,6 @@ namespace systems {
 						{
 							delete_component<claimed_t>(item.first);
 						}
-						//std::cout << "Bailing - no path to workshop\n";
 					}, [&w, &pos, &e]() {
 						// Arrived
 						w.current_path.reset();
@@ -216,23 +200,18 @@ namespace systems {
 					return;
 				}
 				else if (w.step == ai_tag_work_order::work_steps::DROP_INPUT) {
-					//std::cout << "Drop input\n";
-					//if (w.current_tool == 0) std::cout << "Warning: component is unassigned at this time\n";
 					inventory_system::drop_item(w.current_tool, pos.x, pos.y, pos.z );
 					w.current_tool = 0;
 					w.step = ai_tag_work_order::work_steps::SELECT_INPUT;
 					return;
 				}
 				else if (w.step == ai_tag_work_order::work_steps::REACT) {
-					//std::cout << "React\n";
-
 					// Skill check, destroy inputs, create outputs
 					auto stats = e.component<game_stats_t>();
 					auto finder = get_reaction_def(w.reaction_target.reaction_tag);
 					auto [skill_check, roll, difference] = skill_roll_ext(e.id, *stats, rng, finder->skill, finder->difficulty);
 
 					if (skill_check >= SUCCESS) {
-						//std::cout << "Difference (success): " << difference << "\n";
 						// Quality and wear
 						uint8_t wear = 100;
 						uint8_t quality = 3;
@@ -266,7 +245,7 @@ namespace systems {
 
 						// Delete components
 						std::size_t material = get_material_by_tag("plasteel");
-						std::string mat_names = "";
+						std::string mat_names;
 						for (auto comp : w.reaction_target.components) {
 							if (!entity(comp.first)) {
 								work.cancel_work_tag(e);
@@ -282,7 +261,7 @@ namespace systems {
 						}
 
 						// Spawn results
-						std::string cname = "";
+						std::string cname;
 						auto name = e.component<name_t>();
 						if (name) cname = name->first_name + std::string(" ") + name->last_name;
 
@@ -293,7 +272,6 @@ namespace systems {
 								if (!done && finder->specials.test(special_reaction_cooking)) {
 									// This is more complicated, we have to make a special item from the components.
 									// The idea is to get something like Roast Asparagus
-									//std::cout << "Cooking Reaction - spawning " << output.first << "/" << material << "\n";
 									auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material, quality, wear, e.id, cname);
 									auto item = new_item->component<item_t>();
 									item->item_name = mat_names + item->item_name;
@@ -303,7 +281,6 @@ namespace systems {
 								if (!done && finder->specials.test(special_reaction_tanning)) {
 									// This is more complicated, we have to make a special item from the components.
 									// The idea is to get something like Roast Asparagus
-									//std::cout << "Tanning Reaction - spawning " << output.first << "/" << material << "\n";
 									auto new_item = spawn_item_on_ground_ret(pos.x, pos.y, pos.z, output.first, material, quality, wear, e.id, cname);
 									auto item = new_item->component<item_t>();
 									item->item_name = mat_names + item->item_name;
@@ -311,11 +288,10 @@ namespace systems {
 								}
 
 								if (!done) {
-									//std::cout << "Reaction - spawning " << output.first << "/" << material << "\n";
-									std::string cname = "";
-									auto name = e.component<name_t>();
-									if (name) cname = name->first_name + std::string(" ") + name->last_name;
-									spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material, quality, wear, e.id, cname);
+									std::string cname_inner;
+									auto name_inner = e.component<name_t>();
+									if (name_inner) cname_inner = name_inner->first_name + std::string(" ") + name_inner->last_name;
+									spawn_item_on_ground(pos.x, pos.y, pos.z, output.first, material, quality, wear, e.id, cname_inner);
 									done = true;
 								}
 							}
