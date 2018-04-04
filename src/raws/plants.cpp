@@ -12,7 +12,7 @@ std::size_t get_plant_idx(const std::string &tag) noexcept
     if (finder != plant_defs_idx.end()) {
         return finder->second;
     } else {
-		glog(log_target::GAME, log_severity::WARNING, "WARNING: Cannot find plant - {0}", tag);
+		glog(log_target::GAME, log_severity::warning, "WARNING: Cannot find plant - {0}", tag);
     }
     return 0;
 }
@@ -26,7 +26,7 @@ plant_t * get_plant_def(const std::size_t &index) noexcept
 void sanity_check_plants() noexcept
 {
     for (const auto &p : plant_defs) {
-        if (p.name.empty()) glog(log_target::GAME, log_severity::WARNING, "WARNING: No plant name");
+        if (p.name.empty()) glog(log_target::GAME, log_severity::warning, "WARNING: No plant name");
     }
 }
 

@@ -97,7 +97,7 @@ namespace render {
 			glDrawBuffers(2, attachments);
 
 			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-				glog(log_target::LOADER, log_severity::ERROR, "Framebuffer ASCII not complete.");
+				glog(log_target::LOADER, log_severity::error, "Framebuffer ASCII not complete.");
 			}
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -169,7 +169,7 @@ namespace render {
 		static inline glyph_t get_floor_tile(const int &idx) {
 			if (region::stockpile_id(idx) > 0)
 			{
-				auto glyph = get_material_glyph(idx, '178');
+				auto glyph = get_material_glyph(idx, 178);
 				glyph.r = 0.5;
 				glyph.g = 0.5;
 				glyph.b = 0.5;
@@ -264,7 +264,7 @@ namespace render {
 				glyph = 206;
 				break; // All
 			default: {
-				glog(log_target::GAME, log_severity::WARNING, "Wall calculator hit a case of {0}", wall_mask);
+				glog(log_target::GAME, log_severity::warning, "Wall calculator hit a case of {0}", wall_mask);
 				glyph = 79;
 			}
 			}
@@ -277,7 +277,7 @@ namespace render {
 			// Add buildings
 			bengine::each<building_t, position_t>([](bengine::entity_t &e, building_t &b, position_t &pos) {
 				if (b.glyphs_ascii.empty()) {
-					glog(log_target::GAME, log_severity::WARNING, "Building [{0}] is lacking ASCII render data.", b.tag);
+					glog(log_target::GAME, log_severity::warning, "Building [{0}] is lacking ASCII render data.", b.tag);
 					return;
 				}
 				int i = 0;
@@ -484,7 +484,7 @@ namespace render {
 					}
 
 					if (building_def->glyphs_ascii.empty()) {
-						glog(log_target::GAME, log_severity::WARNING, "Building [{0}] has no ASCII data.", building_def->tag);
+						glog(log_target::GAME, log_severity::warning, "Building [{0}] has no ASCII data.", building_def->tag);
 					}
 					else {
 

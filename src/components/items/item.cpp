@@ -22,7 +22,7 @@ bengine::color_t colname_to_col(const std::string &col)
     if (col == "pink") return bengine::color_t((uint8_t )250,105,180);
     if (col == "brown") return bengine::color_t((uint8_t )98, 74, 46);
     if (col == "khaki") return bengine::color_t((uint8_t )240, 230, 140);
-	glog(log_target::LOADER, log_severity::WARNING, "Unknown clothing color: {0}", col);
+	glog(log_target::LOADER, log_severity::warning, "Unknown clothing color: {0}", col);
     return bengine::color_t((uint8_t )250,250,250);
 }
 
@@ -42,7 +42,7 @@ item_t::item_t(const std::string name) noexcept : item_tag(name), type(CLOTHING)
             }
         } else {
             item_name = "ERROR";
-			glog(log_target::LOADER, log_severity::ERROR, "{0} not found", item_tag);
+			glog(log_target::LOADER, log_severity::error, "{0} not found", item_tag);
         }
     }
 }

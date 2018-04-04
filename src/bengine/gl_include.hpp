@@ -21,7 +21,7 @@ inline GLenum glCheckError_(const char *file, int line)
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
-		glog(log_target::GAME, log_severity::ERROR, "{0} | {1} |{2}", error, file, line);
+		glog(log_target::GAME, log_severity::error, "{0} | {1} |{2}", error, file, line);
     }
     return errorCode;
 }

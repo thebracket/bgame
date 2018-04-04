@@ -246,7 +246,7 @@ namespace systems {
 					fmt::MemoryWriter ss;
 					if (flag(tile_idx, ABOVE_GROUND)) ss << "Outside-";
 					if (flag(tile_idx, SOLID)) ss << "Solid-";
-					if (flag(tile_idx, OPAQUE)) ss << "Opaque-";
+					if (flag(tile_idx, OPAQUE_TILE)) ss << "Opaque-";
 					if (flag(tile_idx, CAN_GO_DOWN)) ss << "D-";
 					if (flag(tile_idx, CAN_GO_UP)) ss << "U-";
 					if (flag(tile_idx, CAN_GO_NORTH)) ss << "N-";
@@ -307,7 +307,7 @@ namespace systems {
 						case farm_steps::FIX_SOIL: ss << "Fix Soil"; break;
 						case farm_steps::PLANT_SEEDS: ss << "Plant Seeds"; break;
 						case farm_steps::GROWING: ss << "Growing"; break;
-						default: { glog(log_target::GAME, log_severity::ERROR, "Unknown farming state!"); }
+						default: { glog(log_target::GAME, log_severity::error, "Unknown farming state!"); }
 						}
 						ss << ". Weeded/Watered " << farm_finder->second.days_since_weeded << "/" << farm_finder->second.days_since_watered << " days ago.";
 						lines.emplace_back(color_line(ss.str(), color_green));

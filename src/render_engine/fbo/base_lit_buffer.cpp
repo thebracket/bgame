@@ -60,7 +60,7 @@ namespace render {
 
         // finally check if framebuffer is complete
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-			glog(log_target::LOADER, log_severity::WARNING, "Framebuffer baselight not complete!");
+			glog(log_target::LOADER, log_severity::warning, "Framebuffer baselight not complete!");
 		}
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }

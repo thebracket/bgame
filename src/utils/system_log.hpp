@@ -3,7 +3,7 @@
 #include <string>
 #include <fmt/format.h>
 
-enum class log_severity { INFO, WARNING, ERROR };
+enum class log_severity { info, warning, error };
 enum class log_target { LOADER=0, GAME=1 };
 
 void gamelog(const log_target target, const log_severity severity, const std::string &entry) noexcept;

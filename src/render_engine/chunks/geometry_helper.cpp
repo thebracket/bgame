@@ -45,7 +45,7 @@ namespace chunks {
 			use_id = (unsigned int)material->floor_texture_id;
 		}
 		if (use_id == 3) {
-			glog(log_target::LOADER, log_severity::WARNING, "Material [{0}] is lacking a texture", material->name);
+			glog(log_target::LOADER, log_severity::warning, "Material [{0}] is lacking a texture", material->name);
 		}
 
 		//std::cout << material->name << "=" << use_id << "\n";
@@ -69,7 +69,7 @@ namespace chunks {
 			use_id = (unsigned int)material->base_texture_id;
 		}
 		if (use_id == 3) {
-			glog(log_target::LOADER, log_severity::WARNING, "Material [{0}] is lacking a texture.", material->name);
+			glog(log_target::LOADER, log_severity::warning, "Material [{0}] is lacking a texture.", material->name);
 		}
 		return use_id;
 	}

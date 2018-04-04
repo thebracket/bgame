@@ -14,7 +14,7 @@ std::string save_filename()
 	return get_save_path() + std::string("/savegame") + std::to_string(SAVE_VERSION) + std::string(".dat");
 }
 
-#ifndef _MSC_VER
+#ifndef _WIN32
 #include <pwd.h>
 #include <sys/stat.h>
 std::string get_save_path()

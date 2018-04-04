@@ -26,13 +26,13 @@ namespace tile_flags
 	constexpr tile_flag_type REVEALED = 256;
 	constexpr tile_flag_type VISIBLE = 512;
 	constexpr tile_flag_type SOLID = 1024;
-	constexpr tile_flag_type OPAQUE = 204;
 	constexpr tile_flag_type ABOVE_GROUND = 2048;
 	constexpr tile_flag_type BLOODSTAIN = 4096;
 	constexpr tile_flag_type CAN_GO_NORTH_WEST = 8192;
 	constexpr tile_flag_type CAN_GO_NORTH_EAST = 16384;
 	constexpr tile_flag_type CAN_GO_SOUTH_WEST = 32768;
 	constexpr tile_flag_type CAN_GO_SOUTH_EAST = 65536;
+	constexpr tile_flag_type OPAQUE_TILE = 131072;
 }
 
 namespace tile_type {

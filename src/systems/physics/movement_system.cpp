@@ -107,17 +107,17 @@ namespace systems {
 			using namespace region;
 			move_requests.process_all([](entity_wants_to_move_message msg) {
 				if (!entity(msg.entity_id)) {
-					glog(log_target::GAME, log_severity::WARNING, "Oops - move request for entity {0}, but entity does not exist!", msg.entity_id);
+					glog(log_target::GAME, log_severity::warning, "Oops - move request for entity {0}, but entity does not exist!", msg.entity_id);
 					return;
 				}
 				auto epos = entity(msg.entity_id)->component<position_t>();
 				if (!epos) {
-					glog(log_target::GAME, log_severity::WARNING, "Oops - move request for entity {0}, but entity does not have a position!", msg.entity_id);
+					glog(log_target::GAME, log_severity::warning, "Oops - move request for entity {0}, but entity does not have a position!", msg.entity_id);
 					return;
 				}
 				position_t origin{ epos->x, epos->y, epos->z };
 				if (origin == msg.destination) {
-					glog(log_target::GAME, log_severity::WARNING, "Oops - Moving to same tile, entity {0}", msg.entity_id);
+					glog(log_target::GAME, log_severity::warning, "Oops - Moving to same tile, entity {0}", msg.entity_id);
 					return;
 				}
 

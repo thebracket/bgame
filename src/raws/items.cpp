@@ -37,9 +37,9 @@ void each_stockpile(const std::function<void(stockpile_def_t *)> &func) noexcept
 void sanity_check_items() noexcept
 {
 	for (auto &it : item_defs) {
-        if (it.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Item has no name");
-        if (it.second.tag.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty item tag");
-        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty item name, tag: {0}", it.second.tag);
+        if (it.first.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING: Item has no name");
+        if (it.second.tag.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING: Empty item tag");
+        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING: Empty item name, tag: {0}", it.second.tag);
     }
 }
 

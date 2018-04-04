@@ -210,7 +210,7 @@ namespace systems {
 					bengine::end_zebra_col();
 				}
 				else {
-					glog(log_target::GAME, log_severity::WARNING, "Warning: {0} life event not found", le.type);
+					glog(log_target::GAME, log_severity::warning, "Warning: {0} life event not found", le.type);
 				}
 			}
 		}

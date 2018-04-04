@@ -28,7 +28,7 @@ namespace render {
 
 		// finally check if framebuffer is complete
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-			glog(log_target::LOADER, log_severity::ERROR, "Framebuffer pointlight not complete!");
+			glog(log_target::LOADER, log_severity::error, "Framebuffer pointlight not complete!");
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

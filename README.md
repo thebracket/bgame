@@ -44,6 +44,7 @@ If you are using MSYS2 to build, you need to install (with `pacman -S`):
 * mingw64/mingw-w64-x86_64-libc++
 * mingw64/mingw-w64-x86_64-ccache (to speed up compilation)
 * mingw64/mingw-w64-x86_64-cotire (to speed up compilation)
+* mingw64/mingw-w64-x86_64-fmt
 * tar (yes, that really isn't included by default...)
 
 The Lua libraries bundled with MSYS2 do not work (at least for me), so I bundled Lua in the source directory.

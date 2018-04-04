@@ -29,12 +29,12 @@ namespace systems {
 				if (!attacker) return;
 				auto attack_species = attacker->component<species_t>();
 				if (!attack_species) {
-					glog(log_target::GAME, log_severity::WARNING, "WARNING: Attacker has no species");
+					glog(log_target::GAME, log_severity::warning, "WARNING: Attacker has no species");
 					return;
 				}
 				auto creaturefinder = get_creature_def(attack_species->tag);
 				if (!creaturefinder) {
-					glog(log_target::GAME, log_severity::WARNING, "Unable to find creature: {0}", attack_species->tag);
+					glog(log_target::GAME, log_severity::warning, "Unable to find creature: {0}", attack_species->tag);
 					return;
 				}
 				auto creature = *creaturefinder;

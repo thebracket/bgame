@@ -52,7 +52,7 @@ int main() {
 	if (first_run) {
 		main_func = first_run_screen::tick;
 		if (first_run_screen::first_run_done) first_run = false;
-		gamelog(log_target::LOADER, log_severity::INFO, "Launching first run screen");
+		gamelog(log_target::LOADER, log_severity::info, "Launching first run screen");
 	}
 	else {
 		splash_screen::init();

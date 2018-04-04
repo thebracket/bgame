@@ -14,10 +14,10 @@ const clothing_t * get_clothing_by_tag(const std::string &tag) noexcept
 void sanity_check_clothing() noexcept
 {
 	for (auto &it : clothing_types) {
-        if (it.first.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty clothing string");
-        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty clothing name");
-        if (it.second.colors.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING {0} contains no color options.", it.first);
-        if (it.second.slot.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING {0} has no slot defined.", it.first);
+        if (it.first.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING: Empty clothing string");
+        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING: Empty clothing name");
+        if (it.second.colors.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING {0} contains no color options.", it.first);
+        if (it.second.slot.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING {0} has no slot defined.", it.first);
     }
 }
 

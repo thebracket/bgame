@@ -73,7 +73,7 @@ void read_reactions() noexcept
                             const std::string mat_name = lua_tostring(lua_state, -1);
                             const auto matfinder = get_material_by_tag(mat_name);
                             if (matfinder == 0) {
-								glog(log_target::LOADER, log_severity::WARNING, "Reaction {0} references unkown material {1}", c.name, mat_name);
+								glog(log_target::LOADER, log_severity::warning, "Reaction {0} references unkown material {1}", c.name, mat_name);
                             } else {
                                 input.required_material = matfinder;
                             }
@@ -101,7 +101,7 @@ void read_reactions() noexcept
                             } else if (type_s == "spice") {
                                 input.required_material_type = SPICE;
                             } else {
-								glog(log_target::LOADER, log_severity::WARNING, "WARNING: Unknown material type: {0}", type_s);
+								glog(log_target::LOADER, log_severity::warning, "WARNING: Unknown material type: {0}", type_s);
                             }
                         }
                         lua_pop(lua_state, 1);
@@ -150,19 +150,19 @@ void read_reactions() noexcept
 void sanity_check_reactions() noexcept
 {
 	for (auto &it : reaction_defs) {
-        if (it.second.tag.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty reaction tag");
-        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty reaction name, tag: {0}", it.first);
-        if (it.second.workshop.empty()) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Empty workshop name, tag: {0}", it.first);
+        if (it.second.tag.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING: Empty reaction tag");
+        if (it.second.name.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING: Empty reaction name, tag: {0}", it.first);
+        if (it.second.workshop.empty()) glog(log_target::LOADER, log_severity::warning, "WARNING: Empty workshop name, tag: {0}", it.first);
         const auto bf = get_building_def(it.second.workshop);
-        if (bf == nullptr) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Undefined workshop, tag: {0}", it.first);
+        if (bf == nullptr) glog(log_target::LOADER, log_severity::warning, "WARNING: Undefined workshop, tag: {0}", it.first);
         for (const auto &input : it.second.inputs) {
             const auto finder = get_item_def(input.tag);
-            if (finder == nullptr) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Unknown item tag in input: {0}, reaction tag {1}", input.tag, it.first);
+            if (finder == nullptr) glog(log_target::LOADER, log_severity::warning, "WARNING: Unknown item tag in input: {0}, reaction tag {1}", input.tag, it.first);
         }
         for (const auto &output : it.second.outputs) {
             const auto finder = get_item_def(output.first);
             const auto finder2 = get_clothing_by_tag(output.first);
-            if (finder == nullptr && !finder2) glog(log_target::LOADER, log_severity::WARNING, "WARNING: Unknown item tag in output: {0}, reaction tag {1}", output.first, it.first);
+            if (finder == nullptr && !finder2) glog(log_target::LOADER, log_severity::warning, "WARNING: Unknown item tag in output: {0}, reaction tag {1}", output.first, it.first);
         }
     }
 }

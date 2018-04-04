@@ -75,7 +75,7 @@ namespace bengine {
         ImGuiIO& io = ImGui::GetIO();
         const std::string font_path = std::string("game_assets/") + gui_font;
         //io.Fonts->AddFontDefault();
-		glog(log_target::LOADER, log_severity::INFO, "Loading {0}, at size {1} pixels", font_path, gui_font_size);
+		glog(log_target::LOADER, log_severity::info, "Loading {0}, at size {1} pixels", font_path, gui_font_size);
         io.Fonts->AddFontFromFileTTF(font_path.c_str(), static_cast<float>(gui_font_size));
         config.MergeMode = true;
         // TODO: Why does this fail?

@@ -255,10 +255,10 @@ namespace region {
 		}
 		if (opaque)
 		{
-			current_region->tile_flags[idx].set(OPAQUE);
+			current_region->tile_flags[idx].set(OPAQUE_TILE);
 		} else
 		{
-			current_region->tile_flags[idx].reset(OPAQUE);
+			current_region->tile_flags[idx].reset(OPAQUE_TILE);
 		}
         set_tile_material(idx, material);
         if (remove_vegetation) current_region->tile_vegetation_type[idx] = 0;
@@ -338,7 +338,7 @@ namespace region {
     void make_open_space(const int idx) {
         current_region->tile_type[idx] = tile_type::OPEN_SPACE;
 		current_region->tile_flags[idx].reset(SOLID);
-		current_region->tile_flags[idx].reset(OPAQUE);
+		current_region->tile_flags[idx].reset(OPAQUE_TILE);
         current_region->tile_flags[idx].reset(CAN_STAND_HERE);
         current_region->tile_flags[idx].reset(CONSTRUCTION);
         current_region->tile_vegetation_type[idx] = 0;
@@ -348,7 +348,7 @@ namespace region {
     void make_floor(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::FLOOR;
 		current_region->tile_flags[idx].reset(SOLID);
-		current_region->tile_flags[idx].reset(OPAQUE);
+		current_region->tile_flags[idx].reset(OPAQUE_TILE);
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
 		if (mat > 0) set_tile_material(idx, mat);
@@ -358,7 +358,7 @@ namespace region {
     void make_ramp(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::RAMP;
 		current_region->tile_flags[idx].reset(SOLID);
-		current_region->tile_flags[idx].reset(OPAQUE);
+		current_region->tile_flags[idx].reset(OPAQUE_TILE);
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
 		if (mat > 0) set_tile_material(idx, mat);
@@ -368,7 +368,7 @@ namespace region {
     void make_stairs_up(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::STAIRS_UP;
 		current_region->tile_flags[idx].reset(SOLID);
-		current_region->tile_flags[idx].reset(OPAQUE);
+		current_region->tile_flags[idx].reset(OPAQUE_TILE);
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
 		if (mat > 0) set_tile_material(idx, mat);
@@ -378,7 +378,7 @@ namespace region {
     void make_stairs_down(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::STAIRS_DOWN;
 		current_region->tile_flags[idx].reset(SOLID);
-		current_region->tile_flags[idx].reset(OPAQUE);
+		current_region->tile_flags[idx].reset(OPAQUE_TILE);
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
 		if (mat > 0) set_tile_material(idx, mat);
@@ -388,7 +388,7 @@ namespace region {
     void make_stairs_updown(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::STAIRS_UPDOWN;
 		current_region->tile_flags[idx].reset(SOLID);
-		current_region->tile_flags[idx].reset(OPAQUE);
+		current_region->tile_flags[idx].reset(OPAQUE_TILE);
         current_region->tile_flags[idx].set(CAN_STAND_HERE);
         current_region->tile_vegetation_type[idx] = 0;
 		if (mat > 0) set_tile_material(idx, mat);
@@ -398,7 +398,7 @@ namespace region {
     void make_wall(const int idx, const std::size_t mat) {
         current_region->tile_type[idx] = tile_type::WALL;
 		current_region->tile_flags[idx].reset(SOLID);
-		current_region->tile_flags[idx].reset(OPAQUE);
+		current_region->tile_flags[idx].reset(OPAQUE_TILE);
         current_region->tile_flags[idx].reset(CAN_STAND_HERE);
         current_region->tile_flags[idx].set(CONSTRUCTION);
         current_region->tile_vegetation_type[idx] = 0;
@@ -497,9 +497,9 @@ namespace region {
         {
 			tile_flags[idx].set(SOLID);
 			if (tile_type[idx] == tile_type::WINDOW) {
-				tile_flags[idx].reset(OPAQUE);
+				tile_flags[idx].reset(OPAQUE_TILE);
 			} else {
-				tile_flags[idx].set(OPAQUE);
+				tile_flags[idx].set(OPAQUE_TILE);
 			}
 			tile_flags[idx].reset(CAN_STAND_HERE);
 		} else {

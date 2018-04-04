@@ -19,7 +19,7 @@ namespace render {
 	static std::vector<glm::vec3> ssao_kernel;
 
 	void setup_ssao() {
-		const std::uniform_real_distribution<float> random_floats(0.0, 1.0); // random floats between 0.0 - 1.0
+		std::uniform_real_distribution<float> random_floats(0.0, 1.0); // random floats between 0.0 - 1.0
 		std::default_random_engine generator;
 		for (unsigned int i = 0; i < 64; ++i)
 		{

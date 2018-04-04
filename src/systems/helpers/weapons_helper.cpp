@@ -86,7 +86,7 @@ namespace weapons {
 			if (species) {
 				auto finder = get_creature_def(species->tag);
 				if (!finder) {
-					glog(log_target::GAME, log_severity::WARNING, "WARNING: Unable to find species AC {0}", species->tag);
+					glog(log_target::GAME, log_severity::warning, "WARNING: Unable to find species AC {0}", species->tag);
 				}
 				else {
 					return finder->armor_class;
