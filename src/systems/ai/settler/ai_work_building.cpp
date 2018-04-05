@@ -288,7 +288,16 @@ namespace systems {
 					}
 					else if (provides.provides == provides_pressure_plate) {
 						entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_PRESSURE });
-						entity(b.building_target.building_entity)->assign(lever_t{});
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+					}
+					else if (provides.provides == provides_float_gauge) {
+						entity(b.building_target.building_entity)->assign(float_gauge_t{false, 10});
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+					}
+					else if (provides.provides == provides_proximity_sensor) {
+						entity(b.building_target.building_entity)->assign(proximity_sensor_t{ false, 8 });
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+						entity(b.building_target.building_entity)->assign(viewshed_t{8, false});
 					}
 					else if (provides.provides == provides_stonefall_trap
 						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap)

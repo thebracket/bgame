@@ -160,6 +160,8 @@ void read_buildings() noexcept
 					if (type == "gate_nand") provisions.provides = provides_nand_gate;
 					if (type == "gate_nor") provisions.provides = provides_nor_gate;
 					if (type == "gate_xor") provisions.provides = provides_xor_gate;
+					if (type == "float_sensor") provisions.provides = provides_float_gauge;
+					if (type == "proximity_sensor") provisions.provides = provides_proximity_sensor;
 
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);
