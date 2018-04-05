@@ -314,7 +314,55 @@ namespace systems {
 			cp->active = all_set;
 			const auto sender = circuit_entity->component<sends_signal_t>();
 			sender->active = cp->active;
-			std::cout << "AND gate state: " << sender->active << "\n";
+			nodes_changed.insert(circuit_entity->id);
+		}
+
+		static void nand_gate(entity_t * circuit_entity, signal_processor_t * cp)
+		{
+			auto all_set = true;
+			const auto receiver = circuit_entity->component<receives_signal_t>();
+			for (const auto &n : receiver->receives_from)
+			{
+				const auto r = entity(std::get<0>(n));
+				const auto s = r->component<sends_signal_t>();
+				if (!s->active) all_set = false;
+			}
+			all_set = !all_set;
+			cp->active = all_set;
+			const auto sender = circuit_entity->component<sends_signal_t>();
+			sender->active = cp->active;
+			nodes_changed.insert(circuit_entity->id);
+		}
+
+		static void nor_gate(entity_t * circuit_entity, signal_processor_t * cp)
+		{
+			auto any_set = true;
+			const auto receiver = circuit_entity->component<receives_signal_t>();
+			for (const auto &n : receiver->receives_from)
+			{
+				const auto r = entity(std::get<0>(n));
+				const auto s = r->component<sends_signal_t>();
+				if (s->active) any_set = true;
+			}
+			cp->active = !any_set;
+			const auto sender = circuit_entity->component<sends_signal_t>();
+			sender->active = cp->active;
+			nodes_changed.insert(circuit_entity->id);
+		}
+
+		static void xor_gate(entity_t * circuit_entity, signal_processor_t * cp)
+		{
+			auto set_count = 0;
+			const auto receiver = circuit_entity->component<receives_signal_t>();
+			for (const auto &n : receiver->receives_from)
+			{
+				const auto r = entity(std::get<0>(n));
+				const auto s = r->component<sends_signal_t>();
+				if (s->active) ++set_count;
+			}
+			cp->active = (set_count == 0 || set_count == receiver->receives_from.size());
+			const auto sender = circuit_entity->component<sends_signal_t>();
+			sender->active = cp->active;
 			nodes_changed.insert(circuit_entity->id);
 		}
 
@@ -327,10 +375,9 @@ namespace systems {
 			case AND: and_gate(circuit_entity, cp); break;
 			case OR:  or_gate(circuit_entity, cp);  break;
 			case NOTGATE: not_gate(circuit_entity, cp); break;
-			case NAND: break;
-			case NOR:  break;
-			case EOR:  break;
-			case ENOR: break;
+			case NAND: nand_gate(circuit_entity, cp); break;
+			case NOR:  nor_gate(circuit_entity, cp); break;
+			case XOR: xor_gate(circuit_entity, cp); break;
 			}
 			nodes_changed.insert(circuit_entity->id);
 		}

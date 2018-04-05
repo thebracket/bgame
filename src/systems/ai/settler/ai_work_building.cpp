@@ -271,6 +271,21 @@ namespace systems {
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
 						entity(b.building_target.building_entity)->assign(receives_signal_t{});
 					}
+					else if (provides.provides == provides_nand_gate) {
+						entity(b.building_target.building_entity)->assign(signal_processor_t{ false, NAND });
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+						entity(b.building_target.building_entity)->assign(receives_signal_t{});
+					}
+					else if (provides.provides == provides_nor_gate) {
+						entity(b.building_target.building_entity)->assign(signal_processor_t{ false, NOR });
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+						entity(b.building_target.building_entity)->assign(receives_signal_t{});
+					}
+					else if (provides.provides == provides_xor_gate) {
+						entity(b.building_target.building_entity)->assign(signal_processor_t{ false, XOR });
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+						entity(b.building_target.building_entity)->assign(receives_signal_t{});
+					}
 					else if (provides.provides == provides_pressure_plate) {
 						entity(b.building_target.building_entity)->assign(entry_trigger_t{ TRIGGER_PRESSURE });
 						entity(b.building_target.building_entity)->assign(lever_t{});

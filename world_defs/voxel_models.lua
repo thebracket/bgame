@@ -154,6 +154,10 @@ voxel_models = {
     gate_and = { model=vfn("gate_and"), id=141 },
     gate_or = { model=vfn("gate_or"), id=142 },
     gate_not = { model=vfn("gate_not"), id=143 },
+    silicon_refinery = { model=vfn("silicon_refinery"), id=144 },
+    gate_nand = { model=vfn("gate_nand"), id=145 },
+    gate_nor = { model=vfn("gate_nor"), id=146 },
+    gate_xor = { model=vfn("gate_xor"), id=147 },
 }
 
 function voxelId(name)

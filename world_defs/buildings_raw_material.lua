@@ -174,6 +174,16 @@ reactions["make_raw_glass"] = {
     emits_smoke = true
 };
 
+reactions["make_glass_spikes"] = {
+    name = "Make Glass Spikes",
+    workshop = "glass_furnace",
+    inputs = { { item="raw_glass", qty=1 } },
+    outputs = { { item="retractable_spike", qty=1 } },
+    skill = "Glassmaking",
+    difficulty = 15,
+    automatic = false
+};
+
 ------------------------------------------------------------------------------------------------------------------------
 -- Silicon refineries convert glass into raw silicon.
 ------------------------------------------------------------------------------------------------------------------------
@@ -183,7 +193,7 @@ buildings["silicon_refinery"] = {
     components = { { item="block", qty=1, mat_type="rock" }, { item="raw_glass", qty=1 } },
     skill = { name="Construction", difficulty=12 },
     render_rex = "glass_furnace.xp",
-    vox = voxelId("glass_furnace")
+    vox = voxelId("silicon_refinery")
 };
 
 reactions["make_raw_silicon"] = {

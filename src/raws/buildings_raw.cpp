@@ -157,6 +157,9 @@ void read_buildings() noexcept
 					if (type == "gate_and") provisions.provides = provides_and_gate;
 					if (type == "gate_or") provisions.provides = provides_or_gate;
 					if (type == "gate_not") provisions.provides = provides_not_gate;
+					if (type == "gate_nand") provisions.provides = provides_nand_gate;
+					if (type == "gate_nor") provisions.provides = provides_nor_gate;
+					if (type == "gate_xor") provisions.provides = provides_xor_gate;
 
                     lua_pushstring(lua_state, type.c_str());
                     lua_gettable(lua_state, -2);

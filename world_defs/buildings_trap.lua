@@ -128,3 +128,33 @@ buildings["gate_not"] = {
     render_rex = "pressureplate.xp",
     vox = voxelId("gate_not")
 };
+
+buildings["gate_nand"] = {
+    name = "Gate: NAND",
+    description = "An electronic device receives 2 or more signals, and is active if any are false.",
+    components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { gate_nand={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("gate_nand")
+};
+
+buildings["gate_nor"] = {
+    name = "Gate: NOR",
+    description = "An electronic device receives 2 or more signals, and is active if all are false.",
+    components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { gate_nor={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("gate_nor")
+};
+
+buildings["gate_xor"] = {
+    name = "Gate: XOR",
+    description = "An electronic device receives 2 or more signals, and is active if either but not all inputs are true.",
+    components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { gate_xor={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("gate_xor")
+};
