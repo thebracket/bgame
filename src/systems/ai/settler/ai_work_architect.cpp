@@ -248,6 +248,8 @@ namespace systems {
 						entity(bid)->component<bridge_t>()->complete = true;
 						entity(bid)->assign(receives_signal_t{});
 						entity(bid)->assign(name_t{ "Bridge", "" });
+						auto[bx, by, bz] = idxmap(bidx);
+						entity(bid)->assign(position_t{ bx, by, bz });
 					}
 					call_home("AI", "Architecture", "Bridge");
 				}
