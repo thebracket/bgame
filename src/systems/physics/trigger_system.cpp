@@ -274,6 +274,20 @@ namespace systems {
 			});
 		}
 
+		static void proximity_sensors()
+		{
+			each<proximity_sensor_t, position_t, viewshed_t, sends_signal_t>([] (entity_t &e, proximity_sensor_t &p, position_t &pos, viewshed_t &view, sends_signal_t &sender)
+			{
+				const auto old_state = sender.active;
+				sender.active = !view.visible_entities.empty();
+				if (old_state != sender.active)
+				{
+					p.active = sender.active;
+					nodes_changed.insert(e.id);
+				}
+			});
+		}
+
 		static std::map<int, std::vector<int>> affects;
 
 		static void calc_dependency()
@@ -514,6 +528,7 @@ namespace systems {
 			pulled_levers();
 			oscillators();
 			float_sensors();
+			proximity_sensors();
 			if (dependencies_changed) calc_dependency();
 			run_circuits();
 		}
