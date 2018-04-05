@@ -252,6 +252,28 @@ namespace systems {
 			});
 		}
 
+		static void float_sensors()
+		{
+			each<float_gauge_t, position_t, sends_signal_t>([] (entity_t &e, float_gauge_t &f, position_t &pos, sends_signal_t &sender)
+			{
+				const auto idx = mapidx(pos);
+				const auto water_level = region::water_level(idx);
+				const auto old_status = sender.active;
+				if (water_level >= f.water_level)
+				{
+					sender.active = true;
+				} else
+				{
+					sender.active = false;
+				}
+				if (sender.active != old_status)
+				{
+					f.active = sender.active;
+					nodes_changed.insert(e.id);
+				}
+			});
+		}
+
 		static std::map<int, std::vector<int>> affects;
 
 		static void calc_dependency()
@@ -491,6 +513,7 @@ namespace systems {
 			pull_levers();
 			pulled_levers();
 			oscillators();
+			float_sensors();
 			if (dependencies_changed) calc_dependency();
 			run_circuits();
 		}
