@@ -24,12 +24,9 @@ namespace systems {
 
 		namespace jobs_board {
 			void evaluate_architecture(job_board_t &board, entity_t &e, position_t &pos, job_evaluator_base_t *jt) {
-
 				if (architecture_designations->architecture.empty()) return;
-
 				if (inventory::blocks_available() == 0) return; // No blocks
-
-				board.insert(std::make_pair(12, jt));
+				board.insert(std::make_pair(5, jt));
 			}
 		}
 
@@ -250,6 +247,7 @@ namespace systems {
 					if (complete) {
 						entity(bid)->component<bridge_t>()->complete = true;
 						entity(bid)->assign(receives_signal_t{});
+						entity(bid)->assign(name_t{ "Bridge", "" });
 					}
 					call_home("AI", "Architecture", "Bridge");
 				}
