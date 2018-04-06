@@ -60,6 +60,7 @@ namespace region {
 
     /* Set the tile type of a cell. */
     void set_tile_type(const int idx, const uint8_t type);
+	std::vector<uint8_t> * get_tile_types_array();
 
     /* Retrieve the material for a cell. */
     std::size_t material(const int idx);

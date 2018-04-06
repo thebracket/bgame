@@ -17,6 +17,7 @@
 #include "../damage/damage_system.hpp"
 #include "../../global_assets/rng.hpp"
 #include "systems/gui/circuit_graph.hpp"
+#include "gravity_system.hpp"
 
 using namespace bengine;
 
@@ -463,6 +464,7 @@ namespace systems {
 					}
 				}
 				tile_recalc_all();
+				gravity::tile_was_removed();
 			}
 			const auto building = circuit_entity->component<building_t>();
 			if (building && building->tag == "spike_trap")

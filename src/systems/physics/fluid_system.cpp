@@ -122,19 +122,21 @@ namespace systems {
 			// Swimming/drowning
 
 			each<position_t>([](entity_t &e, position_t &pos) {
-				if (water_level(mapidx(pos)) > 7) {
-					bool is_drowning = true;
+				if (pos.x > 0 && pos.x < REGION_WIDTH-1 && pos.y > 0 && pos.y < REGION_HEIGHT-1 && pos.z > 0 && pos.z < REGION_DEPTH-1) {
+					if (water_level(mapidx(pos)) > 7) {
+						auto is_drowning = true;
 
-					auto stats = e.component<game_stats_t>();
-					if (stats) {
-						if (skill_roll(e.id, *stats, rng, "Swimming", DIFFICULTY_AVERAGE) > FAIL) is_drowning = false;
-					}
+						auto stats = e.component<game_stats_t>();
+						if (stats) {
+							if (skill_roll(e.id, *stats, rng, "Swimming", DIFFICULTY_AVERAGE) > FAIL) is_drowning = false;
+						}
 
-					if (is_drowning) {
-						auto health = e.component<health_t>();
-						if (health) {
-							damage_system::inflict_damage_message msg{ e.id, rng.roll_dice(1,4), "Drowning" };
-							damage_system::inflict_damage(msg);
+						if (is_drowning) {
+							auto health = e.component<health_t>();
+							if (health) {
+								damage_system::inflict_damage_message msg{ e.id, rng.roll_dice(1,4), "Drowning" };
+								damage_system::inflict_damage(msg);
+							}
 						}
 					}
 				}

@@ -15,6 +15,7 @@
 #include "../ai/mining_system.hpp"
 #include "../ai/distance_map_system.hpp"
 #include "../ai/architecture_system.hpp"
+#include "gravity_system.hpp"
 
 using namespace bengine;
 using namespace tile_flags;
@@ -33,16 +34,7 @@ namespace systems {
 			std::size_t entity_id = 0;
 			std::string tag;
 			std::size_t material = 0;
-		};
-
-		struct perform_mining_message {
-			perform_mining_message() = default;
-			perform_mining_message(const int idx, const uint8_t op, int X, int Y, int Z) : target_idx(idx),
-				operation(op), x(X), y(Y), z(Z) {}
-			int target_idx = 0;
-			uint8_t operation = 0;
-			int x=0, y=0, z=0;
-		};
+		};		
 
 		static thread_safe_message_queue<perform_construction_message> construction;
 		static thread_safe_message_queue<perform_mining_message> mining;
@@ -58,7 +50,7 @@ namespace systems {
 		static void dig(const perform_mining_message &e) {
 			make_floor(e.target_idx);
 			//auto &[x,y,z] = idxmap(e.target_idx);
-			// TODO: emit_deferred(tile_removed_message{ x,y,z });
+			gravity::tile_was_removed();
 		}
 
 		static void channel(const perform_mining_message &e) {
@@ -69,6 +61,7 @@ namespace systems {
 			if (flag(below, SOLID)) {
 				make_ramp(below);
 			}
+			gravity::tile_was_removed();
 		}
 
 		static void ramp(const perform_mining_message &e) {
@@ -79,18 +72,22 @@ namespace systems {
 				make_open_space(above);
 				set_flag(above, CAN_STAND_HERE);
 			}
+			gravity::tile_was_removed();
 		}
 
 		static void stairs_up(const perform_mining_message &e) {
 			make_stairs_up(e.target_idx);
+			gravity::tile_was_removed();
 		}
 
 		static void stairs_down(const perform_mining_message &e) {
 			make_stairs_down(e.target_idx);
+			gravity::tile_was_removed();
 		}
 
 		static void stairs_updown(const perform_mining_message &e) {
 			make_stairs_updown(e.target_idx);
+			gravity::tile_was_removed();
 		}
 
 		static void recalculate(const perform_mining_message &e) {
@@ -130,7 +127,7 @@ namespace systems {
 			}
 		}
 
-		static void spawn_mining_result(const perform_mining_message &e) {
+		void spawn_mining_result(const perform_mining_message &e) {
 			const auto mining_result = get_material(material(e.target_idx))->mines_to_tag;
 			const auto mining_result2 = get_material(material(e.target_idx))->mines_to_tag_second;
 

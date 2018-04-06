@@ -107,6 +107,11 @@ namespace region {
         return current_region->tile_type[idx];
     }
 
+	std::vector<uint8_t> * get_tile_types_array()
+	{
+		return &current_region->tile_type;
+	}
+
     std::size_t veg_type(const int idx) {
         return current_region->tile_vegetation_type[idx];
     }

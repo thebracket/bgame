@@ -26,6 +26,7 @@
 #include "../../global_assets/game_designations.hpp"
 #include "building_info.hpp"
 #include "log_system.hpp"
+#include "systems/physics/gravity_system.hpp"
 
 using namespace tile_flags;
 
@@ -244,6 +245,7 @@ namespace systems {
 				if (debug::show_flags)
 				{
 					fmt::MemoryWriter ss;
+					ss << world_x << "/" << world_y << "/" << world_z << ":";
 					if (flag(tile_idx, ABOVE_GROUND)) ss << "Outside-";
 					if (flag(tile_idx, SOLID)) ss << "Solid-";
 					if (flag(tile_idx, OPAQUE_TILE)) ss << "Opaque-";
@@ -260,6 +262,7 @@ namespace systems {
 					if (flag(tile_idx, CAN_STAND_HERE)) ss << "Stand-";
 					if (flag(tile_idx, CONSTRUCTION)) ss << "Cons-";
 					if (flag(tile_idx, VISIBLE)) ss << "Vis-";
+					if (gravity::supported[tile_idx]) ss << "Supported-";
 					lines.emplace_back(color_line(std::string(ICON_FA_BUG) + std::string(" ") + ss.str(), color_cyan));
 				}
 
