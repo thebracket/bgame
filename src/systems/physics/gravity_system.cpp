@@ -6,14 +6,15 @@
 
 namespace systems {
 	namespace gravity {
-		void run(const double &duration_ms) {
+		static void start_falling()
+		{
 			using namespace bengine;
 
 			// Scan to see who shouldn't be falling
-			each_without_both<falling_t, flying_t, position_t>([] (entity_t &e, position_t &pos)
+			each_without_both<falling_t, flying_t, position_t>([](entity_t &e, position_t &pos)
 			{
 				const auto idx = mapidx(pos);
-				if (!region::flag(idx, tile_flags::CAN_STAND_HERE) && region::tile_type(idx)!=tile_type::CLOSED_DOOR)
+				if (!region::flag(idx, tile_flags::CAN_STAND_HERE) && region::tile_type(idx) != tile_type::CLOSED_DOOR)
 				{
 					const auto building = e.component<building_t>();
 					if (building)
@@ -32,9 +33,14 @@ namespace systems {
 					}
 				}
 			});
+		}
+
+		static void fall()
+		{
+			using namespace bengine;
 
 			// Everyone who is falling should fall if they can
-			each<falling_t, position_t>([] (entity_t &e, falling_t &f, position_t &pos)
+			each<falling_t, position_t>([](entity_t &e, falling_t &f, position_t &pos)
 			{
 				//std::cout << e.id << " is falling.\n";
 				const auto idx = mapidx(pos);
@@ -43,7 +49,8 @@ namespace systems {
 					// Fall some more
 					pos.z--;
 					++f.distance;
-				} else
+				}
+				else
 				{
 					// We hit the bottom! Ouch.
 					if (f.distance > 0) {
@@ -54,6 +61,11 @@ namespace systems {
 					}
 				}
 			});
+		}
+
+		void run(const double &duration_ms) {
+			start_falling();
+			fall();
 		}
 	}
 }
