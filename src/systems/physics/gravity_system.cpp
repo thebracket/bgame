@@ -88,7 +88,7 @@ namespace systems {
 				auto[tx, ty, tz] = idxmap(idx);
 				if (tiletypes->operator[](idx) == tile_type::TREE_TRUNK || tiletypes->operator[](idx) == tile_type::TREE_LEAF)
 				{
-					spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood"), 3, 100, 0, "");
+					if (idx % 3 == 0) spawn_item_on_ground(tx, ty, tz, "wood_log", get_material_by_tag("wood"), 3, 100, 0, "");
 				} else
 				{
 					topology::spawn_mining_result(topology::perform_mining_message(idx, 0, tx, ty, tz));
