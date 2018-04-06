@@ -76,7 +76,7 @@ namespace systems {
 			std::vector<int> collapses;
 			for (auto idx=0; idx<REGION_TILES_COUNT; ++idx)
 			{
-				if (tiletypes->operator[](idx) != tile_type::OPEN_SPACE && tiletypes->operator[](idx) != tile_type::TREE_TRUNK && tiletypes->operator[](idx) != tile_type::TREE_LEAF && !supported[idx])
+				if (tiletypes->operator[](idx) != tile_type::OPEN_SPACE && !supported[idx])
 				{
 					collapses.emplace_back(idx);
 				}
