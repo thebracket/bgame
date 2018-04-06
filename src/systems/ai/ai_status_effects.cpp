@@ -11,6 +11,13 @@ namespace systems {
 				if (health.unconscious) {
 					delete_component<ai_tag_my_turn_t>(e.id);
 				}
+
+				// If stunned, cancel the turn and decrement the counter
+				if (health.stunned_counter > 0)
+				{
+					--health.stunned_counter;
+					delete_component<ai_tag_my_turn_t>(e.id);
+				}
 			});
 		}
 	}

@@ -145,6 +145,11 @@ namespace systems {
 							const auto fall_damage = rng.roll_dice(f.distance, 6);
 							damage_system::inflict_damage(damage_system::inflict_damage_message{ e.id, fall_damage, "Falling" });
 							delete_component<falling_t>(e.id);
+							const auto h = e.component<health_t>();
+							if (h)
+							{
+								h->stunned_counter = rng.roll_dice(2, 4);
+							}
 
 							// What else is here?
 							const auto also_here = entity_octree.find_by_loc(octree_location_t{ pos.x, pos.y, pos.z, 0 });

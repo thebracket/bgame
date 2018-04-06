@@ -11,5 +11,6 @@ struct health_t {
 	bool immobile = false;
 	bool slow = false;
 	bool no_grasp = false;
+	int stunned_counter = 0;
 	std::vector<health_part_t> parts;	
 };
