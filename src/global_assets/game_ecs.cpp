@@ -391,7 +391,7 @@ void serialize(Archive & archive, health_part_t &h)
 template<class Archive>
 void serialize(Archive & archive, health_t &h)
 {
-	archive(h.max_hitpoints, h.current_hitpoints, h.unconscious, h.blind, h.immobile, h.slow, h.no_grasp, h.parts); // serialize things by passing them to the archive
+	archive(h.max_hitpoints, h.current_hitpoints, h.unconscious, h.blind, h.immobile, h.slow, h.no_grasp, h.parts, h.stunned_counter); // serialize things by passing them to the archive
 }
 
 template<class Archive>
