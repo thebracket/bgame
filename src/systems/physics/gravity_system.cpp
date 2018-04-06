@@ -49,7 +49,6 @@ namespace systems {
 					supported[idx] = true;
 					auto [x, y, z] = idxmap(idx);
 					const auto tt = tiletypes->operator[](idx);
-					//std::cout << +tt << "\n";
 					if (tt != tile_type::OPEN_SPACE && tt != tile_type::FLOOR)
 					{
 						if (x > 0) check_if_new(idx - 1);
@@ -70,7 +69,6 @@ namespace systems {
 						if (y < REGION_HEIGHT - 1) check_if_new(idx + REGION_WIDTH);
 					}
 				}
-				//std::cout << "Open list size: " << open_list.size() << "\n";
 			}
 
 			std::vector<int> collapses;
@@ -81,7 +79,6 @@ namespace systems {
 					collapses.emplace_back(idx);
 				}
 			}
-			std::cout << collapses.size() << " detected\n";
 
 			for (const auto &idx : collapses)
 			{
@@ -94,7 +91,6 @@ namespace systems {
 					topology::spawn_mining_result(topology::perform_mining_message(idx, 0, tx, ty, tz));
 				}
 				region::make_open_space(idx);
-				std::cout << "Collapse occurred at " << tx << ", " << ty << ", " << tz << "\n";
 			}
 		}
 
@@ -121,7 +117,6 @@ namespace systems {
 					}
 					else {
 						e.assign(falling_t{ 0 });
-						//std::cout << e.id << " is now falling.\n";
 					}
 				}
 			});
@@ -134,7 +129,6 @@ namespace systems {
 			// Everyone who is falling should fall if they can
 			each<falling_t, position_t>([](entity_t &e, falling_t &f, position_t &pos)
 			{
-				//std::cout << e.id << " is falling.\n";
 				const auto idx = mapidx(pos);
 				if (idx > 0 && idx < REGION_TILES_COUNT) {
 					if (!region::flag(idx, tile_flags::CAN_STAND_HERE))
@@ -150,7 +144,6 @@ namespace systems {
 							const auto fall_damage = rng.roll_dice(f.distance, 6);
 							damage_system::inflict_damage(damage_system::inflict_damage_message{ e.id, fall_damage, "Falling" });
 							delete_component<falling_t>(e.id);
-							std::cout << e.id << " hit the ground for " << fall_damage << " points of damage.\n";
 						}
 					}
 				}
