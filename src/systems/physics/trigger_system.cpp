@@ -515,6 +515,7 @@ namespace systems {
 					}
 				}
 				delete_entity(circuit_entity->id);
+				gravity::tile_was_removed();
 			}
 		}
 

@@ -7,7 +7,6 @@
 #include "raws/materials.hpp"
 #include "topology_system.hpp"
 #include "global_assets/spatial_db.hpp"
-#include <boost/container/flat_set.hpp>
 
 namespace systems {
 	namespace gravity {
@@ -43,7 +42,21 @@ namespace systems {
 
 			bengine::each<construct_support_t, position_t>([] (bengine::entity_t &e, construct_support_t &s, position_t &pos)
 			{
-				open_list.emplace_back(mapidx(pos));
+				const auto idx = mapidx(pos);
+				open_list.emplace_back(idx);
+				auto x = pos.x;
+				auto y = pos.y;
+				auto z = pos.z;
+				if (x > 0) check_if_new(idx - 1);
+				if (x < REGION_WIDTH - 1) check_if_new(idx + 1);
+				if (y > 0) check_if_new(idx - REGION_WIDTH);
+				if (y < REGION_HEIGHT - 1) check_if_new(idx + REGION_WIDTH);
+				if (z > 1) check_if_new(idx - (REGION_WIDTH * REGION_HEIGHT));
+				if (z < REGION_DEPTH - 1) check_if_new(idx + (REGION_WIDTH * REGION_HEIGHT));
+				if (z < REGION_DEPTH - 1 && x > 0) check_if_new(idx + (REGION_WIDTH * REGION_HEIGHT) - 1);
+				if (z < REGION_DEPTH - 1 && x < REGION_WIDTH - 1) check_if_new(idx + (REGION_WIDTH * REGION_HEIGHT) + 1);
+				if (z < REGION_DEPTH - 1 && y > 0) check_if_new(idx + (REGION_WIDTH * REGION_HEIGHT) - REGION_WIDTH);
+				if (z < REGION_DEPTH - 1 && y < REGION_HEIGHT - 1) check_if_new(idx + (REGION_WIDTH * REGION_HEIGHT) + REGION_WIDTH);
 			});
 
 			while (!open_list.empty())
