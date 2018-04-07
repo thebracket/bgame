@@ -31,7 +31,7 @@ namespace systems {
 				}
 				else if (type == MINE_CHANNEL) {
 					// Channeling - can stand on the square, the square below, or a spot neighboring the top
-					starting_points.emplace_back(std::make_tuple(mapidx(x, y, z), idx));
+					//starting_points.emplace_back(std::make_tuple(mapidx(x, y, z), idx)); // We don't really want to stand on the square we are digging down!
 					starting_points.emplace_back(std::make_tuple(mapidx(x, y, z-1), idx));
 					starting_points.emplace_back(std::make_tuple(mapidx(x - 1, y, z), idx));
 					starting_points.emplace_back(std::make_tuple(mapidx(x + 1, y, z), idx));
