@@ -7,6 +7,7 @@
 #include "raws/materials.hpp"
 #include "topology_system.hpp"
 #include "global_assets/spatial_db.hpp"
+#include <boost/container/flat_set.hpp>
 
 namespace systems {
 	namespace gravity {
@@ -39,6 +40,12 @@ namespace systems {
 			const auto tiletypes = region::get_tile_types_array();
 
 			open_list.emplace_back(mapidx(0, 0, 0));
+
+			bengine::each<construct_support_t, position_t>([] (bengine::entity_t &e, construct_support_t &s, position_t &pos)
+			{
+				open_list.emplace_back(mapidx(pos));
+			});
+
 			while (!open_list.empty())
 			{
 				const auto idx = open_list.back();

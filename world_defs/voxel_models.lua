@@ -158,6 +158,7 @@ voxel_models = {
     gate_nand = { model=vfn("gate_nand"), id=145 },
     gate_nor = { model=vfn("gate_nor"), id=146 },
     gate_xor = { model=vfn("gate_xor"), id=147 },
+    support = { model=vfn("support"), id=148 },
 }
 
 function voxelId(name)

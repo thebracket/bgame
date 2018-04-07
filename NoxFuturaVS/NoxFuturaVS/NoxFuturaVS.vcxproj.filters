@@ -1213,5 +1213,8 @@
     <ClInclude Include="..\..\src\systems\gui\circuit_graph.hpp">
       <Filter>Header Files\systems\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\components\buildings\construct_provides_support.hpp">
+      <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

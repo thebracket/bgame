@@ -299,6 +299,10 @@ namespace systems {
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
 						entity(b.building_target.building_entity)->assign(viewshed_t{8, false});
 					}
+					else if (provides.provides == provides_support) {
+						entity(b.building_target.building_entity)->assign(receives_signal_t{});
+						entity(b.building_target.building_entity)->assign(construct_support_t{});
+					}
 					else if (provides.provides == provides_stonefall_trap
 						|| provides.provides == provides_cage_trap || provides.provides == provides_blades_trap)
 					{

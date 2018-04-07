@@ -158,3 +158,13 @@ buildings["gate_xor"] = {
     render_rex = "pressureplate.xp",
     vox = voxelId("gate_xor")
 };
+
+buildings["support"] = {
+    name = "Structural Support",
+    description = "Cross-bracing that can hold considerable weight, and be remotely demolished.",
+    components = { { item="block", qty=1 } },
+    skill = { name="Construction", difficulty=12 },
+    provides = { support={energy_cost=0} },
+    render_rex = "pressureplate.xp",
+    vox = voxelId("support")
+};

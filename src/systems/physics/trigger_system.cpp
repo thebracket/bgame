@@ -496,6 +496,25 @@ namespace systems {
 						building->vox_model = 129;
 					}
 				}
+			} else if (building && building->tag == "support")
+			{
+				const auto rs = circuit_entity->component<receives_signal_t>();
+				for (auto &sender_id : rs->receives_from)
+				{
+					const auto tmp_e = entity(std::get<0>(sender_id));
+					if (tmp_e)
+					{
+						const auto ss = tmp_e->component<sends_signal_t>();
+						if (ss)
+						{
+							ss->targets.erase(
+								std::remove_if(ss->targets.begin(), ss->targets.end(), [&sender_id](const auto &a) { return a == std::get<0>(sender_id); }),
+								ss->targets.end()
+							);
+						}
+					}
+				}
+				delete_entity(circuit_entity->id);
 			}
 		}
 

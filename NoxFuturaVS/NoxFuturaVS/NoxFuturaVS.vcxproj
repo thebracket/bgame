@@ -375,6 +375,7 @@
     <ClInclude Include="..\..\src\components\buildings\bridge.hpp" />
     <ClInclude Include="..\..\src\components\buildings\building.hpp" />
     <ClInclude Include="..\..\src\components\buildings\building_designations_t.hpp" />
+    <ClInclude Include="..\..\src\components\buildings\construct_provides_support.hpp" />
     <ClInclude Include="..\..\src\components\calendar.hpp" />
     <ClInclude Include="..\..\src\components\camera_options.hpp" />
     <ClInclude Include="..\..\src\components\claimed_t.hpp" />

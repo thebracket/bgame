@@ -259,6 +259,13 @@ void serialize(Archive & archive, construct_door_t &d)
 }
 
 template<class Archive>
+void serialize(Archive & archive, construct_support_t &d)
+{
+	//archive(d.locked); // serialize things by passing them to the archive
+}
+
+
+template<class Archive>
 void serialize(Archive & archive, construct_provides_sleep_t &tag)
 {
 	// Nothing to do here

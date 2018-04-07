@@ -8,7 +8,8 @@ enum provides_t { provides_sleep, provides_food, provides_seating, provides_desk
     provides_ramp, provides_light, provides_cage_trap, provides_stonefall_trap, provides_blades_trap,
     provides_spikes, provides_lever, provides_signal_recipient, provides_storage, provides_pressure_plate,
 	provides_oscillator, provides_and_gate, provides_or_gate, provides_not_gate, provides_nor_gate,
-	provides_nand_gate, provides_xor_gate, provides_float_gauge, provides_proximity_sensor };
+	provides_nand_gate, provides_xor_gate, provides_float_gauge, provides_proximity_sensor,
+	provides_support };
 
 struct building_provides_t {
     provides_t provides;

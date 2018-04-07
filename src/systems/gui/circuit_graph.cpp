@@ -11,7 +11,7 @@ namespace systems
 	{
 		using namespace bengine;
 
-		enum class node_type_t { UNKNOWN, LEVER, PRESSURE_PLATE, OSCILLATOR, FLOAT_GAUGE, BRIDGE, DOOR, SPIKES, AND_GATE, OR_GATE };
+		enum class node_type_t { UNKNOWN, LEVER, PRESSURE_PLATE, OSCILLATOR, FLOAT_GAUGE, BRIDGE, DOOR, SPIKES, AND_GATE, OR_GATE, SUPPORT };
 		static bool node_dragging = false;
 		static ImVec2 node_drag_start;
 		static int node_drag_id;
@@ -45,6 +45,7 @@ namespace systems
 			case node_type_t::BRIDGE: return "(Bridge)";
 			case node_type_t::DOOR: return "(Door)";
 			case node_type_t::SPIKES: return "(Spikes)";
+			case node_type_t::SUPPORT: return "(Support)";
 			default: return "";
 			}
 		}
@@ -96,6 +97,7 @@ namespace systems
 				if (sp->processor == AND) node.type = node_type_t::AND_GATE;
 				if (sp->processor == OR) node.type = node_type_t::OR_GATE;
 			}
+			if (e.component<construct_support_t>()) node.type = node_type_t::SUPPORT;
 
 			switch (node.type)
 			{
@@ -108,6 +110,7 @@ namespace systems
 			case node_type_t::SPIKES: { node.has_input = true; node.has_output = false; } break;
 			case node_type_t::AND_GATE: { node.has_input = true; node.has_output = true; } break;
 			case node_type_t::OR_GATE: { node.has_input = true; node.has_output = true; } break;
+			case node_type_t::SUPPORT: { node.has_input = true; node.has_output = false; } break;
 				default: {}
 			}
 
