@@ -11,7 +11,7 @@ namespace systems
 	{
 		using namespace bengine;
 
-		enum class node_type_t { UNKNOWN, LEVER, PRESSURE_PLATE, OSCILLATOR, FLOAT_GAUGE, BRIDGE, DOOR, SPIKES, AND_GATE, OR_GATE, SUPPORT };
+		enum class node_type_t { UNKNOWN, LEVER, PRESSURE_PLATE, OSCILLATOR, FLOAT_GAUGE, BRIDGE, DOOR, SPIKES, AND_GATE, OR_GATE, SUPPORT, PROXIMITY_SENSOR };
 		static bool node_dragging = false;
 		static ImVec2 node_drag_start;
 		static int node_drag_id;
@@ -86,6 +86,7 @@ namespace systems
 			node.world_y = p.y;
 			node.world_z = p.z;
 
+			if (e.component<proximity_sensor_t>()) node.type = node_type_t::PROXIMITY_SENSOR;
 			if (e.component<lever_t>()) node.type = node_type_t::LEVER;
 			if (e.component<pressure_plate_t>()) node.type = node_type_t::PRESSURE_PLATE;
 			if (e.component<float_gauge_t>()) node.type = node_type_t::FLOAT_GAUGE;
@@ -114,6 +115,7 @@ namespace systems
 			case node_type_t::AND_GATE: { node.has_input = true; node.has_output = true; } break;
 			case node_type_t::OR_GATE: { node.has_input = true; node.has_output = true; } break;
 			case node_type_t::SUPPORT: { node.has_input = true; node.has_output = false; } break;
+			case node_type_t::PROXIMITY_SENSOR: { node.has_input = false; node.has_output = true; } break;
 			default: {}
 			}
 
