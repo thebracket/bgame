@@ -168,7 +168,7 @@ namespace systems {
 									triggers::lever_pull_requests.enqueue(triggers::request_lever_pull_message{ building_entity->id });
 									context_menu = false;
 								}
-								if (ImGui::MenuItem("Manage Lever Connections"))
+								if (ImGui::MenuItem("Manage Circuit"))
 								{
 									triggers::trigger_details.enqueue(triggers::trigger_details_requested{ building_entity->id });
 									game_master_mode = TRIGGER_MANAGEMENT;

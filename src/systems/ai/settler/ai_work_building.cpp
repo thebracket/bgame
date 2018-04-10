@@ -256,6 +256,10 @@ namespace systems {
 						entity(b.building_target.building_entity)->assign(oscillator_t{});
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
 					}
+					else if (provides.provides == provides_proximity_sensor) {
+						entity(b.building_target.building_entity)->assign(proximity_sensor_t{});
+						entity(b.building_target.building_entity)->assign(sends_signal_t{});
+					}
 					else if (provides.provides == provides_and_gate) {
 						entity(b.building_target.building_entity)->assign(signal_processor_t{ false, AND });
 						entity(b.building_target.building_entity)->assign(sends_signal_t{});
