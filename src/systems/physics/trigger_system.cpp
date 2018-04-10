@@ -281,6 +281,18 @@ namespace systems {
 			{
 				const auto old_state = sender.active;
 				sender.active = !view.visible_entities.empty();
+				if (sender.active)
+				{
+					sender.active = false;
+					for (const auto &id : view.visible_entities)
+					{
+						const auto e = entity(id);
+						if (e)
+						{
+							if (e->component<settler_ai_t>() || e->component<grazer_ai>() || e->component<sentient_ai>()) sender.active = true;
+						}
+					}
+				}
 				if (old_state != sender.active)
 				{
 					p.active = sender.active;
@@ -550,7 +562,7 @@ namespace systems {
 			pulled_levers();
 			oscillators();
 			float_sensors();
-			proximity_sensors();
+			if (slow_tick) proximity_sensors();
 			if (dependencies_changed) calc_dependency();
 			run_circuits();
 		}

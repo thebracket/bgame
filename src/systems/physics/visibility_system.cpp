@@ -161,7 +161,8 @@ namespace systems {
 				auto settler = e.component<settler_ai_t>();
 				auto sentient = e.component<sentient_ai>();
 				auto turret = e.component<turret_t>();
-				if (grazer || settler || sentient || turret) {
+				auto sensor = e.component<proximity_sensor_t>();
+				if (grazer || settler || sentient || turret || sensor) {
 					view.visible_entities.clear();
 					for (const int &idx : view.visible_cache) {
 						auto [x,y,z] = idxmap(idx);
