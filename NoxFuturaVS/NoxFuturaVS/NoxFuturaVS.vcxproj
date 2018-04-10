@@ -341,6 +341,7 @@
     <ClCompile Include="..\..\src\systems\run_systems.cpp" />
     <ClCompile Include="..\..\src\systems\scheduler\calendar_system.cpp" />
     <ClCompile Include="..\..\src\systems\scheduler\corpse_system.cpp" />
+    <ClCompile Include="..\..\src\systems\scheduler\hunger_system.cpp" />
     <ClCompile Include="..\..\src\systems\scheduler\initiative_system.cpp" />
     <ClCompile Include="..\..\src\systems\scheduler\tick_system.cpp" />
     <ClCompile Include="..\..\src\utils\system_log.cpp" />
@@ -387,6 +388,7 @@
     <ClInclude Include="..\..\src\components\corpse_settler.hpp" />
     <ClInclude Include="..\..\src\components\designated_lumberjack.hpp" />
     <ClInclude Include="..\..\src\components\designations.hpp" />
+    <ClInclude Include="..\..\src\components\hunger_t.hpp" />
     <ClInclude Include="..\..\src\components\machinery\entry_trigger.hpp" />
     <ClInclude Include="..\..\src\components\explosion_t.hpp" />
     <ClInclude Include="..\..\src\components\falling.hpp" />
@@ -581,6 +583,7 @@
     <ClInclude Include="..\..\src\systems\run_systems.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\calendar_system.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\corpse_system.hpp" />
+    <ClInclude Include="..\..\src\systems\scheduler\hunger_system.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\initiative_system.hpp" />
     <ClInclude Include="..\..\src\systems\scheduler\tick_system.hpp" />
     <ClInclude Include="..\..\src\utils\system_log.hpp" />

@@ -88,6 +88,7 @@
 #include "ai/settler/ai_work_stockpile.hpp"
 #include "ai/settler/ai_deconstruct.hpp"
 #include "gui/building_info.hpp"
+#include "scheduler/hunger_system.hpp"
 
 namespace systems {
 	constexpr int CAMERA_SYSTEM = 1;
@@ -171,6 +172,7 @@ namespace systems {
 	constexpr int AI_STOCKPILE_SYSTEM = 79;
 	constexpr int AI_DECONSTRUCT_SYSTEM = 80;
 	constexpr int BUILDING_INFO_SYS = 81;
+	constexpr int HUNGER_SYSTEM = 82;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -275,6 +277,7 @@ namespace systems {
 		system_names[AI_STOCKPILE_SYSTEM] = "AI Stockpiling";
 		system_names[AI_DECONSTRUCT_SYSTEM] = "Deconstruction";
 		system_names[BUILDING_INFO_SYS] = "Building Info";
+		system_names[HUNGER_SYSTEM] = "Hunger System";
 		game_master_mode = PLAY;
     }
 
@@ -318,6 +321,7 @@ namespace systems {
 			fluids::copy_to_gpu();
 			logging::age_log();
             run_system(calendarsys::run, duration_ms, CALENDAR_SYSTEM);
+			run_system(hunger_system::run, duration_ms, HUNGER_SYSTEM);
 			if (hour_elapsed) run_system(settler_spawner::run, duration_ms, SETTLER_SPAWNER_SYSTEM);
 			if (day_elapsed || wildlife_population::first_run) run_system(wildlife_population::run, duration_ms, WILDLIFE_POPULATION_SYSTEM);
 			run_system(fluids::run, duration_ms, FLUID_SYSTEM);

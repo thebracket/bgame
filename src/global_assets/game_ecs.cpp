@@ -402,6 +402,12 @@ void serialize(Archive & archive, health_t &h)
 }
 
 template<class Archive>
+void serialize(Archive & archive, hunger_t &h)
+{
+	archive(h.hunger_clock); // serialize things by passing them to the archive
+}
+
+template<class Archive>
 void serialize(Archive & archive, initiative_t &i)
 {
 	archive(i.initiative, i.initiative_modifier); // serialize things by passing them to the archive

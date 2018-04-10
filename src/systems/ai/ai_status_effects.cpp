@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ai_status_effects.hpp"
+#include "systems/damage/damage_system.hpp"
 
 namespace systems {
 	namespace ai_status_effects {
@@ -17,6 +18,12 @@ namespace systems {
 				{
 					--health.stunned_counter;
 					delete_component<ai_tag_my_turn_t>(e.id);
+				}
+
+				const auto hunger = e.component<hunger_t>();
+				if (hunger && hunger->is_starving)
+				{
+					damage_system::inflict_damage(damage_system::inflict_damage_message{e.id, 1, "Starvation"});
 				}
 			});
 		}

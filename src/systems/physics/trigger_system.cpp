@@ -286,10 +286,10 @@ namespace systems {
 					sender.active = false;
 					for (const auto &id : view.visible_entities)
 					{
-						const auto e = entity(id);
-						if (e)
+						const auto detected_e = entity(id);
+						if (detected_e)
 						{
-							if (e->component<settler_ai_t>() || e->component<grazer_ai>() || e->component<sentient_ai>()) sender.active = true;
+							if (detected_e->component<settler_ai_t>() || detected_e->component<grazer_ai>() || detected_e->component<sentient_ai>()) sender.active = true;
 						}
 					}
 				}

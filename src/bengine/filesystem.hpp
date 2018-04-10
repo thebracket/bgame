@@ -2,7 +2,7 @@
 
 #include <string>
 
-constexpr int SAVE_VERSION = 11;
+constexpr int SAVE_VERSION = 12;
 
 std::string get_save_path();
 bool exists(const std::string &filename) noexcept;

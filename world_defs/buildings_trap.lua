@@ -84,7 +84,7 @@ buildings["proximity_sensor"] = {
     description = "An electronic proximity sensor that triggers if movement occurs nearby.",
     components = { { item="mechanism", qty=1 }, { item="circuit", qty=1 } },
     skill = { name="Construction", difficulty=12 },
-    provides = { proximity_sensor={energy_cost=0} },
+    provides = { proximity_sensor={energy_cost=10} },
     render_rex = "pressureplate.xp",
     vox = voxelId("proximity_sensor")
 };

@@ -497,6 +497,9 @@
     <ClCompile Include="..\..\src\systems\gui\circuit_graph.cpp">
       <Filter>Source Files\systems\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\scheduler\hunger_system.cpp">
+      <Filter>Source Files\systems\scheduler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\components\calendar.hpp">
@@ -1215,6 +1218,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\buildings\construct_provides_support.hpp">
       <Filter>Header Files\components\buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\hunger_t.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\scheduler\hunger_system.hpp">
+      <Filter>Header Files\systems\scheduler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

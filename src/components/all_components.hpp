@@ -110,6 +110,7 @@
 #include "machinery/oscillator_t.hpp"
 #include "machinery/node_graph_position.hpp"
 #include "buildings/construct_provides_support.hpp"
+#include "hunger_t.hpp"
 
 namespace bengine {
 	template<class ... Components>
@@ -131,7 +132,8 @@ namespace bengine {
 			item_food_t, item_hide_t, item_leather_t, item_melee_t, item_ranged_t, item_seed_t, item_skull_t, item_spice_t,
 			item_topsoil_t, item_t, item_carried_t, item_creator_t, item_quality_t, item_stored_t, item_wear_t, designated_miner_t,
 			mining_designations_t, ai_tag_work_stockpiles_t, item_food_prepared_t, flying_t, ai_tag_work_deconstruct, sends_signal_t, 
-			signal_processor_t, float_gauge_t, pressure_plate_t, proximity_sensor_t, oscillator_t, node_graph_position_t, construct_support_t
+			signal_processor_t, float_gauge_t, pressure_plate_t, proximity_sensor_t, oscillator_t, node_graph_position_t, construct_support_t,
+			hunger_t
 		>;
 	}
 }
