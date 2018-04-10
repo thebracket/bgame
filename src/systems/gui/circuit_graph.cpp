@@ -31,6 +31,8 @@ namespace systems
 			ImVec2 output_pos;
 
 			std::vector<int> outbound_connections;
+
+			bool on = true;
 		};
 
 		static std::string get_node_type(const node_t &n)
@@ -72,7 +74,8 @@ namespace systems
 			{
 				node.x = pos->x;
 				node.y = pos->y;
-			} else
+			}
+			else
 			{
 				node.x = next_x;
 				node.y = 100;
@@ -111,7 +114,19 @@ namespace systems
 			case node_type_t::AND_GATE: { node.has_input = true; node.has_output = true; } break;
 			case node_type_t::OR_GATE: { node.has_input = true; node.has_output = true; } break;
 			case node_type_t::SUPPORT: { node.has_input = true; node.has_output = false; } break;
-				default: {}
+			default: {}
+			}
+
+			const auto sender = e.component<sends_signal_t>();
+			const auto receiver = e.component<receives_signal_t>();
+			if (sender) {
+				node.on = sender->active;
+			} else if (receiver)
+			{
+				node.on = receiver->active;
+			} else
+			{
+				node.on = false;
 			}
 
 			nodes.emplace_back(node);
@@ -195,6 +210,10 @@ namespace systems
 				ImGui::Text("%s", n.name.c_str());
 				ImGui::SetCursorPos(ImVec2{ n.x + offset - (text_size.x / 2.0f), n.y + text_size.y + (offset/2.0f) });
 				ImGui::TextColored(ImVec4(0.0f, 0.7f, 0.7f, 0.7f), "%s", get_node_type(n).c_str());
+				ImGui::SetCursorPos(ImVec2{ n.x + offset - (text_size.x / 2.0f), n.y + text_size.y + text_size.y + (offset/2.0f) });
+				const std::string is_active = n.on ? "ON" : "OFF";
+				const ImVec4 active_color = n.on ? ImVec4(0.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+				ImGui::TextColored(active_color, "%s", is_active.c_str());
 
 				const ImVec2 node_pos{ static_cast<float>(n.x) + offset, static_cast<float>(n.y) + offset };
 				const ImVec2 node_size{ std::max(100.0f, text_size.x), 100.0f };
