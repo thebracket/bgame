@@ -46,6 +46,7 @@ namespace jobs_board {
 
 	namespace impl {
 		extern std::vector<std::unique_ptr<job_evaluator_base_t>> evaluators;
+		extern std::vector<std::unique_ptr<job_evaluator_base_t>> idle_evaluators;
 	}
 
 	template <typename T>
@@ -55,6 +56,15 @@ namespace jobs_board {
 		impl::evaluators.emplace_back(std::move(base));
 	}
 
+	template <typename T>
+	inline void register_idle_offer(job_evaluator_t evaluator) {
+		std::unique_ptr<job_evaluator_base_t> base = std::make_unique<job_evaluator_concrete<T>>(evaluator);
+
+		impl::idle_evaluators.emplace_back(std::move(base));
+	}
+
 	bool is_working(bengine::entity_t &e);
+	bool is_working_on_leisure(bengine::entity_t &e);
 	void evaluate(job_board_t &board, bengine::entity_t &entity, position_t &pos);
+	void evaluate_idle(job_board_t &board, bengine::entity_t &entity, position_t &pos);
 }

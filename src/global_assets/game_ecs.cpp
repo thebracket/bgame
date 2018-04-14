@@ -76,6 +76,12 @@ void serialize(Archive & archive, ai_tag_leisure_shift_t &tag)
 	archive(tag.dummy);
 }
 
+template<class Archive>
+void serialize(Archive & archive, ai_tag_leisure_eat_t &tag)
+{
+	// Nothing to save
+	archive(tag.tool_id, tag.step);
+}
 
 template<class Archive>
 void serialize(Archive & archive, ai_tag_my_turn_t &tag)

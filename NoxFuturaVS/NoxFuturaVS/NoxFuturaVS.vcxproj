@@ -261,6 +261,7 @@
     <ClCompile Include="..\..\src\systems\ai\sentient_ai_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_deconstruct.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_idle_time.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_eat.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_new_arrival.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_scheduler.cpp" />
@@ -349,6 +350,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\components\ai_tags\ai_mode_idle.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_settler_new_arrival.hpp" />
+    <ClInclude Include="..\..\src\components\ai_tags\ai_tag_leisure_eat.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_leisure_shift.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_my_turn.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_sleep_shift.hpp" />
@@ -498,6 +500,7 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_deconstruct.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_idle.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_idle_time.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_eat.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_new_arrival.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_scheduler.hpp" />
@@ -523,6 +526,7 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_template.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_work_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\jobs_board.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\templated_idle_steps_t.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\templated_work_steps_t.hpp" />
     <ClInclude Include="..\..\src\systems\ai\stockpile_system.hpp" />
     <ClInclude Include="..\..\src\systems\ai\wildlife_population.hpp" />
