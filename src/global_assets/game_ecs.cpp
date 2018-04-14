@@ -84,6 +84,13 @@ void serialize(Archive & archive, ai_tag_leisure_eat_t &tag)
 }
 
 template<class Archive>
+void serialize(Archive & archive, ai_tag_leisure_drink_t &tag)
+{
+	// Nothing to save
+	archive(tag.tool_id, tag.step);
+}
+
+template<class Archive>
 void serialize(Archive & archive, ai_tag_my_turn_t &tag)
 {
 	// Nothing to save
@@ -411,6 +418,12 @@ template<class Archive>
 void serialize(Archive & archive, hunger_t &h)
 {
 	archive(h.hunger_clock); // serialize things by passing them to the archive
+}
+
+template<class Archive>
+void serialize(Archive & archive, thirst_t &h)
+{
+	archive(h.thirst_clock); // serialize things by passing them to the archive
 }
 
 template<class Archive>

@@ -264,7 +264,8 @@ void create_settler(planet_t &planet, const int x, const int y, const int z, ben
 		->assign(initiative_t{})
 		->assign(ai_settler_new_arrival_t{})
 		->assign(sleep_clock_t{})
-		->assign(hunger_t{});
+		->assign(hunger_t{})
+		->assign(thirst_t{});
 
 	// Create clothing items
 	//std::cout << settler->id << "\n";

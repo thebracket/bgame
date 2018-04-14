@@ -261,6 +261,7 @@
     <ClCompile Include="..\..\src\systems\ai\sentient_ai_system.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_deconstruct.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_idle_time.cpp" />
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_drink.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_eat.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_time.cpp" />
     <ClCompile Include="..\..\src\systems\ai\settler\ai_new_arrival.cpp" />
@@ -350,6 +351,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\components\ai_tags\ai_mode_idle.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_settler_new_arrival.hpp" />
+    <ClInclude Include="..\..\src\components\ai_tags\ai_tag_leisure_drink.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_leisure_eat.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_leisure_shift.hpp" />
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_my_turn.hpp" />
@@ -459,6 +461,7 @@
     <ClInclude Include="..\..\src\components\species.hpp" />
     <ClInclude Include="..\..\src\components\stockpile.hpp" />
     <ClInclude Include="..\..\src\components\buildings\turret_t.hpp" />
+    <ClInclude Include="..\..\src\components\thirst_t.hpp" />
     <ClInclude Include="..\..\src\components\viewshed.hpp" />
     <ClInclude Include="..\..\src\components\water_spawner.hpp" />
     <ClInclude Include="..\..\src\components\wildlife_group.hpp" />
@@ -500,6 +503,7 @@
     <ClInclude Include="..\..\src\systems\ai\settler\ai_deconstruct.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_idle.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_idle_time.hpp" />
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_drink.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_eat.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_time.hpp" />
     <ClInclude Include="..\..\src\systems\ai\settler\ai_new_arrival.hpp" />

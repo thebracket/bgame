@@ -25,6 +25,12 @@ namespace systems {
 				{
 					damage_system::inflict_damage(damage_system::inflict_damage_message{e.id, 1, "Starvation"});
 				}
+
+				const auto thirst = e.component<thirst_t>();
+				if (thirst && thirst->is_dehydrating)
+				{
+					damage_system::inflict_damage(damage_system::inflict_damage_message{ e.id, 1, "Dehydration" });
+				}
 			});
 		}
 	}

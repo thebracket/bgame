@@ -90,6 +90,7 @@
 #include "gui/building_info.hpp"
 #include "scheduler/hunger_system.hpp"
 #include "ai/settler/ai_leisure_eat.hpp"
+#include "ai/settler/ai_leisure_drink.hpp"
 
 namespace systems {
 	constexpr int CAMERA_SYSTEM = 1;
@@ -175,6 +176,7 @@ namespace systems {
 	constexpr int BUILDING_INFO_SYS = 81;
 	constexpr int HUNGER_SYSTEM = 82;
 	constexpr int EAT_SYSTEM = 83;
+	constexpr int DRINK_SYSTEM = 84;
 
     boost::container::flat_map<int, std::pair<int, std::vector<float>>> run_time;
     boost::container::flat_map<int, std::string> system_names;
@@ -281,6 +283,7 @@ namespace systems {
 		system_names[BUILDING_INFO_SYS] = "Building Info";
 		system_names[HUNGER_SYSTEM] = "Hunger System";
 		system_names[EAT_SYSTEM] = "Eating System";
+		system_names[DRINK_SYSTEM] = "Drinking System";
 		game_master_mode = PLAY;
     }
 
@@ -368,6 +371,7 @@ namespace systems {
 			run_system(ai_work_stockpiles::run, duration_ms, AI_STOCKPILE_SYSTEM);
 			run_system(ai_deconstruction::run, duration_ms, AI_DECONSTRUCT_SYSTEM);
 			run_system(ai_leisure_eat::run, duration_ms, EAT_SYSTEM);
+			run_system(ai_leisure_drink::run, duration_ms, DRINK_SYSTEM);
 			run_system(ai_idle_time::run, duration_ms, AI_IDLE);
 			run_system(movement::run, duration_ms, MOVEMENT_SYSTEM);
 			run_system(triggers::run, duration_ms, TRIGGER_SYSTEM);

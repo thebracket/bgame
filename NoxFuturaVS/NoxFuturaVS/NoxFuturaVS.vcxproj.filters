@@ -503,6 +503,9 @@
     <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_eat.cpp">
       <Filter>Source Files\systems\ai\settler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\systems\ai\settler\ai_leisure_drink.cpp">
+      <Filter>Source Files\systems\ai\settler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\components\calendar.hpp">
@@ -1236,6 +1239,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\components\ai_tags\ai_tag_leisure_eat.hpp">
       <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\thirst_t.hpp">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ai_tags\ai_tag_leisure_drink.hpp">
+      <Filter>Header Files\components\ai_tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\systems\ai\settler\ai_leisure_drink.hpp">
+      <Filter>Header Files\systems\ai\settler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
