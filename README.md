@@ -1,5 +1,7 @@
 # Nox Futura (formerly Black Future)
 
+Note: I've started working on this in Rust, the repo is [https://github.com/thebracket/noxfutura](https://github.com/thebracket/noxfutura).
+
 An open-source game combining elements of Dwarf Fortress, Civilization, Warhammer, Douglas Adams, and more. It's very much in development, so don't expect miracles - or a finished experience - yet!
 
 Please visit [our website](http://bracketproductions.com/index.php/blackfuture/) 
